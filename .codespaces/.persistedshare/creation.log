@@ -1,0 +1,35 @@
+
+=================================================================================
+2025-07-27 04:24:22.528Z: Configuration starting...
+2025-07-27 04:24:22.537Z: Cloning...
+2025-07-27 04:24:23.035Z: Using image: mcr.microsoft.com/devcontainers/universal
+
+=================================================================================
+2025-07-27 04:24:23.055Z: Creating container...
+
+=================================================================================
+2025-07-27 04:24:23.432Z: Running blocking commands...
+2025-07-27 04:24:23.469Z: $ devcontainer up --id-label Type=codespaces --workspace-folder /var/lib/docker/codespacemount/workspace/new-full-riot- --mount type=bind,source=/.codespaces/agent/mount/cache,target=/vscode --user-data-folder /var/lib/docker/codespacemount/.persistedshare --container-data-folder .vscode-remote/data/Machine --container-system-data-folder /var/vscode-remote --log-level trace --log-format json --update-remote-user-uid-default never --mount-workspace-git-root false --omit-config-remote-env-from-metadata --skip-non-blocking-commands --expect-existing-container --override-config /root/.codespaces/shared/merged_devcontainer.json --default-user-env-probe loginInteractiveShell --container-session-data-folder /workspaces/.codespaces/.persistedshare/devcontainers-cli/cache --secrets-file /root/.codespaces/shared/user-secrets-envs.json
+2025-07-27 04:24:23.703Z: @devcontainers/cli 0.76.0. Node.js v18.20.6. linux 6.8.0-1030-azure x64.
+2025-07-27 04:24:24.110Z: Outcome: success User: codespace WorkspaceFolder: /workspaces/new-full-riot-
+2025-07-27 04:24:24.121Z: devcontainer process exited with exit code 0
+
+=================================================================================
+2025-07-27 04:24:24.172Z: Configuring codespace...
+2025-07-27 04:24:24.176Z: Running oryx...
+
+=================================================================================
+2025-07-27 04:24:33.232Z: Running commands...
+2025-07-27 04:24:33.232Z: $ devcontainer up --id-label Type=codespaces --workspace-folder /var/lib/docker/codespacemount/workspace/new-full-riot- --expect-existing-container --skip-post-attach --mount type=bind,source=/.codespaces/agent/mount/cache,target=/vscode --container-data-folder .vscode-remote/data/Machine --container-system-data-folder /var/vscode-remote --log-level trace --log-format json --update-remote-user-uid-default never --mount-workspace-git-root false --override-config /root/.codespaces/shared/merged_devcontainer.json --default-user-env-probe loginInteractiveShell --container-session-data-folder /workspaces/.codespaces/.persistedshare/devcontainers-cli/cache --secrets-file /root/.codespaces/shared/user-secrets-envs.json
+2025-07-27 04:24:33.541Z: @devcontainers/cli 0.76.0. Node.js v18.20.6. linux 6.8.0-1030-azure x64.
+2025-07-27 04:24:34.092Z: Running the postCreateCommand from Feature 'ghcr.io/devcontainers/features/git-lfs:1'...
+
+2025-07-27 04:24:34.092Z: /usr/local/share/pull-git-lfs-artifacts.sh
+2025-07-27 04:24:34.233Z: Fetching git lfs artifacts...
+2025-07-27 04:24:35.133Z: Updated Git hooks.
+Git LFS initialized.
+2025-07-27 04:24:35.286Z: Outcome: success User: codespace WorkspaceFolder: /workspaces/new-full-riot-
+2025-07-27 04:24:35.299Z: devcontainer process exited with exit code 0
+
+=================================================================================
+2025-07-27 04:24:35.348Z: Finished configuring codespace.
