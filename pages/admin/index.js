@@ -7,6 +7,8 @@ export default function Admin() {
   const [orders, setOrders] = useState([]);
   const [uploads, setUploads] = useState([]);
   const [logs, setLogs] = useState([]);
+  const [messages, setMessages] = useState([]);
+  const [responses, setResponses] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -15,12 +17,32 @@ export default function Admin() {
         router.push('/login');
         return;
       }
-      const { data: ordersData } = await supabase.from('orders').select('*').order('timestamp', { ascending: false });
-      const { data: uploadsData } = await supabase.from('fan_uploads').select('*').order('timestamp', { ascending: false });
-      const { data: logsData } = await supabase.from('stream_logs').select('*').order('timestamp', { ascending: false });
+      const { data: ordersData } = await supabase
+        .from('orders')
+        .select('*')
+        .order('timestamp', { ascending: false });
+      const { data: uploadsData } = await supabase
+        .from('fan_uploads')
+        .select('*')
+        .order('timestamp', { ascending: false });
+      const { data: logsData } = await supabase
+        .from('stream_logs')
+        .select('*')
+        .order('timestamp', { ascending: false });
+      const { data: chatData } = await supabase
+        .from('chat_messages')
+        .select('*')
+        .order('created_at', { ascending: false });
+      const { data: responsesData } = await supabase
+        .from('trivia_responses')
+        .select('*')
+        .order('created_at', { ascending: false });
+
       setOrders(ordersData || []);
       setUploads(uploadsData || []);
       setLogs(logsData || []);
+      setMessages(chatData || []);
+      setResponses(responsesData || []);
     };
     fetchData();
   }, [router]);
@@ -51,6 +73,7 @@ export default function Admin() {
           </tbody>
         </table>
       </section>
+
       <section>
         <h2>Fan Uploads</h2>
         <table border="1" cellPadding="5">
@@ -76,6 +99,7 @@ export default function Admin() {
           </tbody>
         </table>
       </section>
+
       <section>
         <h2>Stream Logs</h2>
         <table border="1" cellPadding="5">
@@ -90,6 +114,54 @@ export default function Admin() {
               <tr key={l.id}>
                 <td>{l.status}</td>
                 <td>{l.checked_at || l.timestamp}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>Chat Messages</h2>
+        <table border="1" cellPadding="5">
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Message</th>
+              <th>Created At</th>
+            </tr>
+          </thead>
+          <tbody>
+            {messages.map((m) => (
+              <tr key={m.id}>
+                <td>{m.user_email}</td>
+                <td>{m.message}</td>
+                <td>{m.created_at}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>Trivia Responses</h2>
+        <table border="1" cellPadding="5">
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Question ID</th>
+              <th>Selected Option</th>
+              <th>Correct</th>
+              <th>Created At</th>
+            </tr>
+          </thead>
+          <tbody>
+            {responses.map((r) => (
+              <tr key={r.id}>
+                <td>{r.user_email}</td>
+                <td>{r.question_id}</td>
+                <td>{r.selected_opt ?? r.selected_option}</td>
+                <td>{r.correct ? 'Yes' : 'No'}</td>
+                <td>{r.created_at}</td>
               </tr>
             ))}
           </tbody>
