@@ -23,11 +23,11 @@ export default function ChatPage() {
       const { data, error } = await supabase
         .from('chat_messages')
         .select('*')
-        .order('timestamp', { ascending: true });
+        .order('created_at', { ascending: true });
       if (!error) {
         setMessages(data);
       }
-    }
+    
     fetchMessages();
 
     const channel = supabase
@@ -51,11 +51,11 @@ export default function ChatPage() {
     if (!newMessage.trim()) return;
     if (!user) return;
     await supabase.from('chat_messages').insert({
-      user_id: user.id,
-      user_email: user.email,
-      message: newMessage,
+      
+       user_email: user.email,
+  message: newMessage,
     });
-    setNewMessage('');
+   
   };
 
   return (
