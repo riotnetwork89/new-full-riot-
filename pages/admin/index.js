@@ -17,32 +17,20 @@ export default function Admin() {
         router.push('/login');
         return;
       }
-      const { data: ordersData } = await supabase
-        .from('orders')
-        .select('*')
-        .order('timestamp', { ascending: false });
-      const { data: uploadsData } = await supabase
-        .from('fan_uploads')
-        .select('*')
-        .order('timestamp', { ascending: false });
-      const { data: logsData } = await supabase
-        .from('stream_logs')
-        .select('*')
-        .order('timestamp', { ascending: false });
-      const { data: chatData } = await supabase
-        .from('chat_messages')
-        .select('*')
-        .order('created_at', { ascending: false });
-      const { data: responsesData } = await supabase
-        .from('trivia_responses')
-        .select('*')
-        .order('created_at', { ascending: false });
+      
+      const [ordersResult, uploadsResult, logsResult, chatResult, responsesResult] = await Promise.all([
+        supabase.from('orders').select('*').order('timestamp', { ascending: false }),
+        supabase.from('fan_uploads').select('*').order('timestamp', { ascending: false }),
+        supabase.from('stream_logs').select('*').order('timestamp', { ascending: false }),
+        supabase.from('chat_messages').select('*').order('created_at', { ascending: false }),
+        supabase.from('trivia_responses').select('*').order('created_at', { ascending: false })
+      ]);
 
-      setOrders(ordersData || []);
-      setUploads(uploadsData || []);
-      setLogs(logsData || []);
-      setMessages(chatData || []);
-      setResponses(responsesData || []);
+      setOrders(ordersResult.data || []);
+      setUploads(uploadsResult.data || []);
+      setLogs(logsResult.data || []);
+      setMessages(chatResult.data || []);
+      setResponses(responsesResult.data || []);
     };
     fetchData();
   }, [router]);
