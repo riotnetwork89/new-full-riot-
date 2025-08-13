@@ -1,160 +1,274 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { supabase } from '../../utils/supabase';
+import Nav from '../../components/Nav';
+import AdminTable from '../../components/AdminTable';
+import EventForm from '../../components/EventForm';
+import toast, { Toaster } from 'react-hot-toast';
 
 export default function Admin() {
   const router = useRouter();
   const [orders, setOrders] = useState([]);
-  const [uploads, setUploads] = useState([]);
+  const [events, setEvents] = useState([]);
   const [logs, setLogs] = useState([]);
   const [messages, setMessages] = useState([]);
-  const [responses, setResponses] = useState([]);
+  const [showEventForm, setShowEventForm] = useState(false);
+  const [editingEvent, setEditingEvent] = useState(null);
+  const [streamStatus, setStreamStatus] = useState('DISCONNECTED');
 
   useEffect(() => {
-    const fetchData = async () => {
+    const checkAdminAccess = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         router.push('/login');
         return;
       }
-      
-      const [ordersResult, uploadsResult, logsResult, chatResult, responsesResult] = await Promise.all([
-        supabase.from('orders').select('*').order('timestamp', { ascending: false }),
-        supabase.from('fan_uploads').select('*').order('timestamp', { ascending: false }),
-        supabase.from('stream_logs').select('*').order('timestamp', { ascending: false }),
-        supabase.from('chat_messages').select('*').order('created_at', { ascending: false }),
-        supabase.from('trivia_responses').select('*').order('created_at', { ascending: false })
-      ]);
 
-      setOrders(ordersResult.data || []);
-      setUploads(uploadsResult.data || []);
-      setLogs(logsResult.data || []);
-      setMessages(chatResult.data || []);
-      setResponses(responsesResult.data || []);
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single();
+
+      if (profile?.role !== 'admin') {
+        router.push('/');
+        return;
+      }
+
+      fetchData();
     };
-    fetchData();
+    checkAdminAccess();
   }, [router]);
 
+  const fetchData = async () => {
+    const [ordersResult, eventsResult, logsResult, chatResult] = await Promise.all([
+      supabase.from('orders').select('*').order('created_at', { ascending: false }),
+      supabase.from('events').select('*').order('date', { ascending: false }),
+      supabase.from('stream_logs').select('*').order('created_at', { ascending: false }),
+      supabase.from('chat_messages').select('*, profiles(display_name)').order('created_at', { ascending: false })
+    ]);
+
+    setOrders(ordersResult.data || []);
+    setEvents(eventsResult.data || []);
+    setLogs(logsResult.data || []);
+    setMessages(chatResult.data || []);
+
+    if (logsResult.data && logsResult.data.length > 0) {
+      setStreamStatus(logsResult.data[0].status);
+    }
+  };
+
+  const handleSaveEvent = async (eventData) => {
+    try {
+      if (editingEvent) {
+        const { error } = await supabase
+          .from('events')
+          .update(eventData)
+          .eq('id', editingEvent.id);
+        
+        if (error) throw error;
+        toast.success('Event updated successfully');
+      } else {
+        const { error } = await supabase
+          .from('events')
+          .insert(eventData);
+        
+        if (error) throw error;
+        toast.success('Event created successfully');
+      }
+      
+      setShowEventForm(false);
+      setEditingEvent(null);
+      fetchData();
+    } catch (error) {
+      toast.error('Error saving event');
+      console.error(error);
+    }
+  };
+
+  const handleDeleteEvent = async (event) => {
+    if (confirm(`Are you sure you want to delete "${event.title}"?`)) {
+      try {
+        const { error } = await supabase
+          .from('events')
+          .delete()
+          .eq('id', event.id);
+        
+        if (error) throw error;
+        toast.success('Event deleted successfully');
+        fetchData();
+      } catch (error) {
+        toast.error('Error deleting event');
+        console.error(error);
+      }
+    }
+  };
+
+  const handleDeleteMessage = async (message) => {
+    if (confirm('Are you sure you want to delete this message?')) {
+      try {
+        const { error } = await supabase
+          .from('chat_messages')
+          .delete()
+          .eq('id', message.id);
+        
+        if (error) throw error;
+        toast.success('Message deleted successfully');
+        fetchData();
+      } catch (error) {
+        toast.error('Error deleting message');
+        console.error(error);
+      }
+    }
+  };
+
+  const updateStreamStatus = async (status) => {
+    try {
+      const { error } = await supabase
+        .from('stream_logs')
+        .insert({ status });
+      
+      if (error) throw error;
+      setStreamStatus(status);
+      toast.success(`Stream status updated to ${status}`);
+    } catch (error) {
+      toast.error('Error updating stream status');
+      console.error(error);
+    }
+  };
+
+  const orderColumns = [
+    { key: 'email', label: 'Email' },
+    { key: 'amount', label: 'Amount', render: (value) => `$${value}` },
+    { key: 'status', label: 'Status' },
+    { key: 'provider', label: 'Provider' },
+    { key: 'created_at', label: 'Date', render: (value) => new Date(value).toLocaleDateString() }
+  ];
+
+  const eventColumns = [
+    { key: 'title', label: 'Title' },
+    { key: 'date', label: 'Date', render: (value) => new Date(value).toLocaleDateString() },
+    { key: 'ppv_price', label: 'PPV Price', render: (value) => `$${value}` },
+    { key: 'ticket_price', label: 'Ticket Price', render: (value) => `$${value}` },
+    { key: 'is_active', label: 'Active', render: (value) => value ? 'Yes' : 'No' }
+  ];
+
+  const eventActions = [
+    {
+      label: 'Edit',
+      onClick: (event) => {
+        setEditingEvent(event);
+        setShowEventForm(true);
+      },
+      className: 'bg-blue-600 text-white hover:bg-blue-700'
+    },
+    {
+      label: 'Delete',
+      onClick: handleDeleteEvent,
+      className: 'bg-red-600 text-white hover:bg-red-700'
+    }
+  ];
+
+  const messageColumns = [
+    { key: 'display_name', label: 'User', render: (value, row) => row.profiles?.display_name || value || 'Anonymous' },
+    { key: 'message', label: 'Message' },
+    { key: 'created_at', label: 'Date', render: (value) => new Date(value).toLocaleString() }
+  ];
+
+  const messageActions = [
+    {
+      label: 'Delete',
+      onClick: handleDeleteMessage,
+      className: 'bg-red-600 text-white hover:bg-red-700'
+    }
+  ];
+
+  const logColumns = [
+    { key: 'status', label: 'Status' },
+    { key: 'bitrate', label: 'Bitrate' },
+    { key: 'notes', label: 'Notes' },
+    { key: 'created_at', label: 'Date', render: (value) => new Date(value).toLocaleString() }
+  ];
+
   return (
-    <div style={{ padding: '2rem' }}>
-      <h1>Admin Dashboard</h1>
-      <section>
-        <h2>Orders</h2>
-        <table border="1" cellPadding="5">
-          <thead>
-            <tr>
-              <th>Email</th>
-              <th>Product</th>
-              <th>Type</th>
-              <th>Timestamp</th>
-            </tr>
-          </thead>
-          <tbody>
-            {orders.map((o) => (
-              <tr key={o.id}>
-                <td>{o.email}</td>
-                <td>{o.product}</td>
-                <td>{o.type}</td>
-                <td>{o.timestamp}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </section>
+    <div className="min-h-screen bg-riot-black">
+      <Nav />
+      <Toaster position="top-center" />
+      
+      <main className="max-w-7xl mx-auto px-4 py-8">
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-4xl font-bold text-riot-red">Admin Dashboard</h1>
+          
+          <div className="flex items-center space-x-4">
+            <div className={`px-4 py-2 rounded-full text-sm font-semibold ${
+              streamStatus === 'LIVE' 
+                ? 'bg-green-600 text-white' 
+                : 'bg-gray-600 text-gray-300'
+            }`}>
+              Stream: {streamStatus}
+            </div>
+            
+            <button
+              onClick={() => updateStreamStatus(streamStatus === 'LIVE' ? 'DISCONNECTED' : 'LIVE')}
+              className={`px-4 py-2 rounded text-sm font-semibold ${
+                streamStatus === 'LIVE'
+                  ? 'bg-red-600 text-white hover:bg-red-700'
+                  : 'bg-green-600 text-white hover:bg-green-700'
+              }`}
+            >
+              {streamStatus === 'LIVE' ? 'Stop Stream' : 'Start Stream'}
+            </button>
+          </div>
+        </div>
 
-      <section>
-        <h2>Fan Uploads</h2>
-        <table border="1" cellPadding="5">
-          <thead>
-            <tr>
-              <th>File ID</th>
-              <th>Submitted By</th>
-              <th>Caption</th>
-              <th>Approved</th>
-              <th>Video URL</th>
-            </tr>
-          </thead>
-          <tbody>
-            {uploads.map((u) => (
-              <tr key={u.id || u.file_id}>
-                <td>{u.file_id}</td>
-                <td>{u.submitted_by}</td>
-                <td>{u.caption}</td>
-                <td>{u.approved ? 'Yes' : 'No'}</td>
-                <td>{u.video_url}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </section>
+        <div className="mb-8">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-2xl font-bold text-white">Events</h2>
+            <button
+              onClick={() => setShowEventForm(true)}
+              className="bg-riot-red text-white px-4 py-2 rounded hover:bg-red-700 transition-colors"
+            >
+              Create Event
+            </button>
+          </div>
+          <AdminTable
+            title=""
+            columns={eventColumns}
+            data={events}
+            actions={eventActions}
+          />
+        </div>
 
-      <section>
-        <h2>Stream Logs</h2>
-        <table border="1" cellPadding="5">
-          <thead>
-            <tr>
-              <th>Status</th>
-              <th>Checked At</th>
-            </tr>
-          </thead>
-          <tbody>
-            {logs.map((l) => (
-              <tr key={l.id}>
-                <td>{l.status}</td>
-                <td>{l.checked_at || l.timestamp}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </section>
+        <AdminTable
+          title="Orders"
+          columns={orderColumns}
+          data={orders}
+        />
 
-      <section>
-        <h2>Chat Messages</h2>
-        <table border="1" cellPadding="5">
-          <thead>
-            <tr>
-              <th>User</th>
-              <th>Message</th>
-              <th>Created At</th>
-            </tr>
-          </thead>
-          <tbody>
-            {messages.map((m) => (
-              <tr key={m.id}>
-                <td>{m.user_email}</td>
-                <td>{m.message}</td>
-                <td>{m.created_at}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </section>
+        <AdminTable
+          title="Chat Messages"
+          columns={messageColumns}
+          data={messages}
+          actions={messageActions}
+        />
 
-      <section>
-        <h2>Trivia Responses</h2>
-        <table border="1" cellPadding="5">
-          <thead>
-            <tr>
-              <th>User</th>
-              <th>Question ID</th>
-              <th>Selected Option</th>
-              <th>Correct</th>
-              <th>Created At</th>
-            </tr>
-          </thead>
-          <tbody>
-            {responses.map((r) => (
-              <tr key={r.id}>
-                <td>{r.user_email}</td>
-                <td>{r.question_id}</td>
-                <td>{r.selected_opt ?? r.selected_option}</td>
-                <td>{r.correct ? 'Yes' : 'No'}</td>
-                <td>{r.created_at}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </section>
+        <AdminTable
+          title="Stream Logs"
+          columns={logColumns}
+          data={logs}
+        />
+
+        {showEventForm && (
+          <EventForm
+            event={editingEvent}
+            onSave={handleSaveEvent}
+            onCancel={() => {
+              setShowEventForm(false);
+              setEditingEvent(null);
+            }}
+          />
+        )}
+      </main>
     </div>
   );
 }
