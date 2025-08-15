@@ -30,10 +30,7 @@ export default function Chat() {
     const fetchMessages = async () => {
       const { data, error } = await supabase
         .from('chat_messages')
-        .select(`
-          *,
-          profiles(display_name)
-        `)
+        .select('*')
         .order('created_at', { ascending: true });
       
       if (!error && data) {
@@ -102,7 +99,7 @@ export default function Chat() {
               <div key={msg.id} className="flex flex-col">
                 <div className="flex items-center space-x-2">
                   <span className="text-riot-red font-semibold text-sm">
-                    {msg.profiles?.display_name || msg.display_name || 'Anonymous'}
+                    {msg.display_name || 'Anonymous'}
                   </span>
                   <span className="text-gray-400 text-xs">
                     {new Date(msg.created_at).toLocaleTimeString()}

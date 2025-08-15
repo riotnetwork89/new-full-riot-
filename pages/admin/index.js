@@ -45,7 +45,7 @@ export default function Admin() {
       supabase.from('orders').select('*').order('created_at', { ascending: false }),
       supabase.from('events').select('*').order('date', { ascending: false }),
       supabase.from('stream_logs').select('*').order('created_at', { ascending: false }),
-      supabase.from('chat_messages').select('*, profiles(display_name)').order('created_at', { ascending: false })
+      supabase.from('chat_messages').select('*').order('created_at', { ascending: false })
     ]);
 
     setOrders(ordersResult.data || []);
@@ -170,7 +170,7 @@ export default function Admin() {
   ];
 
   const messageColumns = [
-    { key: 'display_name', label: 'User', render: (value, row) => row.profiles?.display_name || value || 'Anonymous' },
+    { key: 'display_name', label: 'User', render: (value) => value || 'Anonymous' },
     { key: 'message', label: 'Message' },
     { key: 'created_at', label: 'Date', render: (value) => new Date(value).toLocaleString() }
   ];
