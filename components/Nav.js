@@ -81,7 +81,7 @@ export default function Nav() {
       <div className="max-w-7xl mx-auto flex justify-between items-center">
         <Link href="/" className="group">
           <div className="riot-underline">
-            <span className="text-white text-4xl font-black tracking-tight">RIOT</span>
+            <span className="text-white text-4xl font-black tracking-tight">The Riot</span>
           </div>
         </Link>
         

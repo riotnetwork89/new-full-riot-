@@ -25,10 +25,7 @@ export default function ChatBox() {
     const fetchMessages = async () => {
       const { data, error } = await supabase
         .from('chat_messages')
-        .select(`
-          *,
-          profiles(display_name)
-        `)
+        .select('*')
         .order('created_at', { ascending: true });
       
       if (!error && data) {
@@ -84,7 +81,7 @@ export default function ChatBox() {
         {messages.map((msg) => (
           <div key={msg.id} className="text-sm">
             <span className="font-bold text-riot-red uppercase tracking-widest text-xs">
-              {msg.profiles?.display_name || msg.display_name || 'Anonymous'}:
+              {msg.display_name || 'Anonymous'}:
             </span>
             <span className="text-white ml-3 font-medium">{msg.message}</span>
           </div>
