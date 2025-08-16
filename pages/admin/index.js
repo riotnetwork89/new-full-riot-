@@ -147,7 +147,7 @@ export default function Admin() {
 
   const eventColumns = [
     { key: 'title', label: 'Title' },
-    { key: 'date', label: 'Date', render: (value) => new Date(value).toLocaleDateString() },
+    { key: 'date', label: 'Date', render: (value) => value ? new Date(value).toLocaleDateString() : 'No Date' },
     { key: 'ppv_price', label: 'PPV Price', render: (value) => `$${value}` },
     { key: 'ticket_price', label: 'Ticket Price', render: (value) => `$${value}` },
     { key: 'is_active', label: 'Active', render: (value) => value ? 'Yes' : 'No' }

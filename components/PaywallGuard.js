@@ -13,16 +13,21 @@ export default function PaywallGuard({ children }) {
     let mounted = true;
 
     (async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) {
+          if (mounted) setState({ loading: false, authed: false, hasAccess: false });
+          return;
+        }
+        const resp = await fetch("/api/has-access", {
+          headers: { Authorization: `Bearer ${session.access_token}` },
+        });
+        const info = await resp.json();
+        if (mounted) setState({ loading: false, authed: info.authed, hasAccess: info.hasAccess });
+      } catch (error) {
+        console.error('PaywallGuard fetch error:', error);
         if (mounted) setState({ loading: false, authed: false, hasAccess: false });
-        return;
       }
-      const resp = await fetch("/api/has-access", {
-        headers: { Authorization: `Bearer ${session.access_token}` },
-      });
-      const info = await resp.json();
-      if (mounted) setState({ loading: false, authed: info.authed, hasAccess: info.hasAccess });
     })();
 
     return () => { mounted = false; };
