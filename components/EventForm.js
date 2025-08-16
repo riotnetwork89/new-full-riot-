@@ -3,7 +3,7 @@ import { useState } from 'react';
 export default function EventForm({ event, onSave, onCancel }) {
   const [formData, setFormData] = useState({
     title: event?.title || '',
-    date: event?.date || '',
+    date: event?.date ? new Date(event.date).toISOString().slice(0, 16) : '',
     ppv_price: event?.ppv_price || 25,
     ticket_price: event?.ticket_price || 40,
     is_active: event?.is_active ?? true

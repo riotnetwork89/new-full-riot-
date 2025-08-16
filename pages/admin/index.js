@@ -60,10 +60,15 @@ export default function Admin() {
 
   const handleSaveEvent = async (eventData) => {
     try {
+      const processedData = {
+        ...eventData,
+        date: eventData.date ? new Date(eventData.date).toISOString() : null
+      };
+
       if (editingEvent) {
         const { error } = await supabase
           .from('events')
-          .update(eventData)
+          .update(processedData)
           .eq('id', editingEvent.id);
         
         if (error) throw error;
@@ -71,7 +76,7 @@ export default function Admin() {
       } else {
         const { error } = await supabase
           .from('events')
-          .insert(eventData);
+          .insert(processedData);
         
         if (error) throw error;
         toast.success('Event created successfully');
