@@ -15,7 +15,7 @@ export default function Login() {
     const checkUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
-        router.push('/');
+        router.push('/stream');
       }
     };
     checkUser();
@@ -31,7 +31,7 @@ export default function Login() {
         if (error) throw error;
         
         toast.success('Login successful!');
-        router.push('/');
+        router.push('/stream');
       } else {
         const { data, error } = await supabase.auth.signUp({ 
           email, 
