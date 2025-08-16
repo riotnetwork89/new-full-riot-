@@ -14,13 +14,15 @@ export default function Nav() {
       setUser(user);
       
       if (user) {
-        const { data: profile } = await supabase
+        const { data: profile, error } = await supabase
           .from('profiles')
           .select('role')
           .eq('email', user.email)
           .single();
         
+        console.log('Nav.js - Profile query result:', { profile, error, userEmail: user.email });
         setIsAdmin(profile?.role === 'admin');
+        console.log('Nav.js - Setting isAdmin to:', profile?.role === 'admin');
       } else {
         setIsAdmin(false);
       }
@@ -32,13 +34,15 @@ export default function Nav() {
       setUser(currentUser);
       
       if (currentUser) {
-        const { data: profile } = await supabase
+        const { data: profile, error } = await supabase
           .from('profiles')
           .select('role')
           .eq('email', currentUser.email)
           .single();
         
+        console.log('Nav.js - Auth state change profile query:', { profile, error, userEmail: currentUser.email });
         setIsAdmin(profile?.role === 'admin');
+        console.log('Nav.js - Auth state change setting isAdmin to:', profile?.role === 'admin');
       } else {
         setIsAdmin(false);
       }
