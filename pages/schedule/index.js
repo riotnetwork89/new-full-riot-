@@ -77,14 +77,14 @@ export default function Schedule() {
                   <div className="space-y-2">
                     <p className="text-gray-500 text-xs font-bold uppercase tracking-[0.2em]">Event Date</p>
                     <p className="text-white font-medium">
-                      {new Date(event.date).toLocaleDateString('en-US', {
+                      {event.date ? new Date(event.date).toLocaleDateString('en-US', {
                         weekday: 'long',
                         year: 'numeric',
                         month: 'long',
                         day: 'numeric',
                         hour: '2-digit',
                         minute: '2-digit'
-                      })}
+                      }) : 'Date TBD'}
                     </p>
                   </div>
                   <div className="space-y-2">

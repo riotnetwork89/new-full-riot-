@@ -14,22 +14,28 @@ export default function PaywallGuard({ children }) {
 
     const checkAuth = async () => {
       try {
+        console.log('PaywallGuard: Starting auth check');
         const { data: { user }, error: userErr } = await supabase.auth.getUser();
         if (userErr || !user) {
+          console.log('PaywallGuard: No user found', userErr);
           if (mounted) setState({ loading: false, authed: false, hasAccess: false });
           return;
         }
         
+        console.log('PaywallGuard: User found', user.email);
         const { data: { session } } = await supabase.auth.getSession();
         if (!session) {
+          console.log('PaywallGuard: No session found');
           if (mounted) setState({ loading: false, authed: false, hasAccess: false });
           return;
         }
         
+        console.log('PaywallGuard: Session found, checking access');
         const resp = await fetch("/api/has-access", {
           headers: { Authorization: `Bearer ${session.access_token}` },
         });
         const info = await resp.json();
+        console.log('PaywallGuard: Access check result', info);
         if (mounted) setState({ loading: false, authed: info.authed, hasAccess: info.hasAccess });
       } catch (error) {
         console.error('PaywallGuard fetch error:', error);
