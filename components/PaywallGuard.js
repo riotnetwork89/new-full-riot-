@@ -12,13 +12,20 @@ export default function PaywallGuard({ children }) {
   useEffect(() => {
     let mounted = true;
 
-    (async () => {
+    const checkAuth = async () => {
       try {
+        const { data: { user }, error: userErr } = await supabase.auth.getUser();
+        if (userErr || !user) {
+          if (mounted) setState({ loading: false, authed: false, hasAccess: false });
+          return;
+        }
+        
         const { data: { session } } = await supabase.auth.getSession();
         if (!session) {
           if (mounted) setState({ loading: false, authed: false, hasAccess: false });
           return;
         }
+        
         const resp = await fetch("/api/has-access", {
           headers: { Authorization: `Bearer ${session.access_token}` },
         });
@@ -28,9 +35,22 @@ export default function PaywallGuard({ children }) {
         console.error('PaywallGuard fetch error:', error);
         if (mounted) setState({ loading: false, authed: false, hasAccess: false });
       }
-    })();
+    };
 
-    return () => { mounted = false; };
+    checkAuth();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (mounted) {
+        if (event === 'SIGNED_IN' || event === 'SIGNED_OUT' || event === 'TOKEN_REFRESHED') {
+          checkAuth();
+        }
+      }
+    });
+
+    return () => { 
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   if (state.loading) return (
