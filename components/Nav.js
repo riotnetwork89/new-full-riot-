@@ -93,9 +93,6 @@ export default function Nav() {
           <Link href="/schedule" className="text-white hover:text-riot-red transition-colors font-semibold tracking-wide">
             SCHEDULE
           </Link>
-          <Link href="/trivia" className="text-white hover:text-riot-red transition-colors font-semibold tracking-wide">
-            TRIVIA
-          </Link>
           {isAdmin && (
             <Link href="/admin" className="text-riot-red hover:text-red-400 transition-colors font-semibold tracking-wide">
               ADMIN

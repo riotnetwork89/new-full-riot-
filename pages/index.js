@@ -104,7 +104,7 @@ export default function HomePage() {
           </div>
         )}
 
-        <section className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
           <Link href="/stream" className="group bg-riot-gray p-8 rounded-lg hover:bg-gray-700 transition-all transform hover:scale-105">
             <div className="text-center">
               <div className="w-16 h-16 bg-riot-red rounded-full mx-auto mb-4 flex items-center justify-center group-hover:animate-pulse">
@@ -122,16 +122,6 @@ export default function HomePage() {
               </div>
               <h3 className="text-2xl font-bold text-white mb-2">Schedule</h3>
               <p className="text-gray-300">Upcoming events and shows</p>
-            </div>
-          </Link>
-          
-          <Link href="/trivia" className="group bg-riot-gray p-8 rounded-lg hover:bg-gray-700 transition-all transform hover:scale-105">
-            <div className="text-center">
-              <div className="w-16 h-16 bg-riot-red rounded-full mx-auto mb-4 flex items-center justify-center">
-                <span className="text-white text-2xl">❓</span>
-              </div>
-              <h3 className="text-2xl font-bold text-riot-red mb-2">Trivia</h3>
-              <p className="text-gray-300">Interactive games and prizes</p>
             </div>
           </Link>
         </section>
