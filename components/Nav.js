@@ -5,17 +5,43 @@ import { useRouter } from 'next/router';
 
 export default function Nav() {
   const [user, setUser] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
     const getUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       setUser(user);
+      
+      if (user) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', user.id)
+          .single();
+        
+        setIsAdmin(profile?.role === 'admin');
+      } else {
+        setIsAdmin(false);
+      }
     };
     getUser();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      setUser(session?.user || null);
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      const currentUser = session?.user || null;
+      setUser(currentUser);
+      
+      if (currentUser) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', currentUser.id)
+          .single();
+        
+        setIsAdmin(profile?.role === 'admin');
+      } else {
+        setIsAdmin(false);
+      }
     });
 
     return () => subscription.unsubscribe();
@@ -27,42 +53,47 @@ export default function Nav() {
   };
 
   return (
-    <nav className="bg-riot-black border-b border-riot-red p-4">
+    <nav className="bg-riot-black border-b border-riot-red p-4 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto flex justify-between items-center">
-        <Link href="/" className="text-2xl font-bold text-riot-red">
-          THE RIOT NETWORK
+        <Link href="/" className="text-3xl font-bold text-white tracking-wider">
+          <span className="bg-riot-red px-3 py-1 rounded">RIOT</span>
         </Link>
         
-        <div className="flex space-x-6">
-          <Link href="/stream" className="text-white hover:text-riot-red transition-colors">
-            LIVE
+        <div className="flex space-x-8">
+          <Link href="/" className="text-white hover:text-riot-red transition-colors font-semibold tracking-wide">
+            HOME
           </Link>
-          <Link href="/chat" className="text-white hover:text-riot-red transition-colors">
-            CHAT
+          <Link href="/stream" className="text-white hover:text-riot-red transition-colors font-semibold tracking-wide">
+            STREAM
           </Link>
-          <Link href="/schedule" className="text-white hover:text-riot-red transition-colors">
+          <Link href="/schedule" className="text-white hover:text-riot-red transition-colors font-semibold tracking-wide">
             SCHEDULE
           </Link>
-          <Link href="/merch" className="text-white hover:text-riot-red transition-colors">
-            MERCH
+          <Link href="/trivia" className="text-white hover:text-riot-red transition-colors font-semibold tracking-wide">
+            TRIVIA
           </Link>
+          {isAdmin && (
+            <Link href="/admin" className="text-riot-red hover:text-red-400 transition-colors font-semibold tracking-wide">
+              ADMIN
+            </Link>
+          )}
         </div>
 
         <div className="flex space-x-4">
           {user ? (
             <>
-              <Link href="/profile" className="text-white hover:text-riot-red transition-colors">
+              <Link href="/profile" className="text-white hover:text-riot-red transition-colors font-medium">
                 Profile
               </Link>
               <button 
                 onClick={handleLogout}
-                className="text-white hover:text-riot-red transition-colors"
+                className="text-white hover:text-riot-red transition-colors font-medium"
               >
                 Logout
               </button>
             </>
           ) : (
-            <Link href="/login" className="text-white hover:text-riot-red transition-colors">
+            <Link href="/login" className="bg-riot-red text-white px-4 py-2 rounded hover:bg-red-700 transition-colors font-semibold">
               Login
             </Link>
           )}
