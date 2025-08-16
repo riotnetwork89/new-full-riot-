@@ -77,7 +77,7 @@ export default function Schedule() {
                   <div className="space-y-2">
                     <p className="text-gray-500 text-xs font-bold uppercase tracking-[0.2em]">Event Date</p>
                     <p className="text-white font-medium">
-                      {event.date ? new Date(event.date).toLocaleDateString('en-US', {
+                      {event.date && !isNaN(new Date(event.date)) ? new Date(event.date).toLocaleDateString('en-US', {
                         weekday: 'long',
                         year: 'numeric',
                         month: 'long',
