@@ -24,18 +24,28 @@ export default function PaywallGuard({ children, requireAccess = true }) {
       setUser(user);
 
       if (requireAccess) {
-        const { data } = await supabase
-          .from('orders')
-          .select('id')
-          .eq('email', user.email)
-          .eq('status', 'COMPLETED')
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', user.id)
           .single();
 
-        if (data) {
+        if (profile?.role === 'admin') {
           setHasAccess(true);
         } else {
-          router.push('/checkout');
-          return;
+          const { data } = await supabase
+            .from('orders')
+            .select('id')
+            .eq('email', user.email)
+            .eq('status', 'COMPLETED')
+            .single();
+
+          if (data) {
+            setHasAccess(true);
+          } else {
+            router.push('/checkout');
+            return;
+          }
         }
       } else {
         setHasAccess(true);
