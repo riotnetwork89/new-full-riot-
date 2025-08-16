@@ -21,13 +21,12 @@ export default function Nav() {
             .eq('email', user.email)
             .single();
           
-          if (!error && profile) {
-            setIsAdmin(profile.role === 'admin');
+          if (!error && profile && profile.role === 'admin') {
+            setIsAdmin(true);
           } else {
             setIsAdmin(false);
           }
         } catch (err) {
-          console.error('Nav.js - Error fetching profile:', err);
           setIsAdmin(false);
         }
       } else {
@@ -48,13 +47,12 @@ export default function Nav() {
             .eq('email', currentUser.email)
             .single();
           
-          if (!error && profile) {
-            setIsAdmin(profile.role === 'admin');
+          if (!error && profile && profile.role === 'admin') {
+            setIsAdmin(true);
           } else {
             setIsAdmin(false);
           }
         } catch (err) {
-          console.error('Nav.js - Auth state change error:', err);
           setIsAdmin(false);
         }
       } else {
