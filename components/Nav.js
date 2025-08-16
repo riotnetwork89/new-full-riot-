@@ -17,7 +17,7 @@ export default function Nav() {
         const { data: profile } = await supabase
           .from('profiles')
           .select('role')
-          .eq('id', user.id)
+          .eq('email', user.email)
           .single();
         
         setIsAdmin(profile?.role === 'admin');
@@ -35,7 +35,7 @@ export default function Nav() {
         const { data: profile } = await supabase
           .from('profiles')
           .select('role')
-          .eq('id', currentUser.id)
+          .eq('email', currentUser.email)
           .single();
         
         setIsAdmin(profile?.role === 'admin');
