@@ -64,24 +64,26 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-riot-black">
+    <div className="min-h-screen bg-black font-riot">
       <Nav />
       <Toaster position="top-center" />
       
-      <main className="flex items-center justify-center py-12 px-4">
-        <div className="max-w-md w-full bg-riot-gray rounded-lg p-8">
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-riot-red mb-2">
-              {isLogin ? 'Welcome Back' : 'Join The Riot'}
-            </h1>
-            <p className="text-gray-300">
+      <main className="flex items-center justify-center py-32 px-8">
+        <div className="max-w-md w-full bg-black border border-gray-800 p-16">
+          <div className="text-center mb-12">
+            <div className="riot-underline inline-block">
+              <h1 className="text-4xl font-black text-white mb-4 uppercase tracking-tight">
+                {isLogin ? 'Welcome Back' : 'Join The Riot'}
+              </h1>
+            </div>
+            <p className="text-gray-500 text-sm uppercase tracking-[0.2em]">
               {isLogin ? 'Sign in to your account' : 'Create your account'}
             </p>
           </div>
 
-          <form onSubmit={handleAuth} className="space-y-6">
+          <form onSubmit={handleAuth} className="space-y-8">
             <div>
-              <label className="block text-white text-sm font-medium mb-2">
+              <label className="block text-gray-500 text-xs font-bold uppercase tracking-[0.2em] mb-4">
                 Email Address
               </label>
               <input
@@ -90,12 +92,12 @@ export default function Login() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full px-4 py-3 bg-riot-black text-white border border-riot-red rounded-lg focus:outline-none focus:border-riot-red"
+                className="w-full px-6 py-4 bg-black text-white border border-gray-800 focus:outline-none focus:border-riot-red font-medium"
               />
             </div>
 
             <div>
-              <label className="block text-white text-sm font-medium mb-2">
+              <label className="block text-gray-500 text-xs font-bold uppercase tracking-[0.2em] mb-4">
                 Password
               </label>
               <input
@@ -105,23 +107,23 @@ export default function Login() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 minLength={6}
-                className="w-full px-4 py-3 bg-riot-black text-white border border-riot-red rounded-lg focus:outline-none focus:border-riot-red"
+                className="w-full px-6 py-4 bg-black text-white border border-gray-800 focus:outline-none focus:border-riot-red font-medium"
               />
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-riot-red text-white py-3 px-4 rounded-lg font-semibold hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-riot-red text-white py-4 px-6 font-bold uppercase tracking-[0.1em] hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? 'Processing...' : (isLogin ? 'Sign In' : 'Create Account')}
             </button>
           </form>
 
-          <div className="mt-6 text-center">
+          <div className="mt-8 text-center">
             <button
               onClick={() => setIsLogin(!isLogin)}
-              className="text-riot-red hover:text-red-400 transition-colors"
+              className="text-riot-red hover:text-red-400 transition-colors text-sm uppercase tracking-widest"
             >
               {isLogin 
                 ? "Don't have an account? Sign up" 

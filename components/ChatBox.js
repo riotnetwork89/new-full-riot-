@@ -79,37 +79,37 @@ export default function ChatBox() {
   }
 
   return (
-    <div className="bg-riot-gray rounded-lg p-4 h-96 flex flex-col">
-      <div className="flex-1 overflow-y-auto mb-4 space-y-2">
+    <div className="bg-black border border-gray-800 p-8 h-96 flex flex-col">
+      <div className="flex-1 overflow-y-auto mb-6 space-y-4">
         {messages.map((msg) => (
           <div key={msg.id} className="text-sm">
-            <span className="text-riot-red font-semibold">
+            <span className="font-bold text-riot-red uppercase tracking-widest text-xs">
               {msg.profiles?.display_name || msg.display_name || 'Anonymous'}:
             </span>
-            <span className="text-white ml-2">{msg.message}</span>
+            <span className="text-white ml-3 font-medium">{msg.message}</span>
           </div>
         ))}
         <div ref={messagesEndRef} />
       </div>
       
       {user ? (
-        <form onSubmit={handleSend} className="flex gap-2">
+        <form onSubmit={handleSend} className="flex space-x-4">
           <input
             type="text"
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
             placeholder="Type a message..."
-            className="flex-1 px-3 py-2 bg-riot-black text-white border border-riot-red rounded focus:outline-none focus:border-riot-red"
+            className="flex-1 px-4 py-3 bg-black text-white border border-gray-800 focus:outline-none focus:border-riot-red font-medium"
           />
           <button
             type="submit"
-            className="px-4 py-2 bg-riot-red text-white rounded hover:bg-red-700 transition-colors"
+            className="bg-riot-red text-white px-6 py-3 font-bold uppercase tracking-widest hover:bg-red-700 transition-colors text-xs"
           >
             Send
           </button>
         </form>
       ) : (
-        <div className="text-center text-gray-400">
+        <div className="text-center text-gray-500 text-xs uppercase tracking-widest">
           Please log in to chat
         </div>
       )}

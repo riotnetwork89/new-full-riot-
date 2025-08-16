@@ -132,20 +132,22 @@ export default function Schedule() {
   }
 
   return (
-    <div className="min-h-screen bg-riot-black">
+    <div className="min-h-screen bg-black font-riot">
       <Nav />
       <Toaster position="top-center" />
       
-      <main className="max-w-7xl mx-auto px-4 py-12">
-        <div className="text-center mb-12">
-          <h1 className="text-6xl font-bold text-white mb-4">
-            RIOT <span className="text-riot-red">SCHEDULE</span>
-          </h1>
-          <p className="text-gray-300 text-xl">Upcoming Events & Live Shows</p>
+      <main className="max-w-7xl mx-auto px-8 py-16">
+        <div className="text-center mb-16">
+          <div className="riot-underline inline-block">
+            <h1 className="text-6xl font-black text-white uppercase tracking-tight">
+              Events
+            </h1>
+          </div>
+          <p className="text-gray-500 text-sm uppercase tracking-[0.2em] mt-8">Upcoming Events & Live Shows</p>
         </div>
 
         {isAdmin && (
-          <div className="mb-8 text-center">
+          <div className="mb-16 text-center">
             <button
               onClick={() => {
                 setShowCreateForm(!showCreateForm);
@@ -158,7 +160,7 @@ export default function Schedule() {
                   is_active: true
                 });
               }}
-              className="bg-riot-red text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors font-semibold"
+              className="bg-riot-red text-white px-12 py-4 font-bold uppercase tracking-widest hover:bg-red-700 transition-colors"
             >
               {showCreateForm ? 'Cancel' : 'Create New Event'}
             </button>
@@ -166,34 +168,34 @@ export default function Schedule() {
         )}
 
         {showCreateForm && isAdmin && (
-          <div className="bg-riot-gray rounded-lg p-6 mb-8 max-w-2xl mx-auto">
-            <h2 className="text-2xl font-bold text-riot-red mb-6">
+          <div className="bg-black border border-gray-800 p-12 mb-16 max-w-3xl mx-auto">
+            <h2 className="text-3xl font-black text-white uppercase tracking-wide mb-12">
               {editingEvent ? 'Edit Event' : 'Create New Event'}
             </h2>
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-8">
               <div>
-                <label className="block text-white text-sm font-medium mb-2">Event Title</label>
+                <label className="block text-gray-500 text-xs font-bold uppercase tracking-[0.2em] mb-4">Event Title</label>
                 <input
                   type="text"
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                   required
-                  className="w-full px-4 py-3 bg-riot-black text-white border border-riot-red rounded-lg focus:outline-none focus:border-riot-red"
+                  className="w-full px-6 py-4 bg-black text-white border border-gray-800 focus:outline-none focus:border-riot-red font-medium"
                 />
               </div>
               <div>
-                <label className="block text-white text-sm font-medium mb-2">Event Date</label>
+                <label className="block text-gray-500 text-xs font-bold uppercase tracking-[0.2em] mb-4">Event Date</label>
                 <input
                   type="datetime-local"
                   value={formData.date}
                   onChange={(e) => setFormData({ ...formData, date: e.target.value })}
                   required
-                  className="w-full px-4 py-3 bg-riot-black text-white border border-riot-red rounded-lg focus:outline-none focus:border-riot-red"
+                  className="w-full px-6 py-4 bg-black text-white border border-gray-800 focus:outline-none focus:border-riot-red font-medium"
                 />
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-8">
                 <div>
-                  <label className="block text-white text-sm font-medium mb-2">PPV Price ($)</label>
+                  <label className="block text-gray-500 text-xs font-bold uppercase tracking-[0.2em] mb-4">PPV Price ($)</label>
                   <input
                     type="number"
                     value={formData.ppv_price}
@@ -201,11 +203,11 @@ export default function Schedule() {
                     required
                     min="0"
                     step="0.01"
-                    className="w-full px-4 py-3 bg-riot-black text-white border border-riot-red rounded-lg focus:outline-none focus:border-riot-red"
+                    className="w-full px-6 py-4 bg-black text-white border border-gray-800 focus:outline-none focus:border-riot-red font-medium"
                   />
                 </div>
                 <div>
-                  <label className="block text-white text-sm font-medium mb-2">Ticket Price ($)</label>
+                  <label className="block text-gray-500 text-xs font-bold uppercase tracking-[0.2em] mb-4">Ticket Price ($)</label>
                   <input
                     type="number"
                     value={formData.ticket_price}
@@ -213,23 +215,23 @@ export default function Schedule() {
                     required
                     min="0"
                     step="0.01"
-                    className="w-full px-4 py-3 bg-riot-black text-white border border-riot-red rounded-lg focus:outline-none focus:border-riot-red"
+                    className="w-full px-6 py-4 bg-black text-white border border-gray-800 focus:outline-none focus:border-riot-red font-medium"
                   />
                 </div>
               </div>
-              <div className="flex items-center">
+              <div className="flex items-center space-x-4">
                 <input
                   type="checkbox"
                   id="is_active"
                   checked={formData.is_active}
                   onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })}
-                  className="mr-2"
+                  className="w-4 h-4"
                 />
-                <label htmlFor="is_active" className="text-white">Active Event</label>
+                <label htmlFor="is_active" className="text-white font-medium">Active Event</label>
               </div>
               <button
                 type="submit"
-                className="w-full bg-riot-red text-white py-3 px-4 rounded-lg font-semibold hover:bg-red-700 transition-colors"
+                className="w-full bg-riot-red text-white py-4 px-6 font-bold uppercase tracking-[0.1em] hover:bg-red-700 transition-colors"
               >
                 {editingEvent ? 'Update Event' : 'Create Event'}
               </button>
@@ -237,62 +239,67 @@ export default function Schedule() {
           </div>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
           {events.map((event) => (
-            <div key={event.id} className="bg-riot-gray rounded-lg overflow-hidden shadow-lg">
-              <div className="p-6">
-                <div className="flex justify-between items-start mb-4">
-                  <h3 className="text-2xl font-bold text-white">{event.title}</h3>
+            <div key={event.id} className="bg-black border border-gray-800 p-12">
+              <div className="space-y-8">
+                <div className="flex justify-between items-start">
+                  <h3 className="text-2xl font-black text-white uppercase tracking-wide">{event.title}</h3>
                   {event.is_active && (
-                    <span className="bg-green-500 text-white px-2 py-1 rounded text-sm font-semibold">
+                    <span className="bg-green-600 text-white px-3 py-1 text-xs font-bold uppercase tracking-widest">
                       ACTIVE
                     </span>
                   )}
                 </div>
                 
-                <div className="text-gray-300 mb-4">
-                  <p className="mb-2">
-                    📅 {new Date(event.date).toLocaleDateString('en-US', {
-                      weekday: 'long',
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric',
-                      hour: '2-digit',
-                      minute: '2-digit'
-                    })}
-                  </p>
-                  <p className="mb-1">💰 PPV: ${event.ppv_price}</p>
-                  <p>🎫 Ticket: ${event.ticket_price}</p>
+                <div className="space-y-6">
+                  <div className="space-y-2">
+                    <p className="text-gray-500 text-xs font-bold uppercase tracking-[0.2em]">Event Date</p>
+                    <p className="text-white font-medium">
+                      {new Date(event.date).toLocaleDateString('en-US', {
+                        weekday: 'long',
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                      })}
+                    </p>
+                  </div>
+                  <div className="space-y-2">
+                    <p className="text-gray-500 text-xs font-bold uppercase tracking-[0.2em]">PPV Price</p>
+                    <p className="text-white text-2xl font-black">${event.ppv_price}</p>
+                  </div>
                 </div>
 
-                <div className="flex flex-col space-y-3">
+                <div className="space-y-4">
                   {user ? (
                     <button
                       onClick={() => handlePurchase(event)}
-                      className="bg-riot-red text-white py-3 px-4 rounded-lg font-semibold hover:bg-red-700 transition-colors"
+                      className="w-full bg-riot-red text-white py-4 px-6 font-bold uppercase tracking-[0.1em] hover:bg-red-700 transition-colors"
                     >
                       BUY ACCESS - ${event.ppv_price}
                     </button>
                   ) : (
                     <button
                       onClick={() => router.push('/login')}
-                      className="bg-riot-red text-white py-3 px-4 rounded-lg font-semibold hover:bg-red-700 transition-colors"
+                      className="w-full bg-riot-red text-white py-4 px-6 font-bold uppercase tracking-[0.1em] hover:bg-red-700 transition-colors"
                     >
                       LOGIN TO PURCHASE
                     </button>
                   )}
                   
                   {isAdmin && (
-                    <div className="flex space-x-2">
+                    <div className="flex space-x-4">
                       <button
                         onClick={() => handleEdit(event)}
-                        className="flex-1 bg-blue-600 text-white py-2 px-3 rounded hover:bg-blue-700 transition-colors text-sm"
+                        className="flex-1 bg-blue-600 text-white py-3 px-4 font-bold uppercase tracking-widest hover:bg-blue-700 transition-colors text-xs"
                       >
                         Edit
                       </button>
                       <button
                         onClick={() => handleDelete(event.id)}
-                        className="flex-1 bg-red-600 text-white py-2 px-3 rounded hover:bg-red-700 transition-colors text-sm"
+                        className="flex-1 bg-red-600 text-white py-3 px-4 font-bold uppercase tracking-widest hover:bg-red-700 transition-colors text-xs"
                       >
                         Delete
                       </button>
@@ -305,10 +312,10 @@ export default function Schedule() {
         </div>
 
         {events.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-gray-400 text-xl">No events scheduled at this time.</p>
+          <div className="text-center py-32">
+            <p className="text-gray-500 text-xl uppercase tracking-widest">No events scheduled at this time.</p>
             {isAdmin && (
-              <p className="text-gray-500 mt-2">Create your first event using the button above.</p>
+              <p className="text-gray-600 text-sm uppercase tracking-widest mt-4">Create your first event using the button above.</p>
             )}
           </div>
         )}

@@ -10,9 +10,17 @@ module.exports = {
       colors: {
         riot: {
           black: '#000000',
-          red: '#ff0000',
-          gray: '#333333',
+          red: '#dc2626',
+          gray: '#1a1a1a',
         }
+      },
+      fontFamily: {
+        'riot': ['Inter', 'system-ui', 'sans-serif'],
+      },
+      fontSize: {
+        '10xl': '10rem',
+        '11xl': '12rem',
+        '12xl': '14rem',
       }
     },
   },

@@ -85,56 +85,68 @@ export default function Checkout() {
   }
 
   return (
-    <div className="min-h-screen bg-riot-black">
+    <div className="min-h-screen bg-black font-riot">
       <Nav />
       <Toaster position="top-center" />
       
-      <main className="max-w-2xl mx-auto px-4 py-8">
-        <div className="bg-riot-gray rounded-lg p-8">
-          <h1 className="text-4xl font-bold text-riot-red mb-6 text-center">
-            Checkout
-          </h1>
+      <main className="max-w-3xl mx-auto px-8 py-32">
+        <div className="bg-black border border-gray-800 p-16">
+          <div className="text-center mb-16">
+            <div className="riot-underline inline-block">
+              <h1 className="text-5xl font-black text-white uppercase tracking-tight">
+                Purchase Access
+              </h1>
+            </div>
+          </div>
           
           {activeEvent ? (
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold text-white mb-4">{activeEvent.title}</h2>
-              <p className="text-gray-300 mb-2">
-                Event Date: {new Date(activeEvent.date).toLocaleDateString('en-US', {
-                  weekday: 'long',
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                  hour: '2-digit',
-                  minute: '2-digit'
-                })}
-              </p>
-              <p className="text-3xl font-bold text-riot-red mb-6">
-                ${activeEvent.ppv_price}
-              </p>
+            <div className="space-y-12">
+              <div className="text-center space-y-8">
+                <h2 className="text-3xl font-black text-white uppercase tracking-wide">{activeEvent.title}</h2>
+                <div className="space-y-4">
+                  <p className="text-gray-500 text-xs font-bold uppercase tracking-[0.2em]">Event Date</p>
+                  <p className="text-white text-xl font-medium">
+                    {new Date(activeEvent.date).toLocaleDateString('en-US', {
+                      weekday: 'long',
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    })}
+                  </p>
+                </div>
+                <div className="space-y-4">
+                  <p className="text-white text-5xl font-black">${activeEvent.ppv_price}.00</p>
+                  <p className="text-gray-500 text-xs uppercase tracking-[0.2em]">Per Event Access</p>
+                </div>
+              </div>
               
-              <PayPalScriptProvider options={{
-                "client-id": process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
-                currency: "USD"
-              }}>
-                <PayPalButtons
-                  createOrder={createOrder}
-                  onApprove={onApprove}
-                  onError={onError}
-                  style={{
-                    layout: 'vertical',
-                    color: 'red',
-                    shape: 'rect',
-                    label: 'paypal'
-                  }}
-                />
-              </PayPalScriptProvider>
+              <div className="max-w-md mx-auto">
+                <PayPalScriptProvider options={{
+                  "client-id": process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
+                  currency: "USD"
+                }}>
+                  <PayPalButtons
+                    createOrder={createOrder}
+                    onApprove={onApprove}
+                    onError={onError}
+                    style={{
+                      layout: 'vertical',
+                      color: 'red',
+                      shape: 'rect',
+                      label: 'paypal'
+                    }}
+                  />
+                </PayPalScriptProvider>
+              </div>
             </div>
           ) : (
-            <div className="text-center">
-              <p className="text-white text-xl mb-4">No active events available</p>
+            <div className="text-center space-y-8">
+              <p className="text-white text-xl font-bold uppercase tracking-wide">No active events available</p>
               <button
                 onClick={() => router.push('/')}
-                className="bg-riot-red text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors"
+                className="bg-riot-red text-white px-12 py-4 font-bold uppercase tracking-widest hover:bg-red-700 transition-colors"
               >
                 Back to Home
               </button>

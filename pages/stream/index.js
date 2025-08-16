@@ -41,25 +41,27 @@ export default function Stream() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-riot-black">
+    <div className="min-h-screen bg-black font-riot">
       <Nav />
       
       <PaywallGuard requireAccess={true}>
-        <main className="max-w-7xl mx-auto px-4 py-8">
-          <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-riot-red mb-4">Live Stream</h1>
-            <div className={`inline-block px-4 py-2 rounded-full text-sm font-semibold ${
+        <main className="max-w-7xl mx-auto px-8 py-16">
+          <div className="text-center mb-16">
+            <div className="riot-underline inline-block">
+              <h1 className="text-5xl font-black text-white uppercase tracking-tight">Live Stream</h1>
+            </div>
+            <div className={`inline-block px-8 py-4 mt-8 text-sm font-bold uppercase tracking-[0.2em] ${
               streamStatus === 'LIVE' 
                 ? 'bg-green-600 text-white' 
-                : 'bg-gray-600 text-gray-300'
+                : 'bg-gray-800 text-gray-300'
             }`}>
-              {streamStatus === 'LIVE' ? '🔴 LIVE' : '⚫ OFFLINE'}
+              {streamStatus === 'LIVE' ? 'LIVE' : 'OFFLINE'}
             </div>
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2">
-              <div className="bg-riot-gray rounded-lg overflow-hidden">
+          <div className="grid lg:grid-cols-4 gap-12">
+            <div className="lg:col-span-3">
+              <div className="bg-black border border-gray-800">
                 {process.env.NEXT_PUBLIC_MUX_PLAYBACK_ID ? (
                   <MuxPlayer
                     playbackId={process.env.NEXT_PUBLIC_MUX_PLAYBACK_ID}
@@ -71,15 +73,20 @@ export default function Stream() {
                     }}
                   />
                 ) : (
-                  <div className="aspect-video flex items-center justify-center bg-riot-black">
-                    <p className="text-white text-xl">Stream not configured</p>
+                  <div className="aspect-video flex items-center justify-center bg-black">
+                    <div className="text-center space-y-4">
+                      <div className="w-24 h-24 bg-riot-red mx-auto flex items-center justify-center">
+                        <div className="w-0 h-0 border-l-[16px] border-l-white border-t-[10px] border-t-transparent border-b-[10px] border-b-transparent ml-1"></div>
+                      </div>
+                      <p className="text-white text-xl font-bold uppercase tracking-wide">Stream not configured</p>
+                    </div>
                   </div>
                 )}
               </div>
               
               {streamStatus !== 'LIVE' && (
-                <div className="mt-4 p-4 bg-yellow-900 border border-yellow-600 rounded-lg">
-                  <p className="text-yellow-200">
+                <div className="mt-8 p-8 bg-black border border-gray-800">
+                  <p className="text-gray-400 text-sm uppercase tracking-widest">
                     The stream is currently offline. Please check back later or follow our social media for updates.
                   </p>
                 </div>
@@ -87,7 +94,7 @@ export default function Stream() {
             </div>
 
             <div className="lg:col-span-1">
-              <h2 className="text-2xl font-bold text-white mb-4">Live Chat</h2>
+              <h2 className="text-2xl font-black text-white uppercase tracking-wide mb-8">Live Chat</h2>
               <ChatBox />
             </div>
           </div>

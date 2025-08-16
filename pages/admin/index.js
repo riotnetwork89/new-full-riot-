@@ -191,26 +191,28 @@ export default function Admin() {
   ];
 
   return (
-    <div className="min-h-screen bg-riot-black">
+    <div className="min-h-screen bg-black font-riot">
       <Nav />
       <Toaster position="top-center" />
       
-      <main className="max-w-7xl mx-auto px-4 py-8">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl font-bold text-riot-red">Admin Dashboard</h1>
+      <main className="max-w-7xl mx-auto px-8 py-16">
+        <div className="flex justify-between items-center mb-16">
+          <div className="riot-underline">
+            <h1 className="text-5xl font-black text-white uppercase tracking-tight">Admin</h1>
+          </div>
           
-          <div className="flex items-center space-x-4">
-            <div className={`px-4 py-2 rounded-full text-sm font-semibold ${
+          <div className="flex items-center space-x-6">
+            <div className={`px-6 py-3 text-sm font-bold uppercase tracking-widest ${
               streamStatus === 'LIVE' 
                 ? 'bg-green-600 text-white' 
-                : 'bg-gray-600 text-gray-300'
+                : 'bg-gray-800 text-gray-300'
             }`}>
               Stream: {streamStatus}
             </div>
             
             <button
               onClick={() => updateStreamStatus(streamStatus === 'LIVE' ? 'DISCONNECTED' : 'LIVE')}
-              className={`px-4 py-2 rounded text-sm font-semibold ${
+              className={`px-6 py-3 text-sm font-bold uppercase tracking-widest transition-colors ${
                 streamStatus === 'LIVE'
                   ? 'bg-red-600 text-white hover:bg-red-700'
                   : 'bg-green-600 text-white hover:bg-green-700'
@@ -221,12 +223,12 @@ export default function Admin() {
           </div>
         </div>
 
-        <div className="mb-8">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-2xl font-bold text-white">Events</h2>
+        <div className="mb-16">
+          <div className="flex justify-between items-center mb-8">
+            <h2 className="text-3xl font-black text-white uppercase tracking-wide">Events</h2>
             <button
               onClick={() => setShowEventForm(true)}
-              className="bg-riot-red text-white px-4 py-2 rounded hover:bg-red-700 transition-colors"
+              className="bg-riot-red text-white px-8 py-4 font-bold uppercase tracking-widest hover:bg-red-700 transition-colors"
             >
               Create Event
             </button>
@@ -239,24 +241,35 @@ export default function Admin() {
           />
         </div>
 
-        <AdminTable
-          title="Orders"
-          columns={orderColumns}
-          data={orders}
-        />
+        <div className="space-y-16">
+          <div>
+            <h2 className="text-3xl font-black text-white uppercase tracking-wide mb-8">Orders</h2>
+            <AdminTable
+              title=""
+              columns={orderColumns}
+              data={orders}
+            />
+          </div>
 
-        <AdminTable
-          title="Chat Messages"
-          columns={messageColumns}
-          data={messages}
-          actions={messageActions}
-        />
+          <div>
+            <h2 className="text-3xl font-black text-white uppercase tracking-wide mb-8">Questions</h2>
+            <AdminTable
+              title=""
+              columns={messageColumns}
+              data={messages}
+              actions={messageActions}
+            />
+          </div>
 
-        <AdminTable
-          title="Stream Logs"
-          columns={logColumns}
-          data={logs}
-        />
+          <div>
+            <h2 className="text-3xl font-black text-white uppercase tracking-wide mb-8">Analytics</h2>
+            <AdminTable
+              title=""
+              columns={logColumns}
+              data={logs}
+            />
+          </div>
+        </div>
 
         {showEventForm && (
           <EventForm

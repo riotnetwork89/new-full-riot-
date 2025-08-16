@@ -1,35 +1,35 @@
 export default function AdminTable({ title, columns, data, actions }) {
   return (
-    <section className="mb-8">
-      <h2 className="text-2xl font-bold text-white mb-4">{title}</h2>
-      <div className="overflow-x-auto">
-        <table className="w-full bg-riot-gray rounded-lg overflow-hidden">
-          <thead className="bg-riot-red">
+    <div className="mb-16">
+      {title && <h2 className="text-3xl font-black text-white uppercase tracking-wide mb-8">{title}</h2>}
+      <div className="bg-black border border-gray-800">
+        <table className="w-full">
+          <thead className="bg-black border-b border-gray-800">
             <tr>
-              {columns.map((col) => (
-                <th key={col.key} className="px-4 py-3 text-left text-white font-semibold">
-                  {col.label}
+              {columns.map((column) => (
+                <th key={column.key} className="px-8 py-6 text-left text-xs font-bold text-gray-500 uppercase tracking-[0.2em]">
+                  {column.label}
                 </th>
               ))}
-              {actions && <th className="px-4 py-3 text-left text-white font-semibold">Actions</th>}
+              {actions && <th className="px-8 py-6 text-left text-xs font-bold text-gray-500 uppercase tracking-[0.2em]">Actions</th>}
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-gray-800">
             {data.map((row, index) => (
-              <tr key={row.id || index} className="border-b border-riot-black hover:bg-gray-800">
-                {columns.map((col) => (
-                  <td key={col.key} className="px-4 py-3 text-white">
-                    {col.render ? col.render(row[col.key], row) : row[col.key]}
+              <tr key={index} className="hover:bg-riot-gray">
+                {columns.map((column) => (
+                  <td key={column.key} className="px-8 py-6 whitespace-nowrap text-sm text-white font-medium">
+                    {column.render ? column.render(row[column.key], row) : row[column.key]}
                   </td>
                 ))}
                 {actions && (
-                  <td className="px-4 py-3">
-                    <div className="flex space-x-2">
+                  <td className="px-8 py-6 whitespace-nowrap text-sm">
+                    <div className="flex space-x-4">
                       {actions.map((action, actionIndex) => (
                         <button
                           key={actionIndex}
                           onClick={() => action.onClick(row)}
-                          className={`px-3 py-1 rounded text-sm ${action.className || 'bg-riot-red text-white hover:bg-red-700'}`}
+                          className={`px-4 py-2 text-xs font-bold uppercase tracking-widest transition-colors ${action.className}`}
                         >
                           {action.label}
                         </button>
@@ -41,7 +41,12 @@ export default function AdminTable({ title, columns, data, actions }) {
             ))}
           </tbody>
         </table>
+        {data.length === 0 && (
+          <div className="text-center py-16 text-gray-500 text-sm uppercase tracking-widest">
+            No data available
+          </div>
+        )}
       </div>
-    </section>
+    </div>
   );
 }
