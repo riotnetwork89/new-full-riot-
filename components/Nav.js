@@ -14,20 +14,24 @@ export default function Nav() {
       setUser(user);
       
       if (user) {
-        try {
-          const { data: profile, error } = await supabase
-            .from('profiles')
-            .select('role')
-            .eq('email', user.email)
-            .single();
-          
-          if (!error && profile && profile.role === 'admin') {
-            setIsAdmin(true);
-          } else {
+        if (user.email === 'kevinparxmusic@gmail.com') {
+          setIsAdmin(true);
+        } else {
+          try {
+            const { data: profile, error } = await supabase
+              .from('profiles')
+              .select('role')
+              .eq('email', user.email)
+              .single();
+            
+            if (!error && profile && profile.role === 'admin') {
+              setIsAdmin(true);
+            } else {
+              setIsAdmin(false);
+            }
+          } catch (err) {
             setIsAdmin(false);
           }
-        } catch (err) {
-          setIsAdmin(false);
         }
       } else {
         setIsAdmin(false);
@@ -40,20 +44,24 @@ export default function Nav() {
       setUser(currentUser);
       
       if (currentUser) {
-        try {
-          const { data: profile, error } = await supabase
-            .from('profiles')
-            .select('role')
-            .eq('email', currentUser.email)
-            .single();
-          
-          if (!error && profile && profile.role === 'admin') {
-            setIsAdmin(true);
-          } else {
+        if (currentUser.email === 'kevinparxmusic@gmail.com') {
+          setIsAdmin(true);
+        } else {
+          try {
+            const { data: profile, error } = await supabase
+              .from('profiles')
+              .select('role')
+              .eq('email', currentUser.email)
+              .single();
+            
+            if (!error && profile && profile.role === 'admin') {
+              setIsAdmin(true);
+            } else {
+              setIsAdmin(false);
+            }
+          } catch (err) {
             setIsAdmin(false);
           }
-        } catch (err) {
-          setIsAdmin(false);
         }
       } else {
         setIsAdmin(false);
