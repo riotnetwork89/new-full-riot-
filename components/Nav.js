@@ -92,6 +92,12 @@ export default function Nav() {
           <Link href="/stream" className="text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest">
             Stream
           </Link>
+          <Link href="/schedule" className="text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest">
+            Schedule
+          </Link>
+          <Link href="/merch" className="text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest">
+            Merch
+          </Link>
           {isAdmin && (
             <Link href="/admin" className="text-riot-red hover:text-red-400 transition-colors font-medium text-sm uppercase tracking-widest">
               Admin

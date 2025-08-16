@@ -55,7 +55,7 @@ export default function HomePage() {
                     </h1>
                   </div>
                   <h2 className="text-5xl lg:text-6xl font-black text-white leading-tight">
-                    VOLUME {featuredEvent.id || '5'}
+                    {featuredEvent.title || 'VOLUME 5'}
                   </h2>
                 </div>
                 
