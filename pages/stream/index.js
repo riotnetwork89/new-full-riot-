@@ -44,7 +44,7 @@ export default function Stream() {
     <div className="min-h-screen bg-black font-riot">
       <Nav />
       
-      <PaywallGuard requireAccess={true}>
+      <PaywallGuard>
         <main className="max-w-7xl mx-auto px-8 py-16">
           <div className="text-center mb-16">
             <div className="riot-underline inline-block">
