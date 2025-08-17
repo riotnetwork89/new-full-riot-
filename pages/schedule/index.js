@@ -32,7 +32,9 @@ export default function Schedule() {
 
 
   const handlePurchase = (event) => {
-    router.push(`/checkout?event_id=${event.id}`);
+    if (router.isReady) {
+      router.push(`/checkout?event_id=${event.id}`);
+    }
   };
 
   if (loading) {
@@ -103,7 +105,11 @@ export default function Schedule() {
                     </button>
                   ) : (
                     <button
-                      onClick={() => router.push('/login')}
+                      onClick={() => {
+                        if (router.isReady) {
+                          router.push('/login');
+                        }
+                      }}
                       className="w-full bg-riot-red text-white py-4 px-6 font-bold uppercase tracking-[0.1em] hover:bg-red-700 transition-colors"
                     >
                       LOGIN TO PURCHASE

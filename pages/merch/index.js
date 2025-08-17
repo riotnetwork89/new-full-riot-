@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Nav from '../../components/Nav';
 
 export default function Merch() {
   const items = [
@@ -12,22 +13,16 @@ export default function Merch() {
 
   return (
     <main className="min-h-screen bg-black text-white font-riot">
-      <header className="max-w-7xl mx-auto px-8 py-8 flex items-center justify-between">
-        <div className="riot-underline">
-          <h1 className="text-4xl font-black tracking-tight">THE RIOT — MERCH</h1>
-        </div>
-        <nav className="flex gap-8 text-sm font-medium uppercase tracking-widest">
-          <Link href="/" className="hover:text-riot-red transition-colors">Home</Link>
-          <Link href="/stream" className="hover:text-riot-red transition-colors">Stream</Link>
-          <Link href="/schedule" className="hover:text-riot-red transition-colors">Schedule</Link>
-          <Link href="/merch" className="text-riot-red">Merch</Link>
-          <Link href="/admin" className="hover:text-riot-red transition-colors">Admin</Link>
-        </nav>
-      </header>
-
-      <section className="max-w-7xl mx-auto px-8 pb-24">
+      <Nav />
+      
+      <section className="max-w-7xl mx-auto px-8 py-16">
         <div className="text-center mb-16">
-          <p className="text-gray-500 text-sm uppercase tracking-[0.2em]">Official Riot Network Merchandise</p>
+          <div className="riot-underline inline-block">
+            <h1 className="text-6xl font-black text-white uppercase tracking-tight">
+              Merch
+            </h1>
+          </div>
+          <p className="text-gray-500 text-sm uppercase tracking-[0.2em] mt-8">Official Riot Network Merchandise</p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
