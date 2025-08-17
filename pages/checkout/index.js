@@ -59,7 +59,7 @@ export default function Checkout() {
       
       if (response.ok) {
         toast.success('Payment successful! Redirecting to stream...');
-        setTimeout(() => router.push('/stream'), 2000);
+        router.push('/stream');
       } else {
         toast.error(result.error || 'Payment failed');
       }

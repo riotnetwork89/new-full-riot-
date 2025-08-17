@@ -14,9 +14,6 @@ export default function Login() {
   useEffect(() => {
     const checkUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        router.push('/');
-      }
     };
     checkUser();
   }, [router]);
