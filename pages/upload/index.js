@@ -11,7 +11,7 @@ export default function Upload() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
+    if (!user && router.isReady) {
       router.push('/login');
       return;
     }

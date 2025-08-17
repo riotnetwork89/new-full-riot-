@@ -14,7 +14,7 @@ export default function Checkout() {
   useEffect(() => {
     const checkUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
+      if (!user && router.isReady) {
         router.push('/login');
         return;
       }
