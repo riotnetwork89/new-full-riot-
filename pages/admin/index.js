@@ -4,16 +4,20 @@ import { supabase } from '../../utils/supabase';
 import Nav from '../../components/Nav';
 import AdminTable from '../../components/AdminTable';
 import EventForm from '../../components/EventForm';
+import MerchForm from '../../components/MerchForm';
 import toast, { Toaster } from 'react-hot-toast';
 
 export default function Admin() {
   const router = useRouter();
   const [orders, setOrders] = useState([]);
   const [events, setEvents] = useState([]);
+  const [merchandise, setMerchandise] = useState([]);
   const [logs, setLogs] = useState([]);
   const [messages, setMessages] = useState([]);
   const [showEventForm, setShowEventForm] = useState(false);
+  const [showMerchForm, setShowMerchForm] = useState(false);
   const [editingEvent, setEditingEvent] = useState(null);
+  const [editingMerch, setEditingMerch] = useState(null);
   const [streamStatus, setStreamStatus] = useState('DISCONNECTED');
 
   useEffect(() => {
@@ -41,15 +45,17 @@ export default function Admin() {
   }, [router]);
 
   const fetchData = async () => {
-    const [ordersResult, eventsResult, logsResult, chatResult] = await Promise.all([
+    const [ordersResult, eventsResult, merchResult, logsResult, chatResult] = await Promise.all([
       supabase.from('orders').select('*').order('created_at', { ascending: false }),
       supabase.from('events').select('*').order('date', { ascending: false }),
+      supabase.from('merchandise').select('*').order('created_at', { ascending: false }),
       supabase.from('stream_logs').select('*').order('created_at', { ascending: false }),
       supabase.from('chat_messages').select('*').order('created_at', { ascending: false })
     ]);
 
     setOrders(ordersResult.data || []);
     setEvents(eventsResult.data || []);
+    setMerchandise(merchResult.data || []);
     setLogs(logsResult.data || []);
     setMessages(chatResult.data || []);
 
@@ -104,6 +110,52 @@ export default function Admin() {
         fetchData();
       } catch (error) {
         toast.error('Error deleting event');
+        console.error(error);
+      }
+    }
+  };
+
+  const handleSaveMerch = async (merchData) => {
+    try {
+      if (editingMerch) {
+        const { error } = await supabase
+          .from('merchandise')
+          .update(merchData)
+          .eq('id', editingMerch.id);
+        
+        if (error) throw error;
+        toast.success('Merchandise updated successfully');
+      } else {
+        const { error } = await supabase
+          .from('merchandise')
+          .insert(merchData);
+        
+        if (error) throw error;
+        toast.success('Merchandise created successfully');
+      }
+      
+      setShowMerchForm(false);
+      setEditingMerch(null);
+      fetchData();
+    } catch (error) {
+      toast.error('Error saving merchandise');
+      console.error(error);
+    }
+  };
+
+  const handleDeleteMerch = async (item) => {
+    if (confirm(`Are you sure you want to delete "${item.name}"?`)) {
+      try {
+        const { error } = await supabase
+          .from('merchandise')
+          .delete()
+          .eq('id', item.id);
+        
+        if (error) throw error;
+        toast.success('Merchandise deleted successfully');
+        fetchData();
+      } catch (error) {
+        toast.error('Error deleting merchandise');
         console.error(error);
       }
     }
@@ -170,6 +222,30 @@ export default function Admin() {
     {
       label: 'Delete',
       onClick: handleDeleteEvent,
+      className: 'bg-red-600 text-white hover:bg-red-700'
+    }
+  ];
+
+  const merchColumns = [
+    { key: 'name', label: 'Name' },
+    { key: 'price', label: 'Price', render: (value) => `$${value}` },
+    { key: 'stock_quantity', label: 'Stock', render: (value) => value !== null ? value : 'Unlimited' },
+    { key: 'is_active', label: 'Active', render: (value) => value ? 'Yes' : 'No' },
+    { key: 'created_at', label: 'Created', render: (value) => new Date(value).toLocaleDateString() }
+  ];
+
+  const merchActions = [
+    {
+      label: 'Edit',
+      onClick: (item) => {
+        setEditingMerch(item);
+        setShowMerchForm(true);
+      },
+      className: 'bg-blue-600 text-white hover:bg-blue-700'
+    },
+    {
+      label: 'Delete',
+      onClick: handleDeleteMerch,
       className: 'bg-red-600 text-white hover:bg-red-700'
     }
   ];
@@ -246,6 +322,24 @@ export default function Admin() {
           />
         </div>
 
+        <div className="mb-16">
+          <div className="flex justify-between items-center mb-8">
+            <h2 className="text-3xl font-black text-white uppercase tracking-wide">Merchandise</h2>
+            <button
+              onClick={() => setShowMerchForm(true)}
+              className="bg-riot-red text-white px-8 py-4 font-bold uppercase tracking-widest hover:bg-red-700 transition-colors"
+            >
+              Add Item
+            </button>
+          </div>
+          <AdminTable
+            title=""
+            columns={merchColumns}
+            data={merchandise}
+            actions={merchActions}
+          />
+        </div>
+
         <div className="space-y-16">
           <div>
             <h2 className="text-3xl font-black text-white uppercase tracking-wide mb-8">Orders</h2>
@@ -283,6 +377,17 @@ export default function Admin() {
             onCancel={() => {
               setShowEventForm(false);
               setEditingEvent(null);
+            }}
+          />
+        )}
+
+        {showMerchForm && (
+          <MerchForm
+            item={editingMerch}
+            onSave={handleSaveMerch}
+            onCancel={() => {
+              setShowMerchForm(false);
+              setEditingMerch(null);
             }}
           />
         )}
