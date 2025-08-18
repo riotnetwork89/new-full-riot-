@@ -5,6 +5,7 @@ import Nav from '../../components/Nav';
 import AdminTable from '../../components/AdminTable';
 import EventForm from '../../components/EventForm';
 import MerchForm from '../../components/MerchForm';
+import StreamManager from '../../components/StreamManager';
 import toast, { Toaster } from 'react-hot-toast';
 
 export default function Admin() {
@@ -395,6 +396,10 @@ export default function Admin() {
             }}
           />
         )}
+
+        <div className="mt-16">
+          <StreamManager />
+        </div>
       </main>
     </div>
   );
