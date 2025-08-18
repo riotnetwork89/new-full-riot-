@@ -14,8 +14,10 @@ export default function TriviaPage() {
   useEffect(() => {
     const getUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user && router.isReady) {
-        router.push('/login');
+      if (!user) {
+        if (router.isReady) {
+          router.push('/login');
+        }
         return;
       }
       setUser(user);

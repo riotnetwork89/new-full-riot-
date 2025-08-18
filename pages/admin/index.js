@@ -23,8 +23,10 @@ export default function Admin() {
   useEffect(() => {
     const checkAdminAccess = async () => {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user && router.isReady) {
-        router.push('/login');
+      if (!user) {
+        if (router.isReady) {
+          router.push('/login');
+        }
         return;
       }
 
@@ -34,8 +36,10 @@ export default function Admin() {
         .eq('id', user.id)
         .single();
 
-      if (profile?.role !== 'admin' && router.isReady) {
-        router.push('/');
+      if (profile?.role !== 'admin') {
+        if (router.isReady) {
+          router.push('/');
+        }
         return;
       }
 

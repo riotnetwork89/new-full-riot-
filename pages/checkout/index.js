@@ -14,8 +14,10 @@ export default function Checkout() {
   useEffect(() => {
     const checkUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user && router.isReady) {
-        router.push('/login');
+      if (!user) {
+        if (router.isReady) {
+          router.push('/login');
+        }
         return;
       }
       setUser(user);
@@ -59,7 +61,9 @@ export default function Checkout() {
       
       if (response.ok) {
         toast.success('Payment successful! Redirecting to stream...');
-        router.push('/stream');
+        if (router.isReady) {
+          router.push('/stream');
+        }
       } else {
         toast.error(result.error || 'Payment failed');
       }
@@ -145,7 +149,11 @@ export default function Checkout() {
             <div className="text-center space-y-8">
               <p className="text-white text-xl font-bold uppercase tracking-wide">No active events available</p>
               <button
-                onClick={() => router.push('/')}
+                onClick={() => {
+                  if (router.isReady) {
+                    router.push('/');
+                  }
+                }}
                 className="bg-riot-red text-white px-12 py-4 font-bold uppercase tracking-widest hover:bg-red-700 transition-colors"
               >
                 Back to Home

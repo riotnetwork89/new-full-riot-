@@ -72,8 +72,8 @@ export default function Nav() {
   }, []);
 
   const handleLogout = async () => {
+    await supabase.auth.signOut();
     if (router.isReady) {
-      await supabase.auth.signOut();
       router.push('/');
     }
   };

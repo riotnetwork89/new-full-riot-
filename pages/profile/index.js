@@ -13,8 +13,10 @@ export default function Profile() {
   useEffect(() => {
     const fetchProfile = async () => {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user && router.isReady) {
-        router.push('/login');
+      if (!user) {
+        if (router.isReady) {
+          router.push('/login');
+        }
         return;
       }
       
@@ -119,7 +121,11 @@ export default function Profile() {
             <div className="text-center py-8">
               <p className="text-gray-400 mb-4">No orders found</p>
               <button
-                onClick={() => router.push('/checkout')}
+                onClick={() => {
+                  if (router.isReady) {
+                    router.push('/checkout');
+                  }
+                }}
                 className="bg-riot-red text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors"
               >
                 Purchase Your First Ticket

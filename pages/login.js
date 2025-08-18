@@ -28,7 +28,9 @@ export default function Login() {
         if (error) throw error;
         
         toast.success('Login successful!');
-        router.push('/');
+        if (router.isReady) {
+          router.push('/');
+        }
       } else {
         const { data, error } = await supabase.auth.signUp({ 
           email, 
