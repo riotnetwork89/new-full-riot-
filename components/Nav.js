@@ -6,9 +6,14 @@ import { useRouter } from 'next/router';
 export default function Nav() {
   const [user, setUser] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isReady, setIsReady] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsReady(true);
+    }, 100);
+    
     const getUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       setUser(user);
@@ -68,7 +73,10 @@ export default function Nav() {
       }
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      subscription.unsubscribe();
+      clearTimeout(timer);
+    };
   }, []);
 
   const handleLogout = async () => {
@@ -78,52 +86,91 @@ export default function Nav() {
     }
   };
 
+  const handleNavigation = (href) => {
+    if (router.isReady && isReady && router.asPath !== href) {
+      router.push(href);
+    }
+  };
+
   return (
     <nav className="bg-black px-6 py-8 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto flex justify-between items-center">
-        <Link href="/" className="group">
+        <button 
+          onClick={() => handleNavigation('/')} 
+          disabled={!isReady || !router.isReady}
+          className="group disabled:opacity-50 disabled:cursor-not-allowed"
+        >
           <div className="riot-underline">
             <span className="text-white text-4xl font-black tracking-tight">The Riot</span>
           </div>
-        </Link>
+        </button>
         
         <div className="hidden md:flex space-x-16">
-          <Link href="/" className="text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest">
+          <button 
+            onClick={() => handleNavigation('/')}
+            disabled={!isReady || !router.isReady}
+            className="text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest disabled:opacity-50 disabled:cursor-not-allowed"
+          >
             Home
-          </Link>
-          <Link href="/stream" className="text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest">
+          </button>
+          <button 
+            onClick={() => handleNavigation('/stream')}
+            disabled={!isReady || !router.isReady}
+            className="text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest disabled:opacity-50 disabled:cursor-not-allowed"
+          >
             Stream
-          </Link>
-          <Link href="/schedule" className="text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest">
+          </button>
+          <button 
+            onClick={() => handleNavigation('/schedule')}
+            disabled={!isReady || !router.isReady}
+            className="text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest disabled:opacity-50 disabled:cursor-not-allowed"
+          >
             Schedule
-          </Link>
-          <Link href="/merch" className="text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest">
+          </button>
+          <button 
+            onClick={() => handleNavigation('/merch')}
+            disabled={!isReady || !router.isReady}
+            className="text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest disabled:opacity-50 disabled:cursor-not-allowed"
+          >
             Merch
-          </Link>
+          </button>
           {isAdmin && (
-            <Link href="/admin" className="text-riot-red hover:text-red-400 transition-colors font-medium text-sm uppercase tracking-widest">
+            <button 
+              onClick={() => handleNavigation('/admin')}
+              disabled={!isReady || !router.isReady}
+              className="text-riot-red hover:text-red-400 transition-colors font-medium text-sm uppercase tracking-widest disabled:opacity-50 disabled:cursor-not-allowed"
+            >
               Admin
-            </Link>
+            </button>
           )}
         </div>
 
         <div className="flex items-center space-x-8">
           {user ? (
             <>
-              <Link href="/profile" className="text-gray-400 hover:text-white transition-colors font-medium text-sm uppercase tracking-widest">
+              <button 
+                onClick={() => handleNavigation('/profile')}
+                disabled={!isReady || !router.isReady}
+                className="text-gray-400 hover:text-white transition-colors font-medium text-sm uppercase tracking-widest disabled:opacity-50 disabled:cursor-not-allowed"
+              >
                 Profile
-              </Link>
+              </button>
               <button 
                 onClick={handleLogout}
-                className="text-gray-400 hover:text-white transition-colors font-medium text-sm uppercase tracking-widest"
+                disabled={!isReady || !router.isReady}
+                className="text-gray-400 hover:text-white transition-colors font-medium text-sm uppercase tracking-widest disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Logout
               </button>
             </>
           ) : (
-            <Link href="/login" className="text-gray-400 hover:text-white transition-colors font-medium text-sm uppercase tracking-widest">
+            <button 
+              onClick={() => handleNavigation('/login')}
+              disabled={!isReady || !router.isReady}
+              className="text-gray-400 hover:text-white transition-colors font-medium text-sm uppercase tracking-widest disabled:opacity-50 disabled:cursor-not-allowed"
+            >
               Login
-            </Link>
+            </button>
           )}
         </div>
       </div>
