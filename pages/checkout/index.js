@@ -22,11 +22,14 @@ export default function Checkout() {
       }
       setUser(user);
 
-      const { data: event } = await supabase
+      const { data: events } = await supabase
         .from('events')
         .select('*')
         .eq('is_active', true)
-        .single();
+        .order('date', { ascending: true })
+        .limit(1);
+      
+      const event = events?.[0];
       
       setActiveEvent(event);
       setLoading(false);
