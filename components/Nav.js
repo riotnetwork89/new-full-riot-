@@ -10,9 +10,7 @@ export default function Nav() {
   const router = useRouter();
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsReady(true);
-    }, 100);
+    setIsReady(router.isReady);
     
     const getUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
@@ -75,9 +73,8 @@ export default function Nav() {
 
     return () => {
       subscription.unsubscribe();
-      clearTimeout(timer);
     };
-  }, []);
+  }, [router.isReady]);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -87,8 +84,12 @@ export default function Nav() {
   };
 
   const handleNavigation = (href) => {
-    if (router.isReady && isReady && router.asPath !== href) {
-      router.push(href);
+    if (router.isReady && isReady) {
+      const currentPath = router.asPath.split('?')[0]; // Remove query params
+      const targetPath = href.split('?')[0]; // Remove query params
+      if (currentPath !== targetPath) {
+        router.push(href);
+      }
     }
   };
 
@@ -133,6 +134,13 @@ export default function Nav() {
             className="text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Merch
+          </button>
+          <button 
+            onClick={() => handleNavigation('/vod')}
+            disabled={!isReady || !router.isReady}
+            className="text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            VOD
           </button>
           {isAdmin && (
             <button 

@@ -14,6 +14,7 @@ export default function Admin() {
   const [events, setEvents] = useState([]);
   const [merchandise, setMerchandise] = useState([]);
   const [logs, setLogs] = useState([]);
+  const [vodEdits, setVodEdits] = useState([]);
   const [messages, setMessages] = useState([]);
   const [showEventForm, setShowEventForm] = useState(false);
   const [showMerchForm, setShowMerchForm] = useState(false);
@@ -50,12 +51,13 @@ export default function Admin() {
   }, [router]);
 
   const fetchData = async () => {
-    const [ordersResult, eventsResult, merchResult, logsResult, chatResult] = await Promise.all([
+    const [ordersResult, eventsResult, merchResult, logsResult, chatResult, vodResult] = await Promise.all([
       supabase.from('orders').select('*').order('created_at', { ascending: false }),
       supabase.from('events').select('*').order('date', { ascending: false }),
       supabase.from('merchandise').select('*').order('created_at', { ascending: false }),
       supabase.from('stream_logs').select('*').order('created_at', { ascending: false }),
-      supabase.from('chat_messages').select('*').order('created_at', { ascending: false })
+      supabase.from('chat_messages').select('*').order('created_at', { ascending: false }),
+      supabase.from('vod_edits').select('*').order('created_at', { ascending: false })
     ]);
 
     setOrders(ordersResult.data || []);
@@ -63,6 +65,7 @@ export default function Admin() {
     setMerchandise(merchResult.data || []);
     setLogs(logsResult.data || []);
     setMessages(chatResult.data || []);
+    setVodEdits(vodResult.data || []);
 
     if (logsResult.data && logsResult.data.length > 0) {
       setStreamStatus(logsResult.data[0].status);
@@ -195,6 +198,68 @@ export default function Admin() {
       toast.success(`Stream status updated to ${status}`);
     } catch (error) {
       toast.error('Error updating stream status');
+      console.error(error);
+    }
+  };
+
+  const handleApproveVod = async (vodEdit) => {
+    try {
+      const { error } = await supabase
+        .from('vod_edits')
+        .update({ 
+          approved: true, 
+          published_at: new Date().toISOString(),
+          notification_sent: false 
+        })
+        .eq('id', vodEdit.id);
+      
+      if (error) throw error;
+      toast.success('VOD approved and published');
+      fetchData();
+    } catch (error) {
+      toast.error('Error approving VOD');
+      console.error(error);
+    }
+  };
+
+  const handleRejectVod = async (vodEdit) => {
+    if (confirm('Are you sure you want to reject this VOD?')) {
+      try {
+        const { error } = await supabase
+          .from('vod_edits')
+          .delete()
+          .eq('id', vodEdit.id);
+        
+        if (error) throw error;
+        toast.success('VOD rejected and deleted');
+        fetchData();
+      } catch (error) {
+        toast.error('Error rejecting VOD');
+        console.error(error);
+      }
+    }
+  };
+
+  const handleLiveEdit = async (streamTimestamp, caption) => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      const { error } = await supabase
+        .from('vod_edits')
+        .insert({
+          stream_timestamp: streamTimestamp,
+          caption: caption,
+          is_live_edit: true,
+          approved: true,
+          published_at: new Date().toISOString(),
+          notification_sent: false,
+          submitted_by: user.id
+        });
+      
+      if (error) throw error;
+      toast.success('Live edit published to VOD');
+      fetchData();
+    } catch (error) {
+      toast.error('Error publishing live edit');
       console.error(error);
     }
   };
@@ -342,6 +407,48 @@ export default function Admin() {
             columns={merchColumns}
             data={merchandise}
             actions={merchActions}
+          />
+        </div>
+
+        <div className="mb-16">
+          <div className="flex justify-between items-center mb-8">
+            <h2 className="text-3xl font-black text-white uppercase tracking-wide">VOD Management</h2>
+            {streamStatus === 'LIVE' && (
+              <button
+                onClick={() => {
+                  const caption = prompt('Enter caption for live edit:');
+                  if (caption) {
+                    handleLiveEdit(new Date().toISOString(), caption);
+                  }
+                }}
+                className="bg-green-600 text-white px-8 py-4 font-bold uppercase tracking-widest hover:bg-green-700 transition-colors"
+              >
+                Create Live Edit
+              </button>
+            )}
+          </div>
+          <AdminTable
+            title=""
+            columns={[
+              { key: 'caption', label: 'Caption' },
+              { key: 'approved', label: 'Status', render: (value) => value ? 'Approved' : 'Pending' },
+              { key: 'is_live_edit', label: 'Type', render: (value) => value ? 'Live Edit' : 'Upload' },
+              { key: 'created_at', label: 'Created', render: (value) => new Date(value).toLocaleDateString() }
+            ]}
+            data={vodEdits}
+            actions={[
+              {
+                label: 'Approve',
+                onClick: handleApproveVod,
+                className: 'bg-green-600 text-white hover:bg-green-700',
+                condition: (item) => !item.approved
+              },
+              {
+                label: 'Reject',
+                onClick: handleRejectVod,
+                className: 'bg-red-600 text-white hover:bg-red-700'
+              }
+            ]}
           />
         </div>
 

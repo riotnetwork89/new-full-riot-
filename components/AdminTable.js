@@ -25,15 +25,20 @@ export default function AdminTable({ title, columns, data, actions }) {
                 {actions && (
                   <td className="px-8 py-6 whitespace-nowrap text-sm">
                     <div className="flex space-x-4">
-                      {actions.map((action, actionIndex) => (
-                        <button
-                          key={actionIndex}
-                          onClick={() => action.onClick(row)}
-                          className={`px-4 py-2 text-xs font-bold uppercase tracking-widest transition-colors ${action.className}`}
-                        >
-                          {action.label}
-                        </button>
-                      ))}
+                      {actions.map((action, actionIndex) => {
+                        if (action.condition && !action.condition(row)) {
+                          return null;
+                        }
+                        return (
+                          <button
+                            key={actionIndex}
+                            onClick={() => action.onClick(row)}
+                            className={`px-4 py-2 text-xs font-bold uppercase tracking-widest transition-colors ${action.className}`}
+                          >
+                            {action.label}
+                          </button>
+                        );
+                      })}
                     </div>
                   </td>
                 )}
