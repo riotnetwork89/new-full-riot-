@@ -86,74 +86,44 @@ export default function Nav() {
     }
   };
 
-  const handleNavigation = (href) => {
-    router.push(href).catch((error) => {
-      console.error('Navigation error:', error);
-    });
-  };
-
   return (
     <nav className="bg-black px-6 py-8 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto flex justify-between items-center">
-        <button 
-          onClick={() => handleNavigation('/')} 
-          className="group"
-        >
+        <Link href="/" className="group">
           <div className="riot-underline">
             <span className="text-white text-4xl font-black tracking-tight">The Riot</span>
           </div>
-        </button>
+        </Link>
         
         <div className="hidden md:flex space-x-16">
-          <button 
-            onClick={() => handleNavigation('/')}
-            className="text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest"
-          >
+          <Link href="/" className="text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest">
             Home
-          </button>
-          <button 
-            onClick={() => handleNavigation('/stream')}
-            className="text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest"
-          >
+          </Link>
+          <Link href="/stream" className="text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest">
             Stream
-          </button>
-          <button 
-            onClick={() => handleNavigation('/schedule')}
-            className="text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest"
-          >
+          </Link>
+          <Link href="/schedule" className="text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest">
             Schedule
-          </button>
-          <button 
-            onClick={() => handleNavigation('/merch')}
-            className="text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest"
-          >
+          </Link>
+          <Link href="/merch" className="text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest">
             Merch
-          </button>
-          <button 
-            onClick={() => handleNavigation('/vod')}
-            className="text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest"
-          >
+          </Link>
+          <Link href="/vod" className="text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest">
             VOD
-          </button>
+          </Link>
           {isAdmin && (
-            <button 
-              onClick={() => handleNavigation('/admin')}
-              className="text-riot-red hover:text-red-400 transition-colors font-medium text-sm uppercase tracking-widest"
-            >
+            <Link href="/admin" className="text-riot-red hover:text-red-400 transition-colors font-medium text-sm uppercase tracking-widest">
               Admin
-            </button>
+            </Link>
           )}
         </div>
 
         <div className="flex items-center space-x-8">
           {user ? (
             <>
-              <button 
-                onClick={() => handleNavigation('/profile')}
-                className="text-gray-400 hover:text-white transition-colors font-medium text-sm uppercase tracking-widest"
-              >
+              <Link href="/profile" className="text-gray-400 hover:text-white transition-colors font-medium text-sm uppercase tracking-widest">
                 Profile
-              </button>
+              </Link>
               <button 
                 onClick={handleLogout}
                 className="text-gray-400 hover:text-white transition-colors font-medium text-sm uppercase tracking-widest"
@@ -162,12 +132,9 @@ export default function Nav() {
               </button>
             </>
           ) : (
-            <button 
-              onClick={() => handleNavigation('/login')}
-              className="text-gray-400 hover:text-white transition-colors font-medium text-sm uppercase tracking-widest"
-            >
+            <Link href="/login" className="text-gray-400 hover:text-white transition-colors font-medium text-sm uppercase tracking-widest">
               Login
-            </button>
+            </Link>
           )}
         </div>
       </div>
