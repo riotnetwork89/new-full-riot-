@@ -72,15 +72,23 @@ export default function Nav() {
   }, []);
 
   const handleNavigation = (path) => {
-    setTimeout(() => {
-      window.location.href = path;
-    }, 0);
+    const form = document.createElement('form');
+    form.method = 'GET';
+    form.action = path;
+    document.body.appendChild(form);
+    form.submit();
+    document.body.removeChild(form);
   };
 
   const handleLogout = async () => {
     try {
       await supabase.auth.signOut();
-      window.location.href = '/';
+      const form = document.createElement('form');
+      form.method = 'GET';
+      form.action = '/';
+      document.body.appendChild(form);
+      form.submit();
+      document.body.removeChild(form);
     } catch (error) {
       console.error('Logout error:', error);
     }
