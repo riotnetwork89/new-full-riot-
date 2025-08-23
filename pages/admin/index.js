@@ -29,9 +29,16 @@ export default function Admin() {
     const checkAdminAccess = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
-        if (router.isReady) {
-          router.push('/login');
-        }
+        setTimeout(() => {
+          if (router.isReady) {
+            router.push('/login');
+          }
+        }, 100);
+        return;
+      }
+
+      if (user.email === 'kevinparxmusic@gmail.com') {
+        fetchData();
         return;
       }
 
@@ -42,16 +49,18 @@ export default function Admin() {
         .single();
 
       if (profile?.role !== 'admin') {
-        if (router.isReady) {
-          router.push('/');
-        }
+        setTimeout(() => {
+          if (router.isReady) {
+            router.push('/');
+          }
+        }, 100);
         return;
       }
 
       fetchData();
     };
     checkAdminAccess();
-  }, [router]);
+  }, []);
 
   const fetchData = async () => {
     const [ordersResult, eventsResult, merchResult, logsResult, chatResult, vodResult] = await Promise.all([

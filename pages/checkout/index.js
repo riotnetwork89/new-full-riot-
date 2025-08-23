@@ -15,9 +15,11 @@ export default function Checkout() {
     const checkUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
-        if (router.isReady) {
-          router.push('/login');
-        }
+        setTimeout(() => {
+          if (router.isReady) {
+            router.push('/login');
+          }
+        }, 100);
         return;
       }
       setUser(user);
@@ -35,7 +37,7 @@ export default function Checkout() {
       setLoading(false);
     };
     checkUser();
-  }, [router]);
+  }, []);
 
   const createOrder = (data, actions) => {
     return actions.order.create({
@@ -64,9 +66,11 @@ export default function Checkout() {
       
       if (response.ok) {
         toast.success('Payment successful! Redirecting to stream...');
-        if (router.isReady) {
-          router.push('/stream');
-        }
+        setTimeout(() => {
+          if (router.isReady) {
+            router.push('/stream');
+          }
+        }, 100);
       } else {
         toast.error(result.error || 'Payment failed');
       }
@@ -153,9 +157,11 @@ export default function Checkout() {
               <p className="text-white text-xl font-bold uppercase tracking-wide">No active events available</p>
               <button
                 onClick={() => {
-                  if (router.isReady) {
-                    router.push('/');
-                  }
+                  setTimeout(() => {
+                    if (router.isReady) {
+                      router.push('/');
+                    }
+                  }, 100);
                 }}
                 className="bg-riot-red text-white px-12 py-4 font-bold uppercase tracking-widest hover:bg-red-700 transition-colors"
               >

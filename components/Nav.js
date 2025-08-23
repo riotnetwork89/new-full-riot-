@@ -6,30 +6,16 @@ export default function Nav() {
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
+    let mounted = true;
+    
     const getUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
+      if (!mounted) return;
+      
       setUser(user);
       
-      if (user) {
-        if (user.email === 'kevinparxmusic@gmail.com') {
-          setIsAdmin(true);
-        } else {
-          try {
-            const { data: profile, error } = await supabase
-              .from('profiles')
-              .select('role')
-              .eq('email', user.email)
-              .single();
-            
-            if (!error && profile && profile.role === 'admin') {
-              setIsAdmin(true);
-            } else {
-              setIsAdmin(false);
-            }
-          } catch (err) {
-            setIsAdmin(false);
-          }
-        }
+      if (user?.email === 'kevinparxmusic@gmail.com') {
+        setIsAdmin(true);
       } else {
         setIsAdmin(false);
       }
@@ -38,59 +24,31 @@ export default function Nav() {
     getUser();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (!mounted) return;
+      
       const currentUser = session?.user || null;
       setUser(currentUser);
       
-      if (currentUser) {
-        if (currentUser.email === 'kevinparxmusic@gmail.com') {
-          setIsAdmin(true);
-        } else {
-          try {
-            const { data: profile, error } = await supabase
-              .from('profiles')
-              .select('role')
-              .eq('email', currentUser.email)
-              .single();
-            
-            if (!error && profile && profile.role === 'admin') {
-              setIsAdmin(true);
-            } else {
-              setIsAdmin(false);
-            }
-          } catch (err) {
-            setIsAdmin(false);
-          }
-        }
+      if (currentUser?.email === 'kevinparxmusic@gmail.com') {
+        setIsAdmin(true);
       } else {
         setIsAdmin(false);
       }
     });
 
     return () => {
+      mounted = false;
       subscription.unsubscribe();
     };
   }, []);
 
-  const handleNavigation = (path) => {
-    const form = document.createElement('form');
-    form.method = 'GET';
-    form.action = path;
-    document.body.appendChild(form);
-    form.submit();
-    document.body.removeChild(form);
-  };
-
   const handleLogout = async () => {
     try {
       await supabase.auth.signOut();
-      const form = document.createElement('form');
-      form.method = 'GET';
-      form.action = '/';
-      document.body.appendChild(form);
-      form.submit();
-      document.body.removeChild(form);
+      window.location.href = '/';
     } catch (error) {
       console.error('Logout error:', error);
+      window.location.href = '/';
     }
   };
 

@@ -14,9 +14,16 @@ export default function Login() {
   useEffect(() => {
     const checkUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        setTimeout(() => {
+          if (router.isReady) {
+            router.push('/');
+          }
+        }, 100);
+      }
     };
     checkUser();
-  }, [router]);
+  }, []);
 
   const handleAuth = async (e) => {
     e.preventDefault();
@@ -28,9 +35,11 @@ export default function Login() {
         if (error) throw error;
         
         toast.success('Login successful!');
-        if (router.isReady) {
-          router.push('/');
-        }
+        setTimeout(() => {
+          if (router.isReady) {
+            router.push('/');
+          }
+        }, 100);
       } else {
         const { data, error } = await supabase.auth.signUp({ 
           email, 
