@@ -97,62 +97,62 @@ export default function Nav() {
   return (
     <nav className="bg-black px-6 py-8 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto flex justify-between items-center">
-        <button onClick={() => handleNavigation('/')} className="group">
+        <a href="/" className="group">
           <div className="riot-underline">
             <span className="text-white text-4xl font-black tracking-tight">The Riot</span>
           </div>
-        </button>
+        </a>
         
         <div className="hidden md:flex space-x-16">
-          <button 
-            onClick={() => handleNavigation('/')}
+          <a 
+            href="/"
             className="text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest"
           >
             Home
-          </button>
-          <button 
-            onClick={() => handleNavigation('/stream')}
+          </a>
+          <a 
+            href="/stream"
             className="text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest"
           >
             Stream
-          </button>
-          <button 
-            onClick={() => handleNavigation('/schedule')}
+          </a>
+          <a 
+            href="/schedule"
             className="text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest"
           >
             Schedule
-          </button>
-          <button 
-            onClick={() => handleNavigation('/merch')}
+          </a>
+          <a 
+            href="/merch"
             className="text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest"
           >
             Merch
-          </button>
-          <button 
-            onClick={() => handleNavigation('/vod')}
+          </a>
+          <a 
+            href="/vod"
             className="text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest"
           >
             VOD
-          </button>
+          </a>
           {isAdmin && (
-            <button 
-              onClick={() => handleNavigation('/admin')}
+            <a 
+              href="/admin"
               className="text-riot-red hover:text-red-400 transition-colors font-medium text-sm uppercase tracking-widest"
             >
               Admin
-            </button>
+            </a>
           )}
         </div>
 
         <div className="flex items-center space-x-8">
           {user ? (
             <>
-              <button 
-                onClick={() => handleNavigation('/profile')}
+              <a 
+                href="/profile"
                 className="text-gray-400 hover:text-white transition-colors font-medium text-sm uppercase tracking-widest"
               >
                 Profile
-              </button>
+              </a>
               <button 
                 onClick={handleLogout}
                 className="text-gray-400 hover:text-white transition-colors font-medium text-sm uppercase tracking-widest"
@@ -161,12 +161,12 @@ export default function Nav() {
               </button>
             </>
           ) : (
-            <button 
-              onClick={() => handleNavigation('/login')}
+            <a 
+              href="/login"
               className="text-gray-400 hover:text-white transition-colors font-medium text-sm uppercase tracking-widest"
             >
               Login
-            </button>
+            </a>
           )}
         </div>
       </div>
