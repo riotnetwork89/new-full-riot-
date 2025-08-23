@@ -1,17 +1,11 @@
-import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { supabase } from '../utils/supabase';
-import { useRouter } from 'next/router';
 
 export default function Nav() {
   const [user, setUser] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [isReady, setIsReady] = useState(false);
-  const router = useRouter();
 
   useEffect(() => {
-    setIsReady(router.isReady);
-    
     const getUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       setUser(user);
@@ -75,10 +69,12 @@ export default function Nav() {
     return () => {
       subscription.unsubscribe();
     };
-  }, [router.isReady]);
+  }, []);
 
   const handleNavigation = (path) => {
-    window.location.href = path;
+    setTimeout(() => {
+      window.location.href = path;
+    }, 0);
   };
 
   const handleLogout = async () => {
@@ -93,11 +89,11 @@ export default function Nav() {
   return (
     <nav className="bg-black px-6 py-8 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto flex justify-between items-center">
-        <Link href="/" className="group">
+        <button onClick={() => handleNavigation('/')} className="group">
           <div className="riot-underline">
             <span className="text-white text-4xl font-black tracking-tight">The Riot</span>
           </div>
-        </Link>
+        </button>
         
         <div className="hidden md:flex space-x-16">
           <button 
