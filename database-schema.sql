@@ -34,7 +34,7 @@ ALTER TABLE orders ENABLE ROW LEVEL SECURITY;
 ALTER TABLE stream_logs ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "merchandise_read_all" ON merchandise FOR SELECT USING (true);
-CREATE POLICY "merchandise_insert_admin" ON merchandise FOR INSERT USING (true);
+CREATE POLICY "merchandise_insert_admin" ON merchandise FOR INSERT WITH CHECK (true);
 CREATE POLICY "merchandise_update_admin" ON merchandise FOR UPDATE USING (true);
 CREATE POLICY "merchandise_delete_admin" ON merchandise FOR DELETE USING (true);
 
