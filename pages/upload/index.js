@@ -40,6 +40,8 @@ export default function Upload() {
       approved: false,
       video_url,
       caption,
+      is_live_edit: false,
+      notification_sent: false
     });
     if (error) {
       setMessage(error.message);

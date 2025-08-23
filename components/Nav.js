@@ -6,11 +6,11 @@ import { useRouter } from 'next/router';
 export default function Nav() {
   const [user, setUser] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [isReady, setIsReady] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
-    setIsReady(router.isReady);
+    setMounted(true);
     
     const getUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
@@ -40,6 +40,7 @@ export default function Nav() {
         setIsAdmin(false);
       }
     };
+    
     getUser();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
@@ -74,23 +75,21 @@ export default function Nav() {
     return () => {
       subscription.unsubscribe();
     };
-  }, [router.isReady]);
+  }, []);
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
-    if (router.isReady) {
+    try {
+      await supabase.auth.signOut();
       router.push('/');
+    } catch (error) {
+      console.error('Logout error:', error);
     }
   };
 
   const handleNavigation = (href) => {
-    if (router.isReady && isReady) {
-      const currentPath = router.asPath.split('?')[0]; // Remove query params
-      const targetPath = href.split('?')[0]; // Remove query params
-      if (currentPath !== targetPath) {
-        router.push(href);
-      }
-    }
+    router.push(href).catch((error) => {
+      console.error('Navigation error:', error);
+    });
   };
 
   return (
@@ -98,8 +97,7 @@ export default function Nav() {
       <div className="max-w-7xl mx-auto flex justify-between items-center">
         <button 
           onClick={() => handleNavigation('/')} 
-          disabled={!isReady || !router.isReady}
-          className="group disabled:opacity-50 disabled:cursor-not-allowed"
+          className="group"
         >
           <div className="riot-underline">
             <span className="text-white text-4xl font-black tracking-tight">The Riot</span>
@@ -109,44 +107,38 @@ export default function Nav() {
         <div className="hidden md:flex space-x-16">
           <button 
             onClick={() => handleNavigation('/')}
-            disabled={!isReady || !router.isReady}
-            className="text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest disabled:opacity-50 disabled:cursor-not-allowed"
+            className="text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest"
           >
             Home
           </button>
           <button 
             onClick={() => handleNavigation('/stream')}
-            disabled={!isReady || !router.isReady}
-            className="text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest disabled:opacity-50 disabled:cursor-not-allowed"
+            className="text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest"
           >
             Stream
           </button>
           <button 
             onClick={() => handleNavigation('/schedule')}
-            disabled={!isReady || !router.isReady}
-            className="text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest disabled:opacity-50 disabled:cursor-not-allowed"
+            className="text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest"
           >
             Schedule
           </button>
           <button 
             onClick={() => handleNavigation('/merch')}
-            disabled={!isReady || !router.isReady}
-            className="text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest disabled:opacity-50 disabled:cursor-not-allowed"
+            className="text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest"
           >
             Merch
           </button>
           <button 
             onClick={() => handleNavigation('/vod')}
-            disabled={!isReady || !router.isReady}
-            className="text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest disabled:opacity-50 disabled:cursor-not-allowed"
+            className="text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest"
           >
             VOD
           </button>
           {isAdmin && (
             <button 
               onClick={() => handleNavigation('/admin')}
-              disabled={!isReady || !router.isReady}
-              className="text-riot-red hover:text-red-400 transition-colors font-medium text-sm uppercase tracking-widest disabled:opacity-50 disabled:cursor-not-allowed"
+              className="text-riot-red hover:text-red-400 transition-colors font-medium text-sm uppercase tracking-widest"
             >
               Admin
             </button>
@@ -158,15 +150,13 @@ export default function Nav() {
             <>
               <button 
                 onClick={() => handleNavigation('/profile')}
-                disabled={!isReady || !router.isReady}
-                className="text-gray-400 hover:text-white transition-colors font-medium text-sm uppercase tracking-widest disabled:opacity-50 disabled:cursor-not-allowed"
+                className="text-gray-400 hover:text-white transition-colors font-medium text-sm uppercase tracking-widest"
               >
                 Profile
               </button>
               <button 
                 onClick={handleLogout}
-                disabled={!isReady || !router.isReady}
-                className="text-gray-400 hover:text-white transition-colors font-medium text-sm uppercase tracking-widest disabled:opacity-50 disabled:cursor-not-allowed"
+                className="text-gray-400 hover:text-white transition-colors font-medium text-sm uppercase tracking-widest"
               >
                 Logout
               </button>
@@ -174,8 +164,7 @@ export default function Nav() {
           ) : (
             <button 
               onClick={() => handleNavigation('/login')}
-              disabled={!isReady || !router.isReady}
-              className="text-gray-400 hover:text-white transition-colors font-medium text-sm uppercase tracking-widest disabled:opacity-50 disabled:cursor-not-allowed"
+              className="text-gray-400 hover:text-white transition-colors font-medium text-sm uppercase tracking-widest"
             >
               Login
             </button>

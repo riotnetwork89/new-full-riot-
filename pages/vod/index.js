@@ -19,7 +19,44 @@ export default function VOD() {
         filter: 'approved=eq.true'
       }, (payload) => {
         if (payload.new.notification_sent === false) {
-          toast.success('New VOD content available!');
+          toast.success('🎬 New VOD content available from live stream!', {
+            duration: 6000,
+            style: {
+              background: '#dc2626',
+              color: '#ffffff',
+              fontWeight: 'bold',
+              textTransform: 'uppercase',
+              letterSpacing: '0.1em'
+            }
+          });
+          fetchApprovedVideos();
+          
+          supabase
+            .from('vod_edits')
+            .update({ notification_sent: true })
+            .eq('id', payload.new.id)
+            .then(() => {
+              console.log('Notification marked as sent');
+            });
+        }
+      })
+      .on('postgres_changes', {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'vod_edits',
+        filter: 'approved=eq.true'
+      }, (payload) => {
+        if (payload.new.is_live_edit) {
+          toast.success('🔴 LIVE: New content added to VOD queue!', {
+            duration: 8000,
+            style: {
+              background: '#dc2626',
+              color: '#ffffff',
+              fontWeight: 'bold',
+              textTransform: 'uppercase',
+              letterSpacing: '0.1em'
+            }
+          });
           fetchApprovedVideos();
         }
       })
@@ -77,7 +114,7 @@ export default function VOD() {
                     {video.published_at ? new Date(video.published_at).toLocaleDateString() : 'Recently added'}
                   </p>
                   {video.is_live_edit && (
-                    <span className="inline-block bg-green-600 text-white text-xs px-2 py-1 mt-2 uppercase tracking-wide">
+                    <span className="inline-block bg-red-600 text-white text-xs px-2 py-1 font-bold uppercase tracking-widest mt-2">
                       Live Edit
                     </span>
                   )}

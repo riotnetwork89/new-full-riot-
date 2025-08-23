@@ -14,8 +14,10 @@ export default function Admin() {
   const [events, setEvents] = useState([]);
   const [merchandise, setMerchandise] = useState([]);
   const [logs, setLogs] = useState([]);
-  const [vodEdits, setVodEdits] = useState([]);
   const [messages, setMessages] = useState([]);
+  const [vodEdits, setVodEdits] = useState([]);
+  const [liveEditCaption, setLiveEditCaption] = useState('');
+  const [showLiveEditForm, setShowLiveEditForm] = useState(false);
   const [showEventForm, setShowEventForm] = useState(false);
   const [showMerchForm, setShowMerchForm] = useState(false);
   const [editingEvent, setEditingEvent] = useState(null);
@@ -264,6 +266,43 @@ export default function Admin() {
     }
   };
 
+  const handleCreateLiveEdit = async () => {
+    if (!liveEditCaption.trim()) {
+      toast.error('Please enter a caption for the live edit');
+      return;
+    }
+
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        toast.error('Authentication required');
+        return;
+      }
+
+      const { error } = await supabase
+        .from('vod_edits')
+        .insert({
+          stream_timestamp: new Date().toISOString(),
+          caption: liveEditCaption,
+          is_live_edit: true,
+          approved: true,
+          published_at: new Date().toISOString(),
+          notification_sent: false,
+          submitted_by: user.id,
+          video_url: `https://stream.mux.com/${process.env.NEXT_PUBLIC_MUX_PLAYBOOK_ID || 'oMaw4Lzf01o9sPf7aTgjv1so00VC5ePBYr5km8CEqvgOY'}.m3u8`
+        });
+      
+      if (error) throw error;
+      toast.success('Live edit published to VOD queue');
+      setLiveEditCaption('');
+      setShowLiveEditForm(false);
+      fetchData();
+    } catch (error) {
+      toast.error('Error publishing live edit');
+      console.error(error);
+    }
+  };
+
   const orderColumns = [
     { key: 'email', label: 'Email' },
     { key: 'amount', label: 'Amount', render: (value) => `$${value}` },
@@ -414,26 +453,74 @@ export default function Admin() {
           <div className="flex justify-between items-center mb-8">
             <h2 className="text-3xl font-black text-white uppercase tracking-wide">VOD Management</h2>
             {streamStatus === 'LIVE' && (
-              <button
-                onClick={() => {
-                  const caption = prompt('Enter caption for live edit:');
-                  if (caption) {
-                    handleLiveEdit(new Date().toISOString(), caption);
-                  }
-                }}
-                className="bg-green-600 text-white px-8 py-4 font-bold uppercase tracking-widest hover:bg-green-700 transition-colors"
-              >
-                Create Live Edit
-              </button>
+              <div className="flex space-x-4">
+                <button
+                  onClick={() => setShowLiveEditForm(!showLiveEditForm)}
+                  className="bg-green-600 text-white px-8 py-4 font-bold uppercase tracking-widest hover:bg-green-700 transition-colors"
+                >
+                  {showLiveEditForm ? 'Cancel' : 'Create Live Edit'}
+                </button>
+              </div>
             )}
           </div>
+
+          {showLiveEditForm && (
+            <div className="bg-gray-900 border border-gray-800 p-8 mb-8">
+              <h3 className="text-xl font-bold text-white mb-4 uppercase tracking-wide">Create Live Stream Edit</h3>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-gray-400 text-sm font-bold mb-2 uppercase tracking-widest">
+                    Caption
+                  </label>
+                  <input
+                    type="text"
+                    value={liveEditCaption}
+                    onChange={(e) => setLiveEditCaption(e.target.value)}
+                    placeholder="Enter caption for this live edit..."
+                    className="w-full px-4 py-3 bg-black border border-gray-800 text-white focus:border-riot-red focus:outline-none"
+                  />
+                </div>
+                <div className="flex space-x-4">
+                  <button
+                    onClick={handleCreateLiveEdit}
+                    className="bg-riot-red text-white px-8 py-3 font-bold uppercase tracking-widest hover:bg-red-700 transition-colors"
+                  >
+                    Publish to VOD Queue
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShowLiveEditForm(false);
+                      setLiveEditCaption('');
+                    }}
+                    className="bg-gray-600 text-white px-8 py-3 font-bold uppercase tracking-widest hover:bg-gray-700 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
           <AdminTable
             title=""
             columns={[
               { key: 'caption', label: 'Caption' },
-              { key: 'approved', label: 'Status', render: (value) => value ? 'Approved' : 'Pending' },
-              { key: 'is_live_edit', label: 'Type', render: (value) => value ? 'Live Edit' : 'Upload' },
-              { key: 'created_at', label: 'Created', render: (value) => new Date(value).toLocaleDateString() }
+              { key: 'approved', label: 'Status', render: (value) => (
+                <span className={`px-3 py-1 text-xs font-bold uppercase tracking-widest ${
+                  value ? 'bg-green-600 text-white' : 'bg-yellow-600 text-white'
+                }`}>
+                  {value ? 'Approved' : 'Pending'}
+                </span>
+              )},
+              { key: 'is_live_edit', label: 'Type', render: (value) => (
+                <span className={`px-3 py-1 text-xs font-bold uppercase tracking-widest ${
+                  value ? 'bg-red-600 text-white' : 'bg-blue-600 text-white'
+                }`}>
+                  {value ? 'Live Edit' : 'Upload'}
+                </span>
+              )},
+              { key: 'created_at', label: 'Created', render: (value) => new Date(value).toLocaleDateString() },
+              { key: 'published_at', label: 'Published', render: (value) => value ? new Date(value).toLocaleDateString() : 'Not published' }
             ]}
             data={vodEdits}
             actions={[
