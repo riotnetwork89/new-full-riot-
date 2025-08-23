@@ -6,72 +6,41 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      return res.status(401).json({ error: 'Authentication required' });
-    }
 
     const fixes = [];
 
     try {
-      const { error: addColumnError } = await supabase.rpc('exec', { 
-        sql: 'ALTER TABLE merchandise ADD COLUMN IF NOT EXISTS description text;' 
-      });
-      if (addColumnError) {
-        console.error('Error adding description column:', addColumnError);
-        fixes.push({ fix: 'Add description column', status: 'failed', error: addColumnError.message });
+      const { error: checkError } = await supabase
+        .from('merchandise')
+        .select('description')
+        .limit(1);
+      
+      if (checkError && checkError.message.includes('description')) {
+        fixes.push({ fix: 'Add description column', status: 'needed', error: 'Column missing - requires manual SQL execution' });
       } else {
-        fixes.push({ fix: 'Add description column', status: 'success' });
+        fixes.push({ fix: 'Add description column', status: 'exists' });
       }
     } catch (error) {
       fixes.push({ fix: 'Add description column', status: 'failed', error: error.message });
     }
 
     try {
-      const createVodTableSQL = `
-        CREATE TABLE IF NOT EXISTS vod_edits (
-          id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-          stream_timestamp timestamptz,
-          caption text NOT NULL,
-          is_live_edit boolean DEFAULT false,
-          approved boolean DEFAULT false,
-          published_at timestamptz,
-          notification_sent boolean DEFAULT false,
-          submitted_by uuid REFERENCES auth.users(id),
-          video_url text,
-          thumbnail_url text,
-          created_at timestamptz DEFAULT now()
-        );
-      `;
-
-      const { error: createTableError } = await supabase.rpc('exec', { sql: createVodTableSQL });
-      if (createTableError) {
-        console.error('Error creating vod_edits table:', createTableError);
-        fixes.push({ fix: 'Create vod_edits table', status: 'failed', error: createTableError.message });
+      const { error: checkVodError } = await supabase
+        .from('vod_edits')
+        .select('id')
+        .limit(1);
+      
+      if (checkVodError && checkVodError.message.includes('does not exist')) {
+        fixes.push({ fix: 'Create vod_edits table', status: 'needed', error: 'Table missing - requires manual SQL execution' });
       } else {
-        fixes.push({ fix: 'Create vod_edits table', status: 'success' });
+        fixes.push({ fix: 'Create vod_edits table', status: 'exists' });
       }
     } catch (error) {
       fixes.push({ fix: 'Create vod_edits table', status: 'failed', error: error.message });
     }
 
     try {
-      const rlsSQL = `
-        ALTER TABLE vod_edits ENABLE ROW LEVEL SECURITY;
-        
-        CREATE POLICY IF NOT EXISTS "vod_edits_read_all" ON vod_edits FOR SELECT USING (true);
-        CREATE POLICY IF NOT EXISTS "vod_edits_insert_authed" ON vod_edits FOR INSERT TO authenticated WITH CHECK (true);
-        CREATE POLICY IF NOT EXISTS "vod_edits_update_admin" ON vod_edits FOR UPDATE USING (true);
-        CREATE POLICY IF NOT EXISTS "vod_edits_delete_admin" ON vod_edits FOR DELETE USING (true);
-      `;
-
-      const { error: rlsError } = await supabase.rpc('exec', { sql: rlsSQL });
-      if (rlsError) {
-        console.error('Error setting up RLS policies:', rlsError);
-        fixes.push({ fix: 'Setup vod_edits RLS policies', status: 'failed', error: rlsError.message });
-      } else {
-        fixes.push({ fix: 'Setup vod_edits RLS policies', status: 'success' });
-      }
+      fixes.push({ fix: 'Setup vod_edits RLS policies', status: 'skipped', reason: 'Requires manual SQL execution' });
     } catch (error) {
       fixes.push({ fix: 'Setup vod_edits RLS policies', status: 'failed', error: error.message });
     }
@@ -84,10 +53,10 @@ export default async function handler(req, res) {
 
       if (!checkError && (!existingMerch || existingMerch.length === 0)) {
         const sampleMerch = [
-          { name: 'Riot Tee (Black/Red)', description: 'Premium black and red Riot Network t-shirt with official logo', price: 35, stock: 50, is_active: true },
-          { name: 'Riot Dad Hat', description: 'Classic dad hat with embroidered Riot Network logo', price: 28, stock: 30, is_active: true },
-          { name: 'Riot Hoodie', description: 'Comfortable hoodie with large Riot Network branding', price: 60, stock: 25, is_active: true },
-          { name: 'Riot Sticker Pack', description: 'Set of 5 premium vinyl stickers', price: 12, stock: 100, is_active: true }
+          { name: 'Riot Tee (Black/Red)', price: 35, stock: 50, is_active: true },
+          { name: 'Riot Dad Hat', price: 28, stock: 30, is_active: true },
+          { name: 'Riot Hoodie', price: 60, stock: 25, is_active: true },
+          { name: 'Riot Sticker Pack', price: 12, stock: 100, is_active: true }
         ];
 
         const { error: insertError } = await supabase
