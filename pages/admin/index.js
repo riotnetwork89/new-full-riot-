@@ -17,6 +17,7 @@ export default function Admin() {
   const [messages, setMessages] = useState([]);
   const [vodEdits, setVodEdits] = useState([]);
   const [liveEditCaption, setLiveEditCaption] = useState('');
+  const [isPopulatingMerch, setIsPopulatingMerch] = useState(false);
   const [showLiveEditForm, setShowLiveEditForm] = useState(false);
   const [showEventForm, setShowEventForm] = useState(false);
   const [showMerchForm, setShowMerchForm] = useState(false);
@@ -127,20 +128,42 @@ export default function Admin() {
 
   const handleSaveMerch = async (merchData) => {
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        toast.error('Authentication required');
+        return;
+      }
+
+      const processedData = {
+        name: merchData.name,
+        price: parseFloat(merchData.price),
+        stock: merchData.stock_quantity ? parseInt(merchData.stock_quantity) : 0,
+        is_active: merchData.is_active || false,
+        image_url: merchData.image_url || null,
+        description: merchData.description || null
+      };
+
       if (editingMerch) {
         const { error } = await supabase
           .from('merchandise')
-          .update(merchData)
+          .update(processedData)
           .eq('id', editingMerch.id);
         
-        if (error) throw error;
+        if (error) {
+          console.error('Update error:', error);
+          throw error;
+        }
         toast.success('Merchandise updated successfully');
       } else {
-        const { error } = await supabase
+        const { data, error } = await supabase
           .from('merchandise')
-          .insert(merchData);
+          .insert(processedData)
+          .select();
         
-        if (error) throw error;
+        if (error) {
+          console.error('Insert error:', error);
+          throw error;
+        }
         toast.success('Merchandise created successfully');
       }
       
@@ -148,8 +171,8 @@ export default function Admin() {
       setEditingMerch(null);
       fetchData();
     } catch (error) {
-      toast.error('Error saving merchandise');
-      console.error(error);
+      console.error('Error saving merchandise:', error);
+      toast.error(`Failed to save merchandise: ${error.message}`);
     }
   };
 
