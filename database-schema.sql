@@ -47,6 +47,27 @@ CREATE POLICY "stream_logs_read_all" ON stream_logs FOR SELECT USING (true);
 CREATE POLICY "stream_logs_insert_admin" ON stream_logs FOR INSERT USING (true);
 CREATE POLICY "stream_logs_update_admin" ON stream_logs FOR UPDATE USING (true);
 
+CREATE TABLE IF NOT EXISTS vod_edits (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  stream_timestamp timestamptz,
+  caption text NOT NULL,
+  is_live_edit boolean DEFAULT false,
+  approved boolean DEFAULT false,
+  published_at timestamptz,
+  notification_sent boolean DEFAULT false,
+  submitted_by uuid REFERENCES auth.users(id),
+  video_url text,
+  thumbnail_url text,
+  created_at timestamptz DEFAULT now()
+);
+
+ALTER TABLE vod_edits ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "vod_edits_read_all" ON vod_edits FOR SELECT USING (true);
+CREATE POLICY "vod_edits_insert_authed" ON vod_edits FOR INSERT TO authenticated WITH CHECK (true);
+CREATE POLICY "vod_edits_update_admin" ON vod_edits FOR UPDATE USING (true);
+CREATE POLICY "vod_edits_delete_admin" ON vod_edits FOR DELETE USING (true);
+
 INSERT INTO merchandise (name, price, stock, is_active) VALUES
 ('Riot Tee (Black/Red)', 35, 50, true),
 ('Riot Dad Hat', 28, 30, true),
