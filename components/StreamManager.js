@@ -6,6 +6,7 @@ export default function StreamManager() {
   const [streams, setStreams] = useState([]);
   const [loading, setLoading] = useState(false);
   const [creating, setCreating] = useState(false);
+  const [activatingStream, setActivatingStream] = useState(null);
 
   const fetchStreams = async () => {
     setLoading(true);
@@ -63,6 +64,33 @@ export default function StreamManager() {
       fetchStreams();
     } catch (error) {
       toast.error('Failed to delete stream');
+    }
+  };
+
+  const activateStream = async (streamId) => {
+    setActivatingStream(streamId);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const response = await fetch('/api/mux/activate-stream', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${session?.access_token || ''}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ streamId })
+      });
+      const data = await response.json();
+      
+      if (response.ok) {
+        toast.success(`Stream activated! RTMP URL: ${data.rtmpUrl}`);
+        fetchStreams();
+      } else {
+        toast.error('Failed to activate stream');
+      }
+    } catch (error) {
+      toast.error('Failed to activate stream');
+    } finally {
+      setActivatingStream(null);
     }
   };
 
@@ -133,6 +161,13 @@ export default function StreamManager() {
                   </div>
                 </div>
                 <div className="flex space-x-4 mt-4">
+                  <button
+                    onClick={() => activateStream(stream.id)}
+                    disabled={activatingStream === stream.id}
+                    className="bg-green-600 text-white px-4 py-2 text-sm font-bold uppercase tracking-wide hover:bg-green-700 transition-colors disabled:opacity-50"
+                  >
+                    {activatingStream === stream.id ? 'Activating...' : 'Go Live'}
+                  </button>
                   <button
                     onClick={() => checkStreamStatus(stream.id)}
                     className="bg-blue-600 text-white px-4 py-2 text-sm font-bold uppercase tracking-wide hover:bg-blue-700 transition-colors"
