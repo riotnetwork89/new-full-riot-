@@ -4,21 +4,27 @@ import { supabase } from '../utils/supabase';
 export default function Nav() {
   const [user, setUser] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isNavigating, setIsNavigating] = useState(false);
 
   useEffect(() => {
     let mounted = true;
+    let authTimeout;
     
     const getUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!mounted) return;
       
-      setUser(user);
-      
-      if (user?.email === 'kevinparxmusic@gmail.com') {
-        setIsAdmin(true);
-      } else {
-        setIsAdmin(false);
-      }
+      clearTimeout(authTimeout);
+      authTimeout = setTimeout(() => {
+        if (!mounted) return;
+        setUser(user);
+        
+        if (user?.email === 'kevinparxmusic@gmail.com') {
+          setIsAdmin(true);
+        } else {
+          setIsAdmin(false);
+        }
+      }, 50);
     };
     
     getUser();
@@ -26,29 +32,42 @@ export default function Nav() {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (!mounted) return;
       
-      const currentUser = session?.user || null;
-      setUser(currentUser);
-      
-      if (currentUser?.email === 'kevinparxmusic@gmail.com') {
-        setIsAdmin(true);
-      } else {
-        setIsAdmin(false);
-      }
+      clearTimeout(authTimeout);
+      authTimeout = setTimeout(() => {
+        if (!mounted) return;
+        
+        const currentUser = session?.user || null;
+        setUser(currentUser);
+        
+        if (currentUser?.email === 'kevinparxmusic@gmail.com') {
+          setIsAdmin(true);
+        } else {
+          setIsAdmin(false);
+        }
+      }, 50);
     });
 
     return () => {
       mounted = false;
+      clearTimeout(authTimeout);
       subscription.unsubscribe();
     };
   }, []);
 
   const handleLogout = async () => {
+    if (isNavigating) return;
+    
+    setIsNavigating(true);
     try {
       await supabase.auth.signOut();
-      window.location.href = '/';
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 100);
     } catch (error) {
       console.error('Logout error:', error);
-      window.location.href = '/';
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 100);
     }
   };
 
@@ -64,38 +83,86 @@ export default function Nav() {
         <div className="hidden md:flex space-x-16">
           <a 
             href="/"
-            className="text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest"
+            className={`text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest ${isNavigating ? 'pointer-events-none opacity-50' : ''}`}
+            onClick={(e) => {
+              if (isNavigating) {
+                e.preventDefault();
+                return;
+              }
+              setIsNavigating(true);
+              setTimeout(() => setIsNavigating(false), 1000);
+            }}
           >
             Home
           </a>
           <a 
             href="/stream"
-            className="text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest"
+            className={`text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest ${isNavigating ? 'pointer-events-none opacity-50' : ''}`}
+            onClick={(e) => {
+              if (isNavigating) {
+                e.preventDefault();
+                return;
+              }
+              setIsNavigating(true);
+              setTimeout(() => setIsNavigating(false), 1000);
+            }}
           >
             Stream
           </a>
           <a 
             href="/schedule"
-            className="text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest"
+            className={`text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest ${isNavigating ? 'pointer-events-none opacity-50' : ''}`}
+            onClick={(e) => {
+              if (isNavigating) {
+                e.preventDefault();
+                return;
+              }
+              setIsNavigating(true);
+              setTimeout(() => setIsNavigating(false), 1000);
+            }}
           >
             Schedule
           </a>
           <a 
             href="/merch"
-            className="text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest"
+            className={`text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest ${isNavigating ? 'pointer-events-none opacity-50' : ''}`}
+            onClick={(e) => {
+              if (isNavigating) {
+                e.preventDefault();
+                return;
+              }
+              setIsNavigating(true);
+              setTimeout(() => setIsNavigating(false), 1000);
+            }}
           >
             Merch
           </a>
           <a 
             href="/vod"
-            className="text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest"
+            className={`text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest ${isNavigating ? 'pointer-events-none opacity-50' : ''}`}
+            onClick={(e) => {
+              if (isNavigating) {
+                e.preventDefault();
+                return;
+              }
+              setIsNavigating(true);
+              setTimeout(() => setIsNavigating(false), 1000);
+            }}
           >
             VOD
           </a>
           {isAdmin && (
             <a 
               href="/admin"
-              className="text-riot-red hover:text-red-400 transition-colors font-medium text-sm uppercase tracking-widest"
+              className={`text-riot-red hover:text-red-400 transition-colors font-medium text-sm uppercase tracking-widest ${isNavigating ? 'pointer-events-none opacity-50' : ''}`}
+              onClick={(e) => {
+                if (isNavigating) {
+                  e.preventDefault();
+                  return;
+                }
+                setIsNavigating(true);
+                setTimeout(() => setIsNavigating(false), 1000);
+              }}
             >
               Admin
             </a>
