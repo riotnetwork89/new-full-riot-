@@ -4,7 +4,6 @@ import { supabase } from '../utils/supabase';
 export default function Nav() {
   const [user, setUser] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [isNavigating, setIsNavigating] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -55,9 +54,6 @@ export default function Nav() {
   }, []);
 
   const handleLogout = async () => {
-    if (isNavigating) return;
-    
-    setIsNavigating(true);
     try {
       await supabase.auth.signOut();
       setTimeout(() => {
@@ -83,86 +79,38 @@ export default function Nav() {
         <div className="hidden md:flex space-x-16">
           <a 
             href="/"
-            className={`text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest ${isNavigating ? 'pointer-events-none opacity-50' : ''}`}
-            onClick={(e) => {
-              if (isNavigating) {
-                e.preventDefault();
-                return;
-              }
-              setIsNavigating(true);
-              setTimeout(() => setIsNavigating(false), 1000);
-            }}
+            className="text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest"
           >
             Home
           </a>
           <a 
             href="/stream"
-            className={`text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest ${isNavigating ? 'pointer-events-none opacity-50' : ''}`}
-            onClick={(e) => {
-              if (isNavigating) {
-                e.preventDefault();
-                return;
-              }
-              setIsNavigating(true);
-              setTimeout(() => setIsNavigating(false), 1000);
-            }}
+            className="text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest"
           >
             Stream
           </a>
           <a 
             href="/schedule"
-            className={`text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest ${isNavigating ? 'pointer-events-none opacity-50' : ''}`}
-            onClick={(e) => {
-              if (isNavigating) {
-                e.preventDefault();
-                return;
-              }
-              setIsNavigating(true);
-              setTimeout(() => setIsNavigating(false), 1000);
-            }}
+            className="text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest"
           >
             Schedule
           </a>
           <a 
             href="/merch"
-            className={`text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest ${isNavigating ? 'pointer-events-none opacity-50' : ''}`}
-            onClick={(e) => {
-              if (isNavigating) {
-                e.preventDefault();
-                return;
-              }
-              setIsNavigating(true);
-              setTimeout(() => setIsNavigating(false), 1000);
-            }}
+            className="text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest"
           >
             Merch
           </a>
           <a 
             href="/vod"
-            className={`text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest ${isNavigating ? 'pointer-events-none opacity-50' : ''}`}
-            onClick={(e) => {
-              if (isNavigating) {
-                e.preventDefault();
-                return;
-              }
-              setIsNavigating(true);
-              setTimeout(() => setIsNavigating(false), 1000);
-            }}
+            className="text-white hover:text-riot-red transition-colors font-medium text-sm uppercase tracking-widest"
           >
             VOD
           </a>
           {isAdmin && (
             <a 
               href="/admin"
-              className={`text-riot-red hover:text-red-400 transition-colors font-medium text-sm uppercase tracking-widest ${isNavigating ? 'pointer-events-none opacity-50' : ''}`}
-              onClick={(e) => {
-                if (isNavigating) {
-                  e.preventDefault();
-                  return;
-                }
-                setIsNavigating(true);
-                setTimeout(() => setIsNavigating(false), 1000);
-              }}
+              className="text-riot-red hover:text-red-400 transition-colors font-medium text-sm uppercase tracking-widest"
             >
               Admin
             </a>
