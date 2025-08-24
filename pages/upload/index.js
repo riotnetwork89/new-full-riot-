@@ -12,7 +12,9 @@ export default function Upload() {
     e.preventDefault();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
-      router.push('/login');
+      if (router.isReady) {
+        router.push('/login');
+      }
       return;
     }
     if (!file) {
@@ -31,13 +33,15 @@ export default function Upload() {
     // Get public URL for the uploaded file
     const { data: publicUrlData } = supabase.storage.from('clips').getPublicUrl(filePath);
     const video_url = publicUrlData?.publicUrl || '';
-    // Insert into fan_uploads table
-    const { error } = await supabase.from('fan_uploads').insert({
+    // Insert into vod_edits table
+    const { error } = await supabase.from('vod_edits').insert({
       file_id: filePath,
       submitted_by: user.id,
       approved: false,
       video_url,
       caption,
+      is_live_edit: false,
+      notification_sent: false
     });
     if (error) {
       setMessage(error.message);
