@@ -7,9 +7,16 @@ import ChatBox from '../../components/ChatBox';
 
 export default function Stream() {
   const [streamStatus, setStreamStatus] = useState('DISCONNECTED');
+  const [lastStatusCheck, setLastStatusCheck] = useState(0);
+  const CACHE_DURATION = 30000;
 
   useEffect(() => {
     const fetchStreamStatus = async () => {
+      const now = Date.now();
+      if (now - lastStatusCheck < CACHE_DURATION) {
+        return;
+      }
+      
       const { data } = await supabase
         .from('stream_logs')
         .select('status')
@@ -19,6 +26,7 @@ export default function Stream() {
       
       if (data) {
         setStreamStatus(data.status);
+        setLastStatusCheck(now);
       }
     };
 
@@ -30,6 +38,7 @@ export default function Stream() {
         { event: 'INSERT', schema: 'public', table: 'stream_logs' },
         (payload) => {
           setStreamStatus(payload.new.status);
+          setLastStatusCheck(Date.now());
         }
       )
       .subscribe();
@@ -37,7 +46,7 @@ export default function Stream() {
     return () => {
       subscription.unsubscribe();
     };
-  }, []);
+  }, [lastStatusCheck]);
 
   return (
     <div className="min-h-screen bg-black font-riot">

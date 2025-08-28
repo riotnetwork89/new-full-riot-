@@ -26,10 +26,11 @@ export default function ChatBox() {
       const { data, error } = await supabase
         .from('chat_messages')
         .select('*')
-        .order('created_at', { ascending: true });
+        .order('created_at', { ascending: false })
+        .limit(50);
       
       if (!error && data) {
-        setMessages(data);
+        setMessages(data.reverse());
       }
     };
 
@@ -40,7 +41,10 @@ export default function ChatBox() {
       .on('postgres_changes', 
         { event: 'INSERT', schema: 'public', table: 'chat_messages' },
         (payload) => {
-          setMessages(prev => [...prev, payload.new]);
+          setMessages(prev => {
+            const newMessages = [...prev, payload.new];
+            return newMessages.slice(-50);
+          });
         }
       )
       .subscribe();

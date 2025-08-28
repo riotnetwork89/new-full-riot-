@@ -64,12 +64,12 @@ export default function Admin() {
 
   const fetchData = async () => {
     const [ordersResult, eventsResult, merchResult, logsResult, chatResult, vodResult] = await Promise.all([
-      supabase.from('orders').select('*').order('created_at', { ascending: false }),
-      supabase.from('events').select('*').order('date', { ascending: false }),
-      supabase.from('merchandise').select('*').order('created_at', { ascending: false }),
-      supabase.from('stream_logs').select('*').order('created_at', { ascending: false }),
-      supabase.from('chat_messages').select('*').order('created_at', { ascending: false }),
-      supabase.from('vod_edits').select('*').order('created_at', { ascending: false })
+      supabase.from('orders').select('*').order('created_at', { ascending: false }).limit(100),
+      supabase.from('events').select('*').order('date', { ascending: false }).limit(50),
+      supabase.from('merchandise').select('*').order('created_at', { ascending: false }).limit(50),
+      supabase.from('stream_logs').select('*').order('created_at', { ascending: false }).limit(100),
+      supabase.from('chat_messages').select('*').order('created_at', { ascending: false }).limit(100),
+      supabase.from('vod_edits').select('*').order('created_at', { ascending: false }).limit(50)
     ]);
 
     setOrders(ordersResult.data || []);
