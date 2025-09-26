@@ -14,13 +14,12 @@ export default function Profile() {
         router.push('/login');
         return;
       }
-      // fetch correct trivia responses for user
-      const { data: responses } = await supabase
-        .from('trivia_responses')
-        .select('*')
-        .eq('user_email', user.email)
-        .eq('correct', true);
-      const coinsEarned = responses ? responses.length * 10 : 0;
+      // fetch coins from coin_ledger table
+      const { data: coinData } = await supabase
+        .from('coin_ledger')
+        .select('coins')
+        .eq('user_email', user.email);
+      const coinsEarned = coinData ? coinData.reduce((sum, entry) => sum + entry.coins, 0) : 0;
       setCoins(coinsEarned);
       // fetch orders for user
       const { data: ordersData } = await supabase

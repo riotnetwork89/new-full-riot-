@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import supabase from '../../utils/supabase';
+import { supabase } from '../../utils/supabase';
 
 export default function ChatPage() {
   const [messages, setMessages] = useState([]);
@@ -27,7 +27,7 @@ export default function ChatPage() {
       if (!error) {
         setMessages(data);
       }
-    
+    }
     fetchMessages();
 
     const channel = supabase
@@ -51,11 +51,10 @@ export default function ChatPage() {
     if (!newMessage.trim()) return;
     if (!user) return;
     await supabase.from('chat_messages').insert({
-      
-       user_email: user.email,
-  message: newMessage,
+      user_email: user.email,
+      message: newMessage,
     });
-   
+    setNewMessage('');
   };
 
   return (
