@@ -99,6 +99,17 @@ input::placeholder, textarea::placeholder {
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 }
 
+.nav-link:hover {
+  color: #ff6b6b !important;
+}
+
+.nav-brand {
+  background: linear-gradient(45deg, #ff0000, #ff6b6b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
 @media (max-width: 768px) {
   .container {
     padding: 1rem;

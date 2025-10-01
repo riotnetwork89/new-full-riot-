@@ -5,7 +5,7 @@ export default function App({ Component, pageProps }) {
   return (
     <>
       <Navigation />
-      <main style={{ paddingTop: '64px' }}>
+      <main style={{ paddingTop: '80px' }}>
         <Component {...pageProps} />
       </main>
     </>
