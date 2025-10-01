@@ -49,7 +49,7 @@ export default function Navigation() {
           gap: '2.5rem',
           alignItems: 'center'
         }}>
-          <Link href="/" style={{
+          <Link href="/vault" style={{
             color: 'white',
             textDecoration: 'none',
             fontSize: '1rem',
@@ -76,14 +76,23 @@ export default function Navigation() {
           }}>
             CHAT
           </Link>
-          <Link href="/trivia" style={{
+          <Link href="/merch" style={{
             color: 'white',
             textDecoration: 'none',
             fontSize: '1rem',
             fontWeight: '500',
             transition: 'color 0.3s ease'
           }}>
-            TRIVIA
+            MERCH
+          </Link>
+          <Link href="/schedule" style={{
+            color: 'white',
+            textDecoration: 'none',
+            fontSize: '1rem',
+            fontWeight: '500',
+            transition: 'color 0.3s ease'
+          }}>
+            SCHEDULE
           </Link>
           {user ? (
             <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
@@ -96,15 +105,17 @@ export default function Navigation() {
               }}>
                 PROFILE
               </Link>
-              <Link href="/admin" style={{
-                color: 'white',
-                textDecoration: 'none',
-                fontSize: '1rem',
-                fontWeight: '500',
-                transition: 'color 0.3s ease'
-              }}>
-                ADMIN
-              </Link>
+              {user.email === 'kevinparxmusic@gmail.com' && (
+                <Link href="/admin" style={{
+                  color: 'white',
+                  textDecoration: 'none',
+                  fontSize: '1rem',
+                  fontWeight: '500',
+                  transition: 'color 0.3s ease'
+                }}>
+                  ADMIN
+                </Link>
+              )}
               <span style={{ color: 'white', fontSize: '0.9rem' }}>
                 {user.email}
               </span>
