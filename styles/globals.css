@@ -110,6 +110,49 @@ input::placeholder, textarea::placeholder {
   background-clip: text;
 }
 
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.loading-spinner {
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  border-top: 2px solid #ff6b6b;
+  width: 20px;
+  height: 20px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.card {
+  will-change: transform;
+  transform: translateZ(0);
+}
+
 @media (max-width: 768px) {
   .container {
     padding: 1rem;
@@ -121,5 +164,17 @@ input::placeholder, textarea::placeholder {
   
   h2 {
     font-size: 1.5rem;
+  }
+  
+  .grid {
+    grid-template-columns: 1fr;
+  }
+  
+  nav div[style*="gap: 2.5rem"] {
+    gap: 1rem !important;
+  }
+  
+  nav div[style*="fontSize: 1rem"] {
+    font-size: 0.9rem !important;
   }
 }

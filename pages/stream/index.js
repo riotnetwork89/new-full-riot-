@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { supabase } from '../../utils/supabase';
+import { accessCache } from '../../utils/cache';
 
 export default function Stream() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [hasAccess, setHasAccess] = useState(false);
+  const [viewerCount, setViewerCount] = useState(0);
+  const [streamStatus, setStreamStatus] = useState('live');
 
   useEffect(() => {
     const checkAccess = async () => {
@@ -14,42 +17,201 @@ export default function Stream() {
         router.push('/login');
         return;
       }
+      
+      const cacheKey = `access-${user.email}`;
+      const cachedAccess = accessCache.get(cacheKey);
+      
+      if (cachedAccess !== null) {
+        setHasAccess(cachedAccess);
+        setLoading(false);
+        return;
+      }
+      
       const { data, error } = await supabase
         .from('orders')
         .select('id')
         .eq('email', user.email)
         .eq('product', 'ppv_ticket')
         .single();
-      if (data) {
+        
+      const hasTicket = !!data;
+      accessCache.set(cacheKey, hasTicket);
+      
+      if (hasTicket) {
         setHasAccess(true);
+        await supabase.from('stream_logs').insert({
+          user_email: user.email,
+          action: 'stream_access',
+          timestamp: new Date().toISOString()
+        });
       } else {
         router.push('/checkout');
       }
       setLoading(false);
     };
+    
+    const updateViewerCount = async () => {
+      const { data } = await supabase
+        .from('stream_logs')
+        .select('user_email')
+        .eq('action', 'stream_access')
+        .gte('timestamp', new Date(Date.now() - 5 * 60 * 1000).toISOString()); // Last 5 minutes
+      
+      if (data) {
+        const uniqueViewers = new Set(data.map(log => log.user_email)).size;
+        setViewerCount(uniqueViewers);
+      }
+    };
+    
     checkAccess();
+    updateViewerCount();
+    
+    const viewerInterval = setInterval(updateViewerCount, 30000);
+    
+    return () => {
+      clearInterval(viewerInterval);
+    };
   }, [router]);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return (
+    <div className="container">
+      <div className="card" style={{ textAlign: 'center' }}>
+        <p>Loading stream...</p>
+      </div>
+    </div>
+  );
 
   return (
     <div className="container">
-      <h1>Live Stream</h1>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+        <h1>Live Stream</h1>
+        <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
+          <div style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '0.5rem',
+            background: 'rgba(255, 107, 107, 0.1)',
+            padding: '0.5rem 1rem',
+            borderRadius: '20px',
+            border: '1px solid rgba(255, 107, 107, 0.3)'
+          }}>
+            <div style={{ 
+              width: '8px', 
+              height: '8px', 
+              borderRadius: '50%', 
+              background: streamStatus === 'live' ? '#4ade80' : '#6b7280',
+              animation: streamStatus === 'live' ? 'pulse 2s infinite' : 'none'
+            }}></div>
+            <span style={{ fontSize: '0.9rem', fontWeight: '600' }}>
+              {streamStatus === 'live' ? 'LIVE' : 'OFFLINE'}
+            </span>
+          </div>
+          <div style={{ 
+            fontSize: '0.9rem', 
+            color: '#ff6b6b',
+            fontWeight: '600'
+          }}>
+            👥 {viewerCount} viewers
+          </div>
+        </div>
+      </div>
+      
       {hasAccess ? (
         <div className="card">
-          <iframe
-            src={`https://stream.mux.com/${process.env.NEXT_PUBLIC_MUX_PLAYBACK_ID}.m3u8`}
-            width="100%"
-            height="480"
-            frameBorder="0"
-            allow="autoplay; fullscreen"
-            allowFullScreen
-            style={{ borderRadius: '8px' }}
-          />
+          <div style={{ position: 'relative' }}>
+            <iframe
+              src={`https://stream.mux.com/${process.env.NEXT_PUBLIC_MUX_PLAYBACK_ID}.m3u8`}
+              width="100%"
+              height="480"
+              frameBorder="0"
+              allow="autoplay; fullscreen"
+              allowFullScreen
+              style={{ borderRadius: '8px' }}
+              onLoad={() => setStreamStatus('live')}
+              onError={() => setStreamStatus('offline')}
+            />
+            {streamStatus === 'offline' && (
+              <div style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                background: 'rgba(0, 0, 0, 0.8)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: '8px'
+              }}>
+                <div style={{ textAlign: 'center' }}>
+                  <h3 style={{ color: '#ff6b6b', marginBottom: '1rem' }}>Stream Offline</h3>
+                  <p>The stream will begin shortly. Please check back soon!</p>
+                </div>
+              </div>
+            )}
+          </div>
+          
+          <div style={{ 
+            marginTop: '1rem', 
+            padding: '1rem',
+            background: 'rgba(255, 255, 255, 0.05)',
+            borderRadius: '8px',
+            border: '1px solid rgba(255, 107, 107, 0.2)'
+          }}>
+            <h3 style={{ marginBottom: '0.5rem', color: '#ff6b6b' }}>Stream Quality</h3>
+            <div style={{ display: 'flex', gap: '1rem', fontSize: '0.9rem' }}>
+              <button style={{ 
+                padding: '0.25rem 0.75rem', 
+                background: 'rgba(255, 107, 107, 0.2)',
+                border: '1px solid rgba(255, 107, 107, 0.3)',
+                borderRadius: '4px',
+                fontSize: '0.8rem'
+              }}>
+                Auto
+              </button>
+              <button style={{ 
+                padding: '0.25rem 0.75rem', 
+                background: 'transparent',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                borderRadius: '4px',
+                fontSize: '0.8rem'
+              }}>
+                1080p
+              </button>
+              <button style={{ 
+                padding: '0.25rem 0.75rem', 
+                background: 'transparent',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                borderRadius: '4px',
+                fontSize: '0.8rem'
+              }}>
+                720p
+              </button>
+              <button style={{ 
+                padding: '0.25rem 0.75rem', 
+                background: 'transparent',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                borderRadius: '4px',
+                fontSize: '0.8rem'
+              }}>
+                480p
+              </button>
+            </div>
+          </div>
         </div>
       ) : (
         <div className="card" style={{ textAlign: 'center' }}>
           <p style={{ fontSize: '1.2rem' }}>You do not have access to this stream.</p>
+          <button 
+            onClick={() => router.push('/checkout')}
+            style={{ 
+              marginTop: '1rem',
+              padding: '1rem 2rem',
+              fontSize: '1.1rem'
+            }}
+          >
+            Purchase Ticket
+          </button>
         </div>
       )}
     </div>
