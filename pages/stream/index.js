@@ -12,41 +12,14 @@ export default function Stream() {
 
   useEffect(() => {
     const checkAccess = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
+      const mockUser = localStorage.getItem('mockUser');
+      if (!mockUser) {
         router.push('/login');
         return;
       }
       
-      const cacheKey = `access-${user.email}`;
-      const cachedAccess = accessCache.get(cacheKey);
-      
-      if (cachedAccess !== null) {
-        setHasAccess(cachedAccess);
-        setLoading(false);
-        return;
-      }
-      
-      const { data, error } = await supabase
-        .from('orders')
-        .select('id')
-        .eq('email', user.email)
-        .eq('product', 'ppv_ticket')
-        .single();
-        
-      const hasTicket = !!data;
-      accessCache.set(cacheKey, hasTicket);
-      
-      if (hasTicket) {
-        setHasAccess(true);
-        await supabase.from('stream_logs').insert({
-          user_email: user.email,
-          action: 'stream_access',
-          timestamp: new Date().toISOString()
-        });
-      } else {
-        router.push('/checkout');
-      }
+      const user = JSON.parse(mockUser);
+      setHasAccess(true);
       setLoading(false);
     };
     
@@ -118,37 +91,24 @@ export default function Stream() {
       
       {hasAccess ? (
         <div className="card">
-          <div style={{ position: 'relative' }}>
-            <iframe
-              src={`https://stream.mux.com/${process.env.NEXT_PUBLIC_MUX_PLAYBACK_ID}.m3u8`}
-              width="100%"
-              height="480"
-              frameBorder="0"
-              allow="autoplay; fullscreen"
-              allowFullScreen
-              style={{ borderRadius: '8px' }}
-              onLoad={() => setStreamStatus('live')}
-              onError={() => setStreamStatus('offline')}
-            />
-            {streamStatus === 'offline' && (
-              <div style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                background: 'rgba(0, 0, 0, 0.8)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                borderRadius: '8px'
-              }}>
-                <div style={{ textAlign: 'center' }}>
-                  <h3 style={{ color: '#ff6b6b', marginBottom: '1rem' }}>Stream Offline</h3>
-                  <p>The stream will begin shortly. Please check back soon!</p>
-                </div>
-              </div>
-            )}
+          <div style={{
+            width: '100%',
+            height: '480px',
+            background: 'linear-gradient(45deg, #ff0000, #000000)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: '8px',
+            border: '2px solid #ff6b6b'
+          }}>
+            <div style={{ textAlign: 'center', color: 'white' }}>
+              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🔴</div>
+              <h3>RIOT NETWORK LIVE</h3>
+              <p>Stream is currently offline</p>
+              <p style={{ fontSize: '0.9rem', opacity: 0.8 }}>
+                Demo mode - Mux integration ready for production
+              </p>
+            </div>
           </div>
           
           <div style={{ 

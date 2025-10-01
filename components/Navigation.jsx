@@ -1,149 +1,139 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { supabase } from '../utils/supabase';
 
 export default function Navigation() {
   const [user, setUser] = useState(null);
   const router = useRouter();
 
   useEffect(() => {
-    async function getUser() {
-      const { data: { user } } = await supabase.auth.getUser();
-      setUser(user);
+    const mockUser = localStorage.getItem('mockUser');
+    if (mockUser) {
+      setUser(JSON.parse(mockUser));
     }
-    getUser();
   }, []);
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
+  const handleLogout = () => {
+    localStorage.removeItem('mockUser');
     setUser(null);
     router.push('/login');
   };
 
   return (
     <nav style={{
-      position: 'fixed',
+      background: 'linear-gradient(90deg, #ff0000, #cc0000)',
+      padding: '1rem 2rem',
+      position: 'sticky',
       top: 0,
-      left: 0,
-      right: 0,
-      zIndex: 50,
-      background: 'rgba(0, 0, 0, 0.95)',
-      backdropFilter: 'blur(10px)',
-      borderBottom: '1px solid rgba(255, 107, 107, 0.3)',
-      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.5)'
+      zIndex: 1000,
+      boxShadow: '0 2px 10px rgba(0, 0, 0, 0.3)'
     }}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 2rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '64px' }}>
-          <Link href="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
-            <div className="nav-brand" style={{ 
-              fontSize: '1.8rem', 
-              fontWeight: 'bold',
-              background: 'linear-gradient(45deg, #ff0000, #ff6b6b)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-              letterSpacing: '1px'
-            }}>
-              RIOT NETWORK
-            </div>
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        maxWidth: '1200px',
+        margin: '0 auto'
+      }}>
+        <Link href="/" style={{
+          fontSize: '1.5rem',
+          fontWeight: 'bold',
+          color: 'white',
+          textDecoration: 'none'
+        }}>
+          RIOT NETWORK
+        </Link>
+        
+        <div style={{
+          display: 'flex',
+          gap: '2.5rem',
+          alignItems: 'center'
+        }}>
+          <Link href="/" style={{
+            color: 'white',
+            textDecoration: 'none',
+            fontSize: '1rem',
+            fontWeight: '500',
+            transition: 'color 0.3s ease'
+          }}>
+            VAULT
           </Link>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '2.5rem' }}>
-            <Link href="/" className="nav-link" style={{ 
-              color: 'white', 
-              textDecoration: 'none', 
-              fontWeight: '600', 
-              fontSize: '1rem',
-              transition: 'color 0.3s ease',
-              letterSpacing: '0.5px'
-            }}>
-              VAULT
-            </Link>
-            <Link href="/stream" className="nav-link" style={{ 
-              color: 'white', 
-              textDecoration: 'none', 
-              fontWeight: '600', 
-              fontSize: '1rem',
-              transition: 'color 0.3s ease',
-              letterSpacing: '0.5px'
-            }}>
-              STREAM
-            </Link>
-            <Link href="/chat" className="nav-link" style={{ 
-              color: 'white', 
-              textDecoration: 'none', 
-              fontWeight: '600', 
-              fontSize: '1rem',
-              transition: 'color 0.3s ease',
-              letterSpacing: '0.5px'
-            }}>
-              CHAT
-            </Link>
-            <Link href="/trivia" className="nav-link" style={{ 
-              color: 'white', 
-              textDecoration: 'none', 
-              fontWeight: '600', 
-              fontSize: '1rem',
-              transition: 'color 0.3s ease',
-              letterSpacing: '0.5px'
-            }}>
-              TRIVIA
-            </Link>
-            {user && (
-              <>
-                <Link href="/profile" className="nav-link" style={{ 
-                  color: 'white', 
-                  textDecoration: 'none', 
-                  fontWeight: '600', 
-                  fontSize: '1rem',
-                  transition: 'color 0.3s ease',
-                  letterSpacing: '0.5px'
-                }}>
-                  PROFILE
-                </Link>
-                <Link href="/admin" className="nav-link" style={{ 
-                  color: 'white', 
-                  textDecoration: 'none', 
-                  fontWeight: '600', 
-                  fontSize: '1rem',
-                  transition: 'color 0.3s ease',
-                  letterSpacing: '0.5px'
-                }}>
-                  ADMIN
-                </Link>
-                <button 
-                  onClick={handleLogout}
-                  className="nav-link"
-                  style={{ 
-                    background: 'transparent',
-                    border: 'none',
-                    color: 'white',
-                    fontWeight: '600',
-                    cursor: 'pointer',
-                    fontSize: '1rem',
-                    transition: 'color 0.3s ease',
-                    letterSpacing: '0.5px',
-                    padding: 0
-                  }}
-                >
-                  LOGOUT
-                </button>
-              </>
-            )}
-            {!user && (
-              <Link href="/login" className="nav-link" style={{ 
-                color: 'white', 
-                textDecoration: 'none', 
-                fontWeight: '600', 
+          <Link href="/stream" style={{
+            color: 'white',
+            textDecoration: 'none',
+            fontSize: '1rem',
+            fontWeight: '500',
+            transition: 'color 0.3s ease'
+          }}>
+            STREAM
+          </Link>
+          <Link href="/chat" style={{
+            color: 'white',
+            textDecoration: 'none',
+            fontSize: '1rem',
+            fontWeight: '500',
+            transition: 'color 0.3s ease'
+          }}>
+            CHAT
+          </Link>
+          <Link href="/trivia" style={{
+            color: 'white',
+            textDecoration: 'none',
+            fontSize: '1rem',
+            fontWeight: '500',
+            transition: 'color 0.3s ease'
+          }}>
+            TRIVIA
+          </Link>
+          {user ? (
+            <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+              <Link href="/profile" style={{
+                color: 'white',
+                textDecoration: 'none',
                 fontSize: '1rem',
-                transition: 'color 0.3s ease',
-                letterSpacing: '0.5px'
+                fontWeight: '500',
+                transition: 'color 0.3s ease'
               }}>
-                LOGIN
+                PROFILE
               </Link>
-            )}
-          </div>
+              <Link href="/admin" style={{
+                color: 'white',
+                textDecoration: 'none',
+                fontSize: '1rem',
+                fontWeight: '500',
+                transition: 'color 0.3s ease'
+              }}>
+                ADMIN
+              </Link>
+              <span style={{ color: 'white', fontSize: '0.9rem' }}>
+                {user.email}
+              </span>
+              <button 
+                onClick={handleLogout}
+                style={{
+                  background: 'rgba(255, 255, 255, 0.2)',
+                  color: 'white',
+                  border: 'none',
+                  padding: '0.5rem 1rem',
+                  borderRadius: '4px',
+                  fontSize: '0.9rem',
+                  cursor: 'pointer'
+                }}
+              >
+                LOGOUT
+              </button>
+            </div>
+          ) : (
+            <Link href="/login" style={{
+              color: 'white',
+              textDecoration: 'none',
+              fontSize: '1rem',
+              fontWeight: '500',
+              transition: 'color 0.3s ease'
+            }}>
+              LOGIN
+            </Link>
+          )}
         </div>
       </div>
     </nav>

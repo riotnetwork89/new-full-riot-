@@ -10,21 +10,21 @@ export default function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) {
-      setError(error.message);
-    } else {
+    if (email && password) {
+      localStorage.setItem('mockUser', JSON.stringify({ email, authenticated: true }));
       router.push('/');
+    } else {
+      setError('Please enter email and password');
     }
   };
 
   const handleSignup = async (e) => {
     e.preventDefault();
-    const { error } = await supabase.auth.signUp({ email, password });
-    if (error) {
-      setError(error.message);
-    } else {
+    if (email && password) {
+      localStorage.setItem('mockUser', JSON.stringify({ email, authenticated: true }));
       router.push('/');
+    } else {
+      setError('Please enter email and password');
     }
   };
 

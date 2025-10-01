@@ -9,17 +9,28 @@ export default function VodPage() {
 
   useEffect(() => {
     async function check() {
-      const { data: session } = await supabase.auth.getUser();
-      const email = session?.user?.email;
-      if (!email) return router.push('/login');
-      const { data } = await supabase.from('orders').select('*').eq('email', email);
-      if (data && data.length > 0) {
-        setAuthorized(true);
-        const res = await supabase.from('vods').select('*').order('created_at', { ascending: false });
-        setVods(res.data || []);
-      } else {
-        router.push('/checkout');
+      const mockUser = localStorage.getItem('mockUser');
+      if (!mockUser) {
+        router.push('/login');
+        return;
       }
+      
+      setAuthorized(true);
+      const mockVods = [
+        {
+          id: 1,
+          title: 'Riot Network Live Event #1',
+          video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+          created_at: new Date().toISOString()
+        },
+        {
+          id: 2,
+          title: 'Riot Network Live Event #2',
+          video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
+          created_at: new Date().toISOString()
+        }
+      ];
+      setVods(mockVods);
     }
     check();
   }, []);

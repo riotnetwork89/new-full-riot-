@@ -8,18 +8,17 @@ export default function TriviaPage() {
   const [result, setResult] = useState('');
 
   useEffect(() => {
-    async function fetchQuestion() {
-      // Fetch a single trivia question (modify query as needed)
-      const { data, error } = await supabase
-        .from('trivia_questions')
-        .select('*')
-        .limit(1)
-        .single();
-      if (!error) {
-        setQuestion(data);
-      }
-    }
-    fetchQuestion();
+    const mockQuestion = {
+      id: 1,
+      question: 'What year was Riot Network founded?',
+      option_a: '2020',
+      option_b: '2021',
+      option_c: '2022',
+      option_d: '2023',
+      correct_option: 'c',
+      coin_reward: 50
+    };
+    setQuestion(mockQuestion);
   }, []);
 
   // Countdown timer
@@ -40,24 +39,8 @@ export default function TriviaPage() {
     setSelected(opt);
     if (!question) return;
     const correct = opt === question.correct_option.toLowerCase();
-    // Get current user
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    // Insert response into trivia_responses table
-    await supabase.from('trivia_responses').insert({
-      question_id: question.id,
-      user_email: user ? user.email : null,
-      selected_option: opt.toUpperCase(),
-      correct,
-    });
+    
     if (correct) {
-      // Add coins to user coin ledger
-      await supabase.from('coin_ledger').insert({
-        user_email: user ? user.email : null,
-        coins: question.coin_reward,
-        note: 'Trivia reward',
-      });
       setResult(`Correct! +${question.coin_reward} coins`);
     } else {
       setResult('Wrong answer');

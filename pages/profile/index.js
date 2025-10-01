@@ -9,24 +9,25 @@ export default function Profile() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
+      const mockUser = localStorage.getItem('mockUser');
+      if (!mockUser) {
         router.push('/login');
         return;
       }
-      // fetch coins from coin_ledger table
-      const { data: coinData } = await supabase
-        .from('coin_ledger')
-        .select('coins')
-        .eq('user_email', user.email);
-      const coinsEarned = coinData ? coinData.reduce((sum, entry) => sum + entry.coins, 0) : 0;
-      setCoins(coinsEarned);
-      // fetch orders for user
-      const { data: ordersData } = await supabase
-        .from('orders')
-        .select('*')
-        .eq('email', user.email);
-      setOrders(ordersData || []);
+      
+      const user = JSON.parse(mockUser);
+      const mockOrders = [
+        {
+          id: 1,
+          email: user.email,
+          product: 'ppv_ticket',
+          type: 'ticket',
+          timestamp: new Date().toISOString()
+        }
+      ];
+      
+      setOrders(mockOrders);
+      setCoins(150);
     };
     fetchData();
   }, [router]);
