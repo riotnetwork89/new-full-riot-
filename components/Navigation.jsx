@@ -64,7 +64,7 @@ export default function Navigation() {
             letterSpacing: '1px',
             opacity: 0.9
           }}>
-            VAULT
+            VOD
           </Link>
           <Link href="/stream" style={{
             color: 'white',
