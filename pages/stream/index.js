@@ -33,10 +33,10 @@ export default function Stream() {
   if (loading) return <p>Loading...</p>;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '2rem' }}>
+    <div className="container">
       <h1>Live Stream</h1>
       {hasAccess ? (
-        <div style={{ width: '100%', maxWidth: '800px' }}>
+        <div className="card">
           <iframe
             src={`https://stream.mux.com/${process.env.NEXT_PUBLIC_MUX_PLAYBACK_ID}.m3u8`}
             width="100%"
@@ -44,10 +44,13 @@ export default function Stream() {
             frameBorder="0"
             allow="autoplay; fullscreen"
             allowFullScreen
+            style={{ borderRadius: '8px' }}
           />
         </div>
       ) : (
-        <p>You do not have access.</p>
+        <div className="card" style={{ textAlign: 'center' }}>
+          <p style={{ fontSize: '1.2rem' }}>You do not have access to this stream.</p>
+        </div>
       )}
     </div>
   );

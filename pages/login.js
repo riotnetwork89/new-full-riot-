@@ -29,15 +29,17 @@ export default function Login() {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '2rem', minHeight: '100vh' }}>
-      <h1>Login / Register</h1>
-      <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', width: '300px' }}>
-        <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-        {error && <p style={{ color: 'red' }}>{error}</p>}
-        <button type="submit">Login</button>
-      </form>
-      <button onClick={handleSignup} style={{ marginTop: '1rem' }}>Register</button>
+    <div className="container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: '100vh', justifyContent: 'center' }}>
+      <div className="card" style={{ maxWidth: '400px', width: '100%' }}>
+        <h1 style={{ textAlign: 'center', marginBottom: '2rem' }}>Login / Register</h1>
+        <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column' }}>
+          <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+          {error && <p style={{ color: '#ff6b6b', marginBottom: '1rem' }}>{error}</p>}
+          <button type="submit" style={{ marginBottom: '1rem' }}>Login</button>
+        </form>
+        <button onClick={handleSignup}>Register</button>
+      </div>
     </div>
   );
 }

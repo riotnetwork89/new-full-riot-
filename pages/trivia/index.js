@@ -67,24 +67,44 @@ export default function TriviaPage() {
   if (!question) return <p>Loading question...</p>;
 
   return (
-    <div style={{ padding: '1rem' }}>
+    <div className="container">
       <h1>Trivia Time!</h1>
-      <p>Time left: {timer}s</p>
-      <h2>{question.question}</h2>
-      <ul style={{ listStyle: 'none', padding: 0 }}>
-        {['a', 'b', 'c', 'd'].map((opt) => (
-          <li key={opt} style={{ marginBottom: '0.5rem' }}>
+      <div className="card">
+        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+          <p style={{ fontSize: '1.2rem', marginBottom: '1rem' }}>
+            Time left: <strong style={{ color: '#ff6b6b' }}>{timer}s</strong>
+          </p>
+          <h2 style={{ marginBottom: '2rem' }}>{question.question}</h2>
+        </div>
+        <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))' }}>
+          {['a', 'b', 'c', 'd'].map((opt) => (
             <button
+              key={opt}
               onClick={() => handleAnswer(opt)}
               disabled={!!selected || timer === 0}
-              style={{ padding: '0.5rem 1rem' }}
+              style={{ 
+                margin: '0.5rem 0', 
+                padding: '1rem', 
+                textAlign: 'left',
+                opacity: selected || timer === 0 ? 0.7 : 1
+              }}
             >
-              {opt.toUpperCase()}. {question['option_' + opt]}
+              <strong>{opt.toUpperCase()}:</strong> {question['option_' + opt]}
             </button>
-          </li>
-        ))}
-      </ul>
-      {result && <p>{result}</p>}
+          ))}
+        </div>
+        {result && (
+          <div style={{ textAlign: 'center', marginTop: '2rem' }}>
+            <p style={{ 
+              fontSize: '1.3rem', 
+              fontWeight: 'bold',
+              color: result.includes('Correct') ? '#4ade80' : '#ff6b6b'
+            }}>
+              {result}
+            </p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

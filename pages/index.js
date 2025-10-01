@@ -11,7 +11,7 @@ export default function VodPage() {
     async function check() {
       const { data: session } = await supabase.auth.getUser();
       const email = session?.user?.email;
-      if (!email) return router.push('/');
+      if (!email) return router.push('/login');
       const { data } = await supabase.from('orders').select('*').eq('email', email);
       if (data && data.length > 0) {
         setAuthorized(true);
@@ -25,14 +25,16 @@ export default function VodPage() {
   }, []);
 
   return (
-    <div style={{ padding: 40 }}>
+    <div className="container">
       <h1>THE RIOT VAULT</h1>
-      {vods.map(v => (
-        <div key={v.id} style={{ marginTop: 20 }}>
-          <h3>{v.title}</h3>
-          <video controls src={v.video_url} style={{ width: '100%', maxWidth: 640 }} />
-        </div>
-      ))}
+      <div className="grid">
+        {vods.map(v => (
+          <div key={v.id} className="card">
+            <h3>{v.title}</h3>
+            <video controls src={v.video_url} style={{ width: '100%', borderRadius: '8px' }} />
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

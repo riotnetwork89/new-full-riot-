@@ -48,125 +48,144 @@ export default function Admin() {
   }, [router]);
 
   return (
-    <div style={{ padding: '2rem' }}>
+    <div className="container">
       <h1>Admin Dashboard</h1>
-      <section>
+      
+      <div className="card">
         <h2>Orders</h2>
-        <table border="1" cellPadding="5">
-          <thead>
-            <tr>
-              <th>Email</th>
-              <th>Product</th>
-              <th>Type</th>
-              <th>Timestamp</th>
-            </tr>
-          </thead>
-          <tbody>
-            {orders.map((o) => (
-              <tr key={o.id}>
-                <td>{o.email}</td>
-                <td>{o.product}</td>
-                <td>{o.type}</td>
-                <td>{o.timestamp}</td>
+        <div style={{ overflowX: 'auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr style={{ borderBottom: '2px solid #ff6b6b' }}>
+                <th style={{ padding: '1rem', textAlign: 'left', color: '#ff6b6b' }}>Email</th>
+                <th style={{ padding: '1rem', textAlign: 'left', color: '#ff6b6b' }}>Product</th>
+                <th style={{ padding: '1rem', textAlign: 'left', color: '#ff6b6b' }}>Type</th>
+                <th style={{ padding: '1rem', textAlign: 'left', color: '#ff6b6b' }}>Timestamp</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </section>
+            </thead>
+            <tbody>
+              {orders.map((o) => (
+                <tr key={o.id} style={{ borderBottom: '1px solid rgba(255, 107, 107, 0.2)' }}>
+                  <td style={{ padding: '1rem' }}>{o.email}</td>
+                  <td style={{ padding: '1rem' }}>{o.product}</td>
+                  <td style={{ padding: '1rem' }}>{o.type}</td>
+                  <td style={{ padding: '1rem' }}>{o.timestamp}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
 
-      <section>
+      <div className="card">
         <h2>Fan Uploads</h2>
-        <table border="1" cellPadding="5">
-          <thead>
-            <tr>
-              <th>File ID</th>
-              <th>Submitted By</th>
-              <th>Caption</th>
-              <th>Approved</th>
-              <th>Video URL</th>
-            </tr>
-          </thead>
-          <tbody>
-            {uploads.map((u) => (
-              <tr key={u.id || u.file_id}>
-                <td>{u.file_id}</td>
-                <td>{u.submitted_by}</td>
-                <td>{u.caption}</td>
-                <td>{u.approved ? 'Yes' : 'No'}</td>
-                <td>{u.video_url}</td>
+        <div style={{ overflowX: 'auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr style={{ borderBottom: '2px solid #ff6b6b' }}>
+                <th style={{ padding: '1rem', textAlign: 'left', color: '#ff6b6b' }}>File ID</th>
+                <th style={{ padding: '1rem', textAlign: 'left', color: '#ff6b6b' }}>Submitted By</th>
+                <th style={{ padding: '1rem', textAlign: 'left', color: '#ff6b6b' }}>Caption</th>
+                <th style={{ padding: '1rem', textAlign: 'left', color: '#ff6b6b' }}>Approved</th>
+                <th style={{ padding: '1rem', textAlign: 'left', color: '#ff6b6b' }}>Video URL</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </section>
+            </thead>
+            <tbody>
+              {uploads.map((u) => (
+                <tr key={u.id || u.file_id} style={{ borderBottom: '1px solid rgba(255, 107, 107, 0.2)' }}>
+                  <td style={{ padding: '1rem' }}>{u.file_id}</td>
+                  <td style={{ padding: '1rem' }}>{u.submitted_by}</td>
+                  <td style={{ padding: '1rem' }}>{u.caption}</td>
+                  <td style={{ padding: '1rem' }}>
+                    <span style={{ color: u.approved ? '#4ade80' : '#ff6b6b' }}>
+                      {u.approved ? 'Yes' : 'No'}
+                    </span>
+                  </td>
+                  <td style={{ padding: '1rem' }}>{u.video_url}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
 
-      <section>
+      <div className="card">
         <h2>Stream Logs</h2>
-        <table border="1" cellPadding="5">
-          <thead>
-            <tr>
-              <th>Status</th>
-              <th>Checked At</th>
-            </tr>
-          </thead>
-          <tbody>
-            {logs.map((l) => (
-              <tr key={l.id}>
-                <td>{l.status}</td>
-                <td>{l.checked_at || l.timestamp}</td>
+        <div style={{ overflowX: 'auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr style={{ borderBottom: '2px solid #ff6b6b' }}>
+                <th style={{ padding: '1rem', textAlign: 'left', color: '#ff6b6b' }}>Status</th>
+                <th style={{ padding: '1rem', textAlign: 'left', color: '#ff6b6b' }}>Checked At</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </section>
+            </thead>
+            <tbody>
+              {logs.map((l) => (
+                <tr key={l.id} style={{ borderBottom: '1px solid rgba(255, 107, 107, 0.2)' }}>
+                  <td style={{ padding: '1rem' }}>{l.status}</td>
+                  <td style={{ padding: '1rem' }}>{l.checked_at || l.timestamp}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
 
-      <section>
+      <div className="card">
         <h2>Chat Messages</h2>
-        <table border="1" cellPadding="5">
-          <thead>
-            <tr>
-              <th>User</th>
-              <th>Message</th>
-              <th>Created At</th>
-            </tr>
-          </thead>
-          <tbody>
-            {messages.map((m) => (
-              <tr key={m.id}>
-                <td>{m.user_email}</td>
-                <td>{m.message}</td>
-                <td>{m.created_at}</td>
+        <div style={{ overflowX: 'auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr style={{ borderBottom: '2px solid #ff6b6b' }}>
+                <th style={{ padding: '1rem', textAlign: 'left', color: '#ff6b6b' }}>User</th>
+                <th style={{ padding: '1rem', textAlign: 'left', color: '#ff6b6b' }}>Message</th>
+                <th style={{ padding: '1rem', textAlign: 'left', color: '#ff6b6b' }}>Created At</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </section>
+            </thead>
+            <tbody>
+              {messages.map((m) => (
+                <tr key={m.id} style={{ borderBottom: '1px solid rgba(255, 107, 107, 0.2)' }}>
+                  <td style={{ padding: '1rem' }}>{m.user_email}</td>
+                  <td style={{ padding: '1rem' }}>{m.message}</td>
+                  <td style={{ padding: '1rem' }}>{m.created_at}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
 
-      <section>
+      <div className="card">
         <h2>Trivia Responses</h2>
-        <table border="1" cellPadding="5">
-          <thead>
-            <tr>
-              <th>User</th>
-              <th>Question ID</th>
-              <th>Selected Option</th>
-              <th>Correct</th>
-              <th>Created At</th>
-            </tr>
-          </thead>
-          <tbody>
-            {responses.map((r) => (
-              <tr key={r.id}>
-                <td>{r.user_email}</td>
-                <td>{r.question_id}</td>
-                <td>{r.selected_opt ?? r.selected_option}</td>
-                <td>{r.correct ? 'Yes' : 'No'}</td>
-                <td>{r.created_at}</td>
+        <div style={{ overflowX: 'auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr style={{ borderBottom: '2px solid #ff6b6b' }}>
+                <th style={{ padding: '1rem', textAlign: 'left', color: '#ff6b6b' }}>User</th>
+                <th style={{ padding: '1rem', textAlign: 'left', color: '#ff6b6b' }}>Question ID</th>
+                <th style={{ padding: '1rem', textAlign: 'left', color: '#ff6b6b' }}>Selected Option</th>
+                <th style={{ padding: '1rem', textAlign: 'left', color: '#ff6b6b' }}>Correct</th>
+                <th style={{ padding: '1rem', textAlign: 'left', color: '#ff6b6b' }}>Created At</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </section>
+            </thead>
+            <tbody>
+              {responses.map((r) => (
+                <tr key={r.id} style={{ borderBottom: '1px solid rgba(255, 107, 107, 0.2)' }}>
+                  <td style={{ padding: '1rem' }}>{r.user_email}</td>
+                  <td style={{ padding: '1rem' }}>{r.question_id}</td>
+                  <td style={{ padding: '1rem' }}>{r.selected_opt ?? r.selected_option}</td>
+                  <td style={{ padding: '1rem' }}>
+                    <span style={{ color: r.correct ? '#4ade80' : '#ff6b6b' }}>
+                      {r.correct ? 'Yes' : 'No'}
+                    </span>
+                  </td>
+                  <td style={{ padding: '1rem' }}>{r.created_at}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 }

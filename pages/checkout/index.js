@@ -30,11 +30,13 @@ export default function Checkout() {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '2rem' }}>
-      <h1>Checkout</h1>
-      <p>Purchase your ticket to watch the event.</p>
-      <button onClick={handleCheckout}>Buy Ticket</button>
-      {message && <p style={{ color: 'red' }}>{message}</p>}
+    <div className="container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: '100vh', justifyContent: 'center' }}>
+      <div className="card" style={{ maxWidth: '500px', width: '100%', textAlign: 'center' }}>
+        <h1>Checkout</h1>
+        <p style={{ marginBottom: '2rem', fontSize: '1.1rem' }}>Purchase your ticket to watch the event.</p>
+        <button onClick={handleCheckout} style={{ fontSize: '1.2rem', padding: '16px 32px' }}>Buy Ticket</button>
+        {message && <p style={{ color: '#ff6b6b', marginTop: '1rem' }}>{message}</p>}
+      </div>
     </div>
   );
 }

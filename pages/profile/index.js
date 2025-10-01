@@ -32,17 +32,38 @@ export default function Profile() {
   }, [router]);
 
   return (
-    <div style={{ padding: '2rem' }}>
+    <div className="container">
       <h1>Your Profile</h1>
-      <p>Riot Coins: {coins}</p>
-      <h2>Your Orders</h2>
-      <ul>
-        {orders.map((o) => (
-          <li key={o.id}>
-            {o.product} – {o.timestamp}
-          </li>
-        ))}
-      </ul>
+      <div className="grid">
+        <div className="card">
+          <h2 style={{ marginBottom: '1rem' }}>Riot Coins</h2>
+          <div style={{ fontSize: '3rem', fontWeight: 'bold', color: '#ff6b6b', textAlign: 'center' }}>
+            {coins}
+          </div>
+        </div>
+        <div className="card">
+          <h3 style={{ marginBottom: '1rem' }}>Your Orders</h3>
+          {orders.length > 0 ? (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              {orders.map((o) => (
+                <div key={o.id} style={{ 
+                  padding: '1rem', 
+                  background: 'rgba(255, 255, 255, 0.05)', 
+                  borderRadius: '8px',
+                  border: '1px solid rgba(255, 107, 107, 0.2)'
+                }}>
+                  <div style={{ fontWeight: 'bold', color: '#ff6b6b' }}>{o.product}</div>
+                  <div style={{ fontSize: '0.9rem', opacity: 0.8 }}>
+                    {o.type} - {new Date(o.timestamp).toLocaleString()}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p style={{ textAlign: 'center', opacity: 0.7 }}>No orders yet</p>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
