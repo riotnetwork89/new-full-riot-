@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function SchedulePage() {
   const [events] = useState([
@@ -39,6 +39,11 @@ export default function SchedulePage() {
       ticketPrice: 10
     }
   ]);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -49,7 +54,10 @@ export default function SchedulePage() {
   };
 
   const formatDate = (dateString) => {
-    const date = new Date(dateString);
+    if (!isClient) {
+      return dateString;
+    }
+    const date = new Date(dateString + 'T00:00:00');
     return date.toLocaleDateString('en-US', { 
       weekday: 'long', 
       year: 'numeric', 
