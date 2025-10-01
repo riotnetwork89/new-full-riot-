@@ -88,23 +88,6 @@ export default function Navigation() {
           }}>
             STREAM
           </Link>
-          <Link href="/chat" style={{
-            color: 'white',
-            textDecoration: 'none',
-            fontSize: '0.9rem',
-            fontWeight: '600',
-            textTransform: 'uppercase',
-            letterSpacing: '1px',
-            opacity: 0.9,
-            cursor: 'pointer',
-            userSelect: 'none',
-            display: 'block',
-            padding: '0.5rem 0.75rem',
-            borderRadius: '4px',
-            transition: 'color 0.2s ease'
-          }}>
-            CHAT
-          </Link>
           <Link href="/merch" style={{
             color: 'white',
             textDecoration: 'none',
