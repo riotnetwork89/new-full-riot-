@@ -67,15 +67,49 @@ export default function SchedulePage() {
   };
 
   return (
-    <div className="container">
-      <h1>Event Schedule</h1>
-      <p style={{ textAlign: 'center', marginBottom: '2rem', opacity: 0.8 }}>
-        Don't miss out on our upcoming live events and exclusive content!
-      </p>
-      
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-        {events.map(event => (
-          <div key={event.id} className="card">
+    <div style={{ 
+      minHeight: '100vh',
+      background: 'linear-gradient(135deg, #000000 0%, #1a0000 50%, #330000 100%)',
+      color: 'white',
+      padding: '2rem'
+    }}>
+      <div style={{ 
+        maxWidth: '1200px', 
+        margin: '0 auto',
+        textAlign: 'center'
+      }}>
+        <h1 style={{ 
+          fontSize: '3rem', 
+          fontWeight: '900',
+          marginBottom: '1rem',
+          background: 'linear-gradient(45deg, #ff0080, #ff6600)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          textTransform: 'uppercase',
+          letterSpacing: '2px'
+        }}>
+          EVENT SCHEDULE
+        </h1>
+        <p style={{ 
+          fontSize: '1.2rem',
+          textAlign: 'center', 
+          marginBottom: '3rem', 
+          opacity: 0.8,
+          fontWeight: '300'
+        }}>
+          Don't miss out on our upcoming live events and exclusive content!
+        </p>
+        
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', marginTop: '2rem' }}>
+          {events.map(event => (
+            <div key={event.id} style={{ 
+              background: 'linear-gradient(135deg, rgba(255, 0, 128, 0.1), rgba(255, 102, 0, 0.1))',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              borderRadius: '16px',
+              padding: '2rem',
+              transition: 'all 0.3s ease',
+              backdropFilter: 'blur(10px)'
+            }}>
             <div style={{ 
               display: 'flex', 
               justifyContent: 'space-between', 
@@ -83,7 +117,16 @@ export default function SchedulePage() {
               marginBottom: '1rem'
             }}>
               <div style={{ flex: 1 }}>
-                <h3 style={{ marginBottom: '0.5rem' }}>{event.title}</h3>
+                <h3 style={{ 
+                  marginBottom: '0.5rem',
+                  color: '#ff0080',
+                  fontSize: '1.5rem',
+                  fontWeight: '700',
+                  textTransform: 'uppercase',
+                  letterSpacing: '1px'
+                }}>
+                  {event.title}
+                </h3>
                 <div style={{ 
                   display: 'flex', 
                   gap: '1rem', 
@@ -91,13 +134,13 @@ export default function SchedulePage() {
                   flexWrap: 'wrap'
                 }}>
                   <span style={{ 
-                    color: '#ff6b6b', 
+                    color: '#8B5CF6', 
                     fontWeight: 'bold' 
                   }}>
                     📅 {formatDate(event.date)}
                   </span>
                   <span style={{ 
-                    color: '#ff6b6b', 
+                    color: '#8B5CF6', 
                     fontWeight: 'bold' 
                   }}>
                     🕐 {event.time}
@@ -111,7 +154,11 @@ export default function SchedulePage() {
                     ● {event.status}
                   </span>
                 </div>
-                <p style={{ opacity: 0.8, marginBottom: '1rem' }}>
+                <p style={{ 
+                  color: 'rgba(255, 255, 255, 0.8)', 
+                  marginBottom: '1rem',
+                  lineHeight: '1.6'
+                }}>
                   {event.description}
                 </p>
               </div>
@@ -122,30 +169,33 @@ export default function SchedulePage() {
                 <div style={{ 
                   fontSize: '1.5rem', 
                   fontWeight: 'bold', 
-                  color: '#ff6b6b',
+                  color: '#ff0080',
                   marginBottom: '0.5rem'
                 }}>
                   ${event.ticketPrice}
                 </div>
                 <button style={{
                   background: event.status === 'upcoming' 
-                    ? 'linear-gradient(90deg, #ff6b6b, #ff5252)' 
-                    : 'linear-gradient(90deg, #94a3b8, #64748b)',
+                    ? 'linear-gradient(45deg, #ff0080, #ff6600)' 
+                    : 'linear-gradient(45deg, #6B46C1, #8B5CF6)',
                   color: 'white',
                   border: 'none',
                   padding: '0.75rem 1.5rem',
-                  borderRadius: '8px',
+                  borderRadius: '50px',
                   fontSize: '0.9rem',
-                  fontWeight: 'bold',
+                  fontWeight: '700',
                   cursor: 'pointer',
-                  transition: 'transform 0.2s ease'
+                  transition: 'all 0.3s ease',
+                  textTransform: 'uppercase',
+                  letterSpacing: '1px'
                 }}>
                   {event.status === 'upcoming' ? 'Buy Ticket' : 'Watch Replay'}
                 </button>
               </div>
             </div>
           </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );

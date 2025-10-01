@@ -21,12 +21,13 @@ export default function Navigation() {
 
   return (
     <nav style={{
-      background: 'linear-gradient(90deg, #ff0000, #cc0000)',
+      background: 'linear-gradient(90deg, #000000, #1a0000)',
       padding: '1rem 2rem',
       position: 'sticky',
       top: 0,
       zIndex: 1000,
-      boxShadow: '0 2px 10px rgba(0, 0, 0, 0.3)'
+      boxShadow: '0 2px 10px rgba(0, 0, 0, 0.5)',
+      backdropFilter: 'blur(10px)'
     }}>
       <div style={{
         display: 'flex',
@@ -37,9 +38,13 @@ export default function Navigation() {
       }}>
         <Link href="/" style={{
           fontSize: '1.5rem',
-          fontWeight: 'bold',
+          fontWeight: '900',
           color: 'white',
-          textDecoration: 'none'
+          textDecoration: 'none',
+          background: 'linear-gradient(45deg, #ff0000, #ffffff)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          letterSpacing: '2px'
         }}>
           RIOT NETWORK
         </Link>
@@ -52,45 +57,60 @@ export default function Navigation() {
           <Link href="/vault" style={{
             color: 'white',
             textDecoration: 'none',
-            fontSize: '1rem',
-            fontWeight: '500',
-            transition: 'color 0.3s ease'
+            fontSize: '0.9rem',
+            fontWeight: '600',
+            transition: 'all 0.3s ease',
+            textTransform: 'uppercase',
+            letterSpacing: '1px',
+            opacity: 0.9
           }}>
             VAULT
           </Link>
           <Link href="/stream" style={{
             color: 'white',
             textDecoration: 'none',
-            fontSize: '1rem',
-            fontWeight: '500',
-            transition: 'color 0.3s ease'
+            fontSize: '0.9rem',
+            fontWeight: '600',
+            transition: 'all 0.3s ease',
+            textTransform: 'uppercase',
+            letterSpacing: '1px',
+            opacity: 0.9
           }}>
             STREAM
           </Link>
           <Link href="/chat" style={{
             color: 'white',
             textDecoration: 'none',
-            fontSize: '1rem',
-            fontWeight: '500',
-            transition: 'color 0.3s ease'
+            fontSize: '0.9rem',
+            fontWeight: '600',
+            transition: 'all 0.3s ease',
+            textTransform: 'uppercase',
+            letterSpacing: '1px',
+            opacity: 0.9
           }}>
             CHAT
           </Link>
           <Link href="/merch" style={{
             color: 'white',
             textDecoration: 'none',
-            fontSize: '1rem',
-            fontWeight: '500',
-            transition: 'color 0.3s ease'
+            fontSize: '0.9rem',
+            fontWeight: '600',
+            transition: 'all 0.3s ease',
+            textTransform: 'uppercase',
+            letterSpacing: '1px',
+            opacity: 0.9
           }}>
             MERCH
           </Link>
           <Link href="/schedule" style={{
             color: 'white',
             textDecoration: 'none',
-            fontSize: '1rem',
-            fontWeight: '500',
-            transition: 'color 0.3s ease'
+            fontSize: '0.9rem',
+            fontWeight: '600',
+            transition: 'all 0.3s ease',
+            textTransform: 'uppercase',
+            letterSpacing: '1px',
+            opacity: 0.9
           }}>
             SCHEDULE
           </Link>
@@ -99,9 +119,12 @@ export default function Navigation() {
               <Link href="/profile" style={{
                 color: 'white',
                 textDecoration: 'none',
-                fontSize: '1rem',
-                fontWeight: '500',
-                transition: 'color 0.3s ease'
+                fontSize: '0.9rem',
+                fontWeight: '600',
+                transition: 'all 0.3s ease',
+                textTransform: 'uppercase',
+                letterSpacing: '1px',
+                opacity: 0.9
               }}>
                 PROFILE
               </Link>
@@ -109,9 +132,12 @@ export default function Navigation() {
                 <Link href="/admin" style={{
                   color: 'white',
                   textDecoration: 'none',
-                  fontSize: '1rem',
-                  fontWeight: '500',
-                  transition: 'color 0.3s ease'
+                  fontSize: '0.9rem',
+                  fontWeight: '600',
+                  transition: 'all 0.3s ease',
+                  textTransform: 'uppercase',
+                  letterSpacing: '1px',
+                  opacity: 0.9
                 }}>
                   ADMIN
                 </Link>
@@ -122,13 +148,17 @@ export default function Navigation() {
               <button 
                 onClick={handleLogout}
                 style={{
-                  background: 'rgba(255, 255, 255, 0.2)',
+                  background: 'linear-gradient(45deg, #ff0000, #cc0000)',
                   color: 'white',
                   border: 'none',
                   padding: '0.5rem 1rem',
-                  borderRadius: '4px',
-                  fontSize: '0.9rem',
-                  cursor: 'pointer'
+                  borderRadius: '20px',
+                  fontSize: '0.8rem',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  textTransform: 'uppercase',
+                  letterSpacing: '1px',
+                  transition: 'all 0.3s ease'
                 }}
               >
                 LOGOUT
@@ -138,9 +168,12 @@ export default function Navigation() {
             <Link href="/login" style={{
               color: 'white',
               textDecoration: 'none',
-              fontSize: '1rem',
-              fontWeight: '500',
-              transition: 'color 0.3s ease'
+              fontSize: '0.9rem',
+              fontWeight: '600',
+              transition: 'all 0.3s ease',
+              textTransform: 'uppercase',
+              letterSpacing: '1px',
+              opacity: 0.9
             }}>
               LOGIN
             </Link>

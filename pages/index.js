@@ -15,114 +15,310 @@ export default function HomePage() {
 
   if (user) {
     return (
-      <div className="container">
-        <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-          <h1 style={{ fontSize: '3rem', marginBottom: '1rem' }}>Welcome Back!</h1>
-          <p style={{ fontSize: '1.2rem', opacity: 0.8 }}>
-            Hey {user.email.split('@')[0]}, ready to dive into the Riot Network experience?
+      <div style={{ 
+        minHeight: '100vh',
+        background: 'linear-gradient(135deg, #000000 0%, #1a0000 50%, #330000 100%)',
+        color: 'white',
+        padding: '2rem'
+      }}>
+        <div style={{ 
+          maxWidth: '1200px', 
+          margin: '0 auto',
+          textAlign: 'center'
+        }}>
+          <h1 style={{ 
+            fontSize: '3.5rem', 
+            fontWeight: '900',
+            marginBottom: '1rem',
+            background: 'linear-gradient(45deg, #ff0000, #ffffff)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            textTransform: 'uppercase',
+            letterSpacing: '2px'
+          }}>
+            Welcome Back, {user.email.split('@')[0]}!
+          </h1>
+          <p style={{ 
+            fontSize: '1.3rem', 
+            opacity: 0.9,
+            marginBottom: '3rem',
+            fontWeight: '300'
+          }}>
+            Your premium streaming experience awaits
           </p>
-        </div>
-        
-        <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))' }}>
-          <Link href="/stream" style={{ textDecoration: 'none' }}>
-            <div className="card" style={{ 
-              cursor: 'pointer',
-              transition: 'transform 0.3s ease',
-              background: 'linear-gradient(135deg, rgba(255, 107, 107, 0.1), rgba(255, 82, 82, 0.1))'
-            }}>
-              <h3 style={{ color: '#ff6b6b', marginBottom: '1rem' }}>🔴 Live Stream</h3>
-              <p>Join our exclusive live streaming events and interact with the community in real-time.</p>
-            </div>
-          </Link>
           
-          <Link href="/chat" style={{ textDecoration: 'none' }}>
-            <div className="card" style={{ 
-              cursor: 'pointer',
-              transition: 'transform 0.3s ease',
-              background: 'linear-gradient(135deg, rgba(255, 107, 107, 0.1), rgba(255, 82, 82, 0.1))'
-            }}>
-              <h3 style={{ color: '#ff6b6b', marginBottom: '1rem' }}>💬 Live Chat</h3>
-              <p>Connect with other fans and share your thoughts during live events.</p>
-            </div>
-          </Link>
-          
-          <Link href="/profile" style={{ textDecoration: 'none' }}>
-            <div className="card" style={{ 
-              cursor: 'pointer',
-              transition: 'transform 0.3s ease',
-              background: 'linear-gradient(135deg, rgba(255, 107, 107, 0.1), rgba(255, 82, 82, 0.1))'
-            }}>
-              <h3 style={{ color: '#ff6b6b', marginBottom: '1rem' }}>👤 Your Profile</h3>
-              <p>Check your Riot Coins, order history, and manage your account settings.</p>
-            </div>
-          </Link>
+          <div style={{ 
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+            gap: '2rem',
+            marginTop: '3rem'
+          }}>
+            <Link href="/stream" style={{ textDecoration: 'none' }}>
+              <div style={{ 
+                background: 'linear-gradient(135deg, rgba(255, 0, 0, 0.2), rgba(255, 255, 255, 0.1))',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                borderRadius: '16px',
+                padding: '2rem',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                backdropFilter: 'blur(10px)',
+                textAlign: 'left'
+              }}>
+                <div style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>🔴</div>
+                <h3 style={{ 
+                  color: '#ff0000', 
+                  marginBottom: '1rem',
+                  fontSize: '1.5rem',
+                  fontWeight: '700'
+                }}>
+                  LIVE STREAM
+                </h3>
+                <p style={{ color: 'rgba(255, 255, 255, 0.8)', lineHeight: '1.6' }}>
+                  Join exclusive live events with real-time interaction and premium content
+                </p>
+              </div>
+            </Link>
+            
+            <Link href="/chat" style={{ textDecoration: 'none' }}>
+              <div style={{ 
+                background: 'linear-gradient(135deg, rgba(255, 0, 0, 0.2), rgba(255, 255, 255, 0.1))',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                borderRadius: '16px',
+                padding: '2rem',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                backdropFilter: 'blur(10px)',
+                textAlign: 'left'
+              }}>
+                <div style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>💬</div>
+                <h3 style={{ 
+                  color: '#ff0000', 
+                  marginBottom: '1rem',
+                  fontSize: '1.5rem',
+                  fontWeight: '700'
+                }}>
+                  LIVE CHAT
+                </h3>
+                <p style={{ color: 'rgba(255, 255, 255, 0.8)', lineHeight: '1.6' }}>
+                  Connect with the community and share your thoughts during live events
+                </p>
+              </div>
+            </Link>
+            
+            <Link href="/profile" style={{ textDecoration: 'none' }}>
+              <div style={{ 
+                background: 'linear-gradient(135deg, rgba(255, 0, 0, 0.2), rgba(255, 255, 255, 0.1))',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                borderRadius: '16px',
+                padding: '2rem',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                backdropFilter: 'blur(10px)',
+                textAlign: 'left'
+              }}>
+                <div style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>👤</div>
+                <h3 style={{ 
+                  color: '#ff0000', 
+                  marginBottom: '1rem',
+                  fontSize: '1.5rem',
+                  fontWeight: '700'
+                }}>
+                  YOUR PROFILE
+                </h3>
+                <p style={{ color: 'rgba(255, 255, 255, 0.8)', lineHeight: '1.6' }}>
+                  Manage your account, check Riot Coins, and view your order history
+                </p>
+              </div>
+            </Link>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="container">
-      <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-        <h1 style={{ fontSize: '4rem', marginBottom: '1rem', background: 'linear-gradient(90deg, #ff6b6b, #ff5252)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-          RIOT NETWORK
-        </h1>
-        <p style={{ fontSize: '1.5rem', marginBottom: '2rem', opacity: 0.8 }}>
-          Premium Pay-Per-View Streaming Experience
-        </p>
-        <p style={{ fontSize: '1.1rem', opacity: 0.7, maxWidth: '600px', margin: '0 auto' }}>
-          Join thousands of fans for exclusive live events, interactive chat, and premium content. 
-          Get access to our streaming platform and become part of the Riot Network community.
-        </p>
-      </div>
+    <div style={{ 
+      minHeight: '100vh',
+      background: 'linear-gradient(135deg, #000000 0%, #1a0000 50%, #330000 100%)',
+      color: 'white',
+      position: 'relative',
+      overflow: 'hidden'
+    }}>
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundImage: 'url(https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        opacity: 0.3,
+        zIndex: 1
+      }} />
       
-      <div style={{ display: 'flex', justifyContent: 'center', gap: '2rem', marginBottom: '3rem' }}>
-        <Link href="/login">
-          <button style={{
-            background: 'linear-gradient(90deg, #ff6b6b, #ff5252)',
-            color: 'white',
-            border: 'none',
-            padding: '1rem 2rem',
-            borderRadius: '8px',
-            fontSize: '1.1rem',
-            fontWeight: 'bold',
-            cursor: 'pointer',
-            transition: 'transform 0.2s ease'
+      <div style={{ 
+        position: 'relative',
+        zIndex: 2,
+        maxWidth: '1200px', 
+        margin: '0 auto',
+        padding: '4rem 2rem',
+        textAlign: 'center'
+      }}>
+        <div style={{ marginBottom: '4rem' }}>
+          <h1 style={{ 
+            fontSize: '5rem', 
+            fontWeight: '900',
+            marginBottom: '1rem',
+            background: 'linear-gradient(45deg, #ff0000, #ffffff)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            textTransform: 'uppercase',
+            letterSpacing: '3px',
+            textShadow: '0 0 30px rgba(255, 0, 0, 0.5)'
           }}>
-            Login to Stream
-          </button>
-        </Link>
-        <Link href="/schedule">
-          <button style={{
-            background: 'transparent',
-            color: '#ff6b6b',
-            border: '2px solid #ff6b6b',
-            padding: '1rem 2rem',
-            borderRadius: '8px',
-            fontSize: '1.1rem',
-            fontWeight: 'bold',
-            cursor: 'pointer',
-            transition: 'all 0.2s ease'
+            RIOT NETWORK
+          </h1>
+          <p style={{ 
+            fontSize: '1.8rem', 
+            marginBottom: '1.5rem',
+            fontWeight: '300',
+            opacity: 0.9
           }}>
-            View Schedule
-          </button>
-        </Link>
-      </div>
-      
-      <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))' }}>
-        <div className="card">
-          <h3 style={{ color: '#ff6b6b', marginBottom: '1rem' }}>🎥 Premium Streaming</h3>
-          <p>High-quality live streams with interactive features and real-time chat.</p>
+            ⚡ EXCLUSIVE LIVE EVENTS ⚡
+          </p>
+          <p style={{ 
+            fontSize: '1.2rem', 
+            opacity: 0.8,
+            maxWidth: '600px',
+            margin: '0 auto',
+            lineHeight: '1.6'
+          }}>
+            NEW EPISODE EVERY WEEK<br />
+            ONLY ON THE RIOT NETWORK
+          </p>
         </div>
         
-        <div className="card">
-          <h3 style={{ color: '#ff6b6b', marginBottom: '1rem' }}>🎁 Exclusive Content</h3>
-          <p>Access to special events, behind-the-scenes content, and member-only streams.</p>
+        <div style={{ marginBottom: '3rem' }}>
+          <Link href="/login">
+            <button style={{
+              background: 'linear-gradient(45deg, #ff0000, #cc0000)',
+              color: 'white',
+              border: 'none',
+              padding: '1.2rem 3rem',
+              borderRadius: '50px',
+              fontSize: '1.3rem',
+              fontWeight: '700',
+              cursor: 'pointer',
+              transition: 'all 0.3s ease',
+              textTransform: 'uppercase',
+              letterSpacing: '1px',
+              marginRight: '1rem',
+              boxShadow: '0 10px 30px rgba(255, 0, 0, 0.3)'
+            }}>
+              SUBSCRIBE NOW
+            </button>
+          </Link>
+          <Link href="/schedule">
+            <button style={{
+              background: 'transparent',
+              color: 'white',
+              border: '2px solid rgba(255, 255, 255, 0.5)',
+              padding: '1.2rem 3rem',
+              borderRadius: '50px',
+              fontSize: '1.1rem',
+              fontWeight: '600',
+              cursor: 'pointer',
+              transition: 'all 0.3s ease',
+              textTransform: 'uppercase',
+              letterSpacing: '1px',
+              backdropFilter: 'blur(10px)'
+            }}>
+              ▶ Trailer
+            </button>
+          </Link>
         </div>
         
-        <div className="card">
-          <h3 style={{ color: '#ff6b6b', marginBottom: '1rem' }}>🏆 Rewards System</h3>
-          <p>Earn Riot Coins through participation and redeem them for exclusive perks.</p>
+        <p style={{ 
+          fontSize: '1.1rem',
+          opacity: 0.7,
+          marginBottom: '2rem'
+        }}>
+          $15.99 a month or $149.99 a year
+        </p>
+        
+        <div style={{ marginBottom: '4rem' }}>
+          <p style={{ 
+            fontSize: '1rem',
+            opacity: 0.8,
+            marginBottom: '1.5rem'
+          }}>
+            Available on multiple devices. <span style={{ color: '#ff0000' }}>View All &gt;</span>
+          </p>
+          <div style={{ 
+            display: 'flex',
+            justifyContent: 'center',
+            gap: '2rem',
+            flexWrap: 'wrap',
+            opacity: 0.7
+          }}>
+            <div style={{ fontSize: '2rem' }}>📱</div>
+            <div style={{ fontSize: '2rem' }}>📺</div>
+            <div style={{ fontSize: '2rem' }}>💻</div>
+            <div style={{ fontSize: '2rem' }}>🎮</div>
+          </div>
+        </div>
+        
+        <div style={{ 
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+          gap: '2rem',
+          marginTop: '4rem'
+        }}>
+          <div style={{ textAlign: 'center' }}>
+            <h3 style={{ 
+              color: '#ff0000', 
+              marginBottom: '1rem',
+              fontSize: '1.3rem',
+              fontWeight: '700',
+              textTransform: 'uppercase'
+            }}>
+              UNLIMITED STREAMING
+            </h3>
+            <p style={{ color: 'rgba(255, 255, 255, 0.8)', lineHeight: '1.6' }}>
+              Get streaming access to all the content and all future releases
+            </p>
+          </div>
+          
+          <div style={{ textAlign: 'center' }}>
+            <h3 style={{ 
+              color: '#ff0000', 
+              marginBottom: '1rem',
+              fontSize: '1.3rem',
+              fontWeight: '700',
+              textTransform: 'uppercase'
+            }}>
+              WATCH ANYWHERE
+            </h3>
+            <p style={{ color: 'rgba(255, 255, 255, 0.8)', lineHeight: '1.6' }}>
+              Enjoy on your favorite device
+            </p>
+          </div>
+          
+          <div style={{ textAlign: 'center' }}>
+            <h3 style={{ 
+              color: '#ff0000', 
+              marginBottom: '1rem',
+              fontSize: '1.3rem',
+              fontWeight: '700',
+              textTransform: 'uppercase'
+            }}>
+              SUPPORT THE CREATORS
+            </h3>
+            <p style={{ color: 'rgba(255, 255, 255, 0.8)', lineHeight: '1.6' }}>
+              Directly support the creators and help them provide you with more content
+            </p>
+          </div>
         </div>
       </div>
     </div>
