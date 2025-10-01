@@ -59,10 +59,15 @@ export default function Navigation() {
             textDecoration: 'none',
             fontSize: '0.9rem',
             fontWeight: '600',
-            transition: 'all 0.3s ease',
             textTransform: 'uppercase',
             letterSpacing: '1px',
-            opacity: 0.9
+            opacity: 0.9,
+            cursor: 'pointer',
+            userSelect: 'none',
+            display: 'block',
+            padding: '0.5rem 0.75rem',
+            borderRadius: '4px',
+            transition: 'color 0.2s ease'
           }}>
             VOD
           </Link>
@@ -71,10 +76,15 @@ export default function Navigation() {
             textDecoration: 'none',
             fontSize: '0.9rem',
             fontWeight: '600',
-            transition: 'all 0.3s ease',
             textTransform: 'uppercase',
             letterSpacing: '1px',
-            opacity: 0.9
+            opacity: 0.9,
+            cursor: 'pointer',
+            userSelect: 'none',
+            display: 'block',
+            padding: '0.5rem 0.75rem',
+            borderRadius: '4px',
+            transition: 'color 0.2s ease'
           }}>
             STREAM
           </Link>
@@ -83,10 +93,15 @@ export default function Navigation() {
             textDecoration: 'none',
             fontSize: '0.9rem',
             fontWeight: '600',
-            transition: 'all 0.3s ease',
             textTransform: 'uppercase',
             letterSpacing: '1px',
-            opacity: 0.9
+            opacity: 0.9,
+            cursor: 'pointer',
+            userSelect: 'none',
+            display: 'block',
+            padding: '0.5rem 0.75rem',
+            borderRadius: '4px',
+            transition: 'color 0.2s ease'
           }}>
             CHAT
           </Link>
@@ -95,10 +110,15 @@ export default function Navigation() {
             textDecoration: 'none',
             fontSize: '0.9rem',
             fontWeight: '600',
-            transition: 'all 0.3s ease',
             textTransform: 'uppercase',
             letterSpacing: '1px',
-            opacity: 0.9
+            opacity: 0.9,
+            cursor: 'pointer',
+            userSelect: 'none',
+            display: 'block',
+            padding: '0.5rem 0.75rem',
+            borderRadius: '4px',
+            transition: 'color 0.2s ease'
           }}>
             MERCH
           </Link>
@@ -107,10 +127,15 @@ export default function Navigation() {
             textDecoration: 'none',
             fontSize: '0.9rem',
             fontWeight: '600',
-            transition: 'all 0.3s ease',
             textTransform: 'uppercase',
             letterSpacing: '1px',
-            opacity: 0.9
+            opacity: 0.9,
+            cursor: 'pointer',
+            userSelect: 'none',
+            display: 'block',
+            padding: '0.5rem 0.75rem',
+            borderRadius: '4px',
+            transition: 'color 0.2s ease'
           }}>
             SCHEDULE
           </Link>
@@ -121,10 +146,15 @@ export default function Navigation() {
                 textDecoration: 'none',
                 fontSize: '0.9rem',
                 fontWeight: '600',
-                transition: 'all 0.3s ease',
                 textTransform: 'uppercase',
                 letterSpacing: '1px',
-                opacity: 0.9
+                opacity: 0.9,
+                cursor: 'pointer',
+                userSelect: 'none',
+                display: 'block',
+                padding: '0.5rem 0.75rem',
+                borderRadius: '4px',
+                transition: 'color 0.2s ease'
               }}>
                 PROFILE
               </Link>
@@ -134,10 +164,15 @@ export default function Navigation() {
                   textDecoration: 'none',
                   fontSize: '0.9rem',
                   fontWeight: '600',
-                  transition: 'all 0.3s ease',
                   textTransform: 'uppercase',
                   letterSpacing: '1px',
-                  opacity: 0.9
+                  opacity: 0.9,
+                  cursor: 'pointer',
+                  userSelect: 'none',
+                  display: 'block',
+                  padding: '0.5rem 0.75rem',
+                  borderRadius: '4px',
+                  transition: 'color 0.2s ease'
                 }}>
                   ADMIN
                 </Link>
@@ -170,10 +205,15 @@ export default function Navigation() {
               textDecoration: 'none',
               fontSize: '0.9rem',
               fontWeight: '600',
-              transition: 'all 0.3s ease',
               textTransform: 'uppercase',
               letterSpacing: '1px',
-              opacity: 0.9
+              opacity: 0.9,
+              cursor: 'pointer',
+              userSelect: 'none',
+              display: 'block',
+              padding: '0.5rem 0.75rem',
+              borderRadius: '4px',
+              transition: 'color 0.2s ease'
             }}>
               LOGIN
             </Link>
