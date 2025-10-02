@@ -28,6 +28,7 @@ export default function Navigation() {
   };
 
   const handleNavClick = (path, e) => {
+    console.log('Navigation click handler called:', path, e);
     e.preventDefault();
     e.stopPropagation();
     
@@ -38,9 +39,7 @@ export default function Navigation() {
       }, 100);
     }
     
-    setTimeout(() => {
-      router.push(path);
-    }, 50);
+    router.push(path);
   };
 
   return (
@@ -74,7 +73,11 @@ export default function Navigation() {
           WebkitUserSelect: 'none',
           MozUserSelect: 'none',
           msUserSelect: 'none'
-        }} onClick={(e) => handleNavClick('/', e)}>
+        }} onClick={(e) => {
+          e.preventDefault();
+          console.log('Home navigation clicked');
+          router.push('/');
+        }}>
           RIOT NETWORK
         </Link>
         
@@ -103,7 +106,11 @@ export default function Navigation() {
             msUserSelect: 'none',
             pointerEvents: 'auto'
           }}
-          onClick={(e) => handleNavClick('/vault', e)}
+          onClick={(e) => {
+            e.preventDefault();
+            console.log('VOD navigation clicked');
+            router.push('/vault');
+          }}
           onMouseEnter={(e) => {
             if (router.pathname !== '/vault') {
               e.target.style.background = 'rgba(255, 0, 0, 0.1)';
@@ -138,7 +145,11 @@ export default function Navigation() {
             msUserSelect: 'none',
             pointerEvents: 'auto'
           }}
-          onClick={(e) => handleNavClick('/stream', e)}
+          onClick={(e) => {
+            e.preventDefault();
+            console.log('Stream navigation clicked');
+            router.push('/stream');
+          }}
           onMouseEnter={(e) => {
             if (router.pathname !== '/stream') {
               e.target.style.background = 'rgba(255, 0, 0, 0.1)';
@@ -173,7 +184,11 @@ export default function Navigation() {
             msUserSelect: 'none',
             pointerEvents: 'auto'
           }}
-          onClick={(e) => handleNavClick('/merch', e)}
+          onClick={(e) => {
+            e.preventDefault();
+            console.log('Merch navigation clicked');
+            router.push('/merch');
+          }}
           onMouseEnter={(e) => {
             if (router.pathname !== '/merch') {
               e.target.style.background = 'rgba(255, 0, 0, 0.1)';
@@ -208,7 +223,11 @@ export default function Navigation() {
             msUserSelect: 'none',
             pointerEvents: 'auto'
           }}
-          onClick={(e) => handleNavClick('/schedule', e)}
+          onClick={(e) => {
+            e.preventDefault();
+            console.log('Schedule navigation clicked');
+            router.push('/schedule');
+          }}
           onMouseEnter={(e) => {
             if (router.pathname !== '/schedule') {
               e.target.style.background = 'rgba(255, 0, 0, 0.1)';
@@ -245,7 +264,11 @@ export default function Navigation() {
                 msUserSelect: 'none',
                 pointerEvents: 'auto'
               }}
-              onClick={(e) => handleNavClick('/profile', e)}
+              onClick={(e) => {
+                e.preventDefault();
+                console.log('Profile navigation clicked');
+                router.push('/profile');
+              }}
               onMouseEnter={(e) => {
                 if (router.pathname !== '/profile') {
                   e.target.style.background = 'rgba(255, 0, 0, 0.1)';
@@ -281,7 +304,11 @@ export default function Navigation() {
                   msUserSelect: 'none',
                   pointerEvents: 'auto'
                 }}
-                onClick={(e) => handleNavClick('/admin', e)}
+                onClick={(e) => {
+                  e.preventDefault();
+                  console.log('Admin navigation clicked');
+                  router.push('/admin');
+                }}
                 onMouseEnter={(e) => {
                   if (router.pathname !== '/admin') {
                     e.target.style.background = 'rgba(255, 0, 0, 0.1)';
@@ -301,7 +328,11 @@ export default function Navigation() {
                 {user.email}
               </span>
               <button 
-                onClick={handleLogout}
+                onClick={(e) => {
+                  e.preventDefault();
+                  console.log('Logout clicked');
+                  handleLogout();
+                }}
                 style={{
                   background: 'linear-gradient(45deg, #ff0000, #cc0000)',
                   color: 'white',
@@ -352,7 +383,11 @@ export default function Navigation() {
               msUserSelect: 'none',
               pointerEvents: 'auto'
             }}
-            onClick={(e) => handleNavClick('/login', e)}
+            onClick={(e) => {
+              e.preventDefault();
+              console.log('Login navigation clicked');
+              router.push('/login');
+            }}
             onMouseEnter={(e) => {
               if (router.pathname !== '/login') {
                 e.target.style.background = 'rgba(255, 0, 0, 0.1)';
