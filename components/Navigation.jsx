@@ -9,21 +9,20 @@ export default function Navigation() {
 
 
   useEffect(() => {
-    const checkUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      setUser(user);
+    const checkUser = () => {
+      const mockUser = localStorage.getItem('mockUser');
+      const user = mockUser ? JSON.parse(mockUser) : null;
+      setUser(user && user.authenticated ? user : null);
     };
+    
     checkUser();
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      setUser(session?.user || null);
-    });
-
-    return () => subscription.unsubscribe();
+    
+    const interval = setInterval(checkUser, 1000);
+    return () => clearInterval(interval);
   }, []);
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
+    localStorage.removeItem('mockUser');
     setUser(null);
     router.push('/login');
   };
@@ -94,9 +93,17 @@ export default function Navigation() {
             pointerEvents: 'auto'
           }}
           onClick={(e) => {
+            console.log('🔥 VOD onClick handler triggered!', e);
             e.preventDefault();
-            console.log('VOD navigation clicked');
+            e.stopPropagation();
+            console.log('VOD navigation clicked - using router.push');
             router.push('/vault');
+          }}
+          onMouseDown={(e) => {
+            console.log('🔥 VOD onMouseDown triggered!', e);
+          }}
+          onMouseUp={(e) => {
+            console.log('🔥 VOD onMouseUp triggered!', e);
           }}
           onMouseEnter={(e) => {
             if (router.pathname !== '/vault') {
@@ -133,9 +140,17 @@ export default function Navigation() {
             pointerEvents: 'auto'
           }}
           onClick={(e) => {
+            console.log('🔥 STREAM onClick handler triggered!', e);
             e.preventDefault();
-            console.log('STREAM navigation clicked');
+            e.stopPropagation();
+            console.log('STREAM navigation clicked - using router.push');
             router.push('/stream');
+          }}
+          onMouseDown={(e) => {
+            console.log('🔥 STREAM onMouseDown triggered!', e);
+          }}
+          onMouseUp={(e) => {
+            console.log('🔥 STREAM onMouseUp triggered!', e);
           }}
           onMouseEnter={(e) => {
             if (router.pathname !== '/stream') {
@@ -172,9 +187,17 @@ export default function Navigation() {
             pointerEvents: 'auto'
           }}
           onClick={(e) => {
+            console.log('🔥 MERCH onClick handler triggered!', e);
             e.preventDefault();
-            console.log('Merch navigation clicked');
+            e.stopPropagation();
+            console.log('Merch navigation clicked - preventing default and pushing route');
             router.push('/merch');
+          }}
+          onMouseDown={(e) => {
+            console.log('🔥 MERCH onMouseDown triggered!', e);
+          }}
+          onMouseUp={(e) => {
+            console.log('🔥 MERCH onMouseUp triggered!', e);
           }}
           onMouseEnter={(e) => {
             if (router.pathname !== '/merch') {
@@ -211,9 +234,17 @@ export default function Navigation() {
             pointerEvents: 'auto'
           }}
           onClick={(e) => {
+            console.log('🔥 SCHEDULE onClick handler triggered!', e);
             e.preventDefault();
-            console.log('Schedule navigation clicked');
+            e.stopPropagation();
+            console.log('Schedule navigation clicked - preventing default and pushing route');
             router.push('/schedule');
+          }}
+          onMouseDown={(e) => {
+            console.log('🔥 SCHEDULE onMouseDown triggered!', e);
+          }}
+          onMouseUp={(e) => {
+            console.log('🔥 SCHEDULE onMouseUp triggered!', e);
           }}
           onMouseEnter={(e) => {
             if (router.pathname !== '/schedule') {
