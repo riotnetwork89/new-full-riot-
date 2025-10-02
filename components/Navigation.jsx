@@ -45,7 +45,7 @@ export default function Navigation() {
         maxWidth: '1200px',
         margin: '0 auto'
       }}>
-        <Link href="#" style={{
+        <div style={{
           fontSize: '1.5rem',
           fontWeight: '900',
           color: 'white',
@@ -69,14 +69,14 @@ export default function Navigation() {
           }
         }}>
           RIOT NETWORK
-        </Link>
+        </div>
         
         <div style={{
           display: 'flex',
           gap: '2.5rem',
           alignItems: 'center'
         }}>
-          <Link href="#" style={{
+          <div style={{
             color: 'white',
             textDecoration: 'none',
             fontSize: '0.9rem',
@@ -126,8 +126,8 @@ export default function Navigation() {
             }
           }}>
             VOD
-          </Link>
-          <Link href="#" style={{
+          </div>
+          <div style={{
             color: 'white',
             textDecoration: 'none',
             fontSize: '0.9rem',
@@ -177,8 +177,8 @@ export default function Navigation() {
             }
           }}>
             STREAM
-          </Link>
-          <Link href="#" style={{
+          </div>
+          <div style={{
             color: 'white',
             textDecoration: 'none',
             fontSize: '0.9rem',
@@ -228,8 +228,8 @@ export default function Navigation() {
             }
           }}>
             MERCH
-          </Link>
-          <Link href="#" style={{
+          </div>
+          <div style={{
             color: 'white',
             textDecoration: 'none',
             fontSize: '0.9rem',
@@ -279,10 +279,10 @@ export default function Navigation() {
             }
           }}>
             SCHEDULE
-          </Link>
+          </div>
           {user ? (
             <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-              <Link href="#" style={{
+              <div style={{
                 color: 'white',
                 textDecoration: 'none',
                 fontSize: '0.9rem',
@@ -324,9 +324,9 @@ export default function Navigation() {
                 }
               }}>
                 PROFILE
-              </Link>
+              </div>
               {user.email === 'kevinparxmusic@gmail.com' && (
-                <Link href="#" style={{
+                <div style={{
                   color: 'white',
                   textDecoration: 'none',
                   fontSize: '0.9rem',
@@ -368,7 +368,7 @@ export default function Navigation() {
                   }
                 }}>
                   ADMIN
-                </Link>
+                </div>
               )}
               <span style={{ color: 'white', fontSize: '0.9rem' }}>
                 {user.email}
@@ -409,7 +409,7 @@ export default function Navigation() {
               </button>
             </div>
           ) : (
-            <Link href="#" style={{
+            <div style={{
               color: 'white',
               textDecoration: 'none',
               fontSize: '0.9rem',
@@ -451,7 +451,7 @@ export default function Navigation() {
               }
             }}>
               LOGIN
-            </Link>
+            </div>
           )}
         </div>
       </div>
