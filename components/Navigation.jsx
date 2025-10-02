@@ -29,7 +29,18 @@ export default function Navigation() {
 
   const handleNavClick = (path, e) => {
     e.preventDefault();
-    router.push(path);
+    e.stopPropagation();
+    
+    if (e.target) {
+      e.target.style.opacity = '0.7';
+      setTimeout(() => {
+        if (e.target) e.target.style.opacity = '1';
+      }, 100);
+    }
+    
+    setTimeout(() => {
+      router.push(path);
+    }, 50);
   };
 
   return (
@@ -58,7 +69,11 @@ export default function Navigation() {
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
           letterSpacing: '2px',
-          cursor: 'pointer'
+          cursor: 'pointer',
+          userSelect: 'none',
+          WebkitUserSelect: 'none',
+          MozUserSelect: 'none',
+          msUserSelect: 'none'
         }} onClick={(e) => handleNavClick('/', e)}>
           RIOT NETWORK
         </Link>
@@ -81,7 +96,12 @@ export default function Navigation() {
             borderRadius: '6px',
             transition: 'all 0.15s ease',
             background: router.pathname === '/vault' ? 'rgba(255, 0, 0, 0.2)' : 'transparent',
-            border: '1px solid transparent'
+            border: '1px solid transparent',
+            userSelect: 'none',
+            WebkitUserSelect: 'none',
+            MozUserSelect: 'none',
+            msUserSelect: 'none',
+            pointerEvents: 'auto'
           }}
           onClick={(e) => handleNavClick('/vault', e)}
           onMouseEnter={(e) => {
@@ -111,7 +131,12 @@ export default function Navigation() {
             borderRadius: '6px',
             transition: 'all 0.15s ease',
             background: router.pathname === '/stream' ? 'rgba(255, 0, 0, 0.2)' : 'transparent',
-            border: '1px solid transparent'
+            border: '1px solid transparent',
+            userSelect: 'none',
+            WebkitUserSelect: 'none',
+            MozUserSelect: 'none',
+            msUserSelect: 'none',
+            pointerEvents: 'auto'
           }}
           onClick={(e) => handleNavClick('/stream', e)}
           onMouseEnter={(e) => {
@@ -141,7 +166,12 @@ export default function Navigation() {
             borderRadius: '6px',
             transition: 'all 0.15s ease',
             background: router.pathname === '/merch' ? 'rgba(255, 0, 0, 0.2)' : 'transparent',
-            border: '1px solid transparent'
+            border: '1px solid transparent',
+            userSelect: 'none',
+            WebkitUserSelect: 'none',
+            MozUserSelect: 'none',
+            msUserSelect: 'none',
+            pointerEvents: 'auto'
           }}
           onClick={(e) => handleNavClick('/merch', e)}
           onMouseEnter={(e) => {
@@ -171,7 +201,12 @@ export default function Navigation() {
             borderRadius: '6px',
             transition: 'all 0.15s ease',
             background: router.pathname === '/schedule' ? 'rgba(255, 0, 0, 0.2)' : 'transparent',
-            border: '1px solid transparent'
+            border: '1px solid transparent',
+            userSelect: 'none',
+            WebkitUserSelect: 'none',
+            MozUserSelect: 'none',
+            msUserSelect: 'none',
+            pointerEvents: 'auto'
           }}
           onClick={(e) => handleNavClick('/schedule', e)}
           onMouseEnter={(e) => {
@@ -203,7 +238,12 @@ export default function Navigation() {
                 borderRadius: '6px',
                 transition: 'all 0.15s ease',
                 background: router.pathname === '/profile' ? 'rgba(255, 0, 0, 0.2)' : 'transparent',
-                border: '1px solid transparent'
+                border: '1px solid transparent',
+                userSelect: 'none',
+                WebkitUserSelect: 'none',
+                MozUserSelect: 'none',
+                msUserSelect: 'none',
+                pointerEvents: 'auto'
               }}
               onClick={(e) => handleNavClick('/profile', e)}
               onMouseEnter={(e) => {
@@ -234,7 +274,12 @@ export default function Navigation() {
                   borderRadius: '6px',
                   transition: 'all 0.15s ease',
                   background: router.pathname === '/admin' ? 'rgba(255, 0, 0, 0.2)' : 'transparent',
-                  border: '1px solid transparent'
+                  border: '1px solid transparent',
+                  userSelect: 'none',
+                  WebkitUserSelect: 'none',
+                  MozUserSelect: 'none',
+                  msUserSelect: 'none',
+                  pointerEvents: 'auto'
                 }}
                 onClick={(e) => handleNavClick('/admin', e)}
                 onMouseEnter={(e) => {
@@ -300,7 +345,12 @@ export default function Navigation() {
               borderRadius: '6px',
               transition: 'all 0.15s ease',
               background: router.pathname === '/login' ? 'rgba(255, 0, 0, 0.2)' : 'transparent',
-              border: '1px solid transparent'
+              border: '1px solid transparent',
+              userSelect: 'none',
+              WebkitUserSelect: 'none',
+              MozUserSelect: 'none',
+              msUserSelect: 'none',
+              pointerEvents: 'auto'
             }}
             onClick={(e) => handleNavClick('/login', e)}
             onMouseEnter={(e) => {
