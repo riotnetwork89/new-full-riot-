@@ -27,6 +27,11 @@ export default function Navigation() {
     router.push('/login');
   };
 
+  const handleNavClick = (path, e) => {
+    e.preventDefault();
+    router.push(path);
+  };
+
   return (
     <nav style={{
       background: 'linear-gradient(90deg, #000000, #1a0000)',
@@ -52,8 +57,9 @@ export default function Navigation() {
           background: 'linear-gradient(45deg, #ff0000, #ffffff)',
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
-          letterSpacing: '2px'
-        }}>
+          letterSpacing: '2px',
+          cursor: 'pointer'
+        }} onClick={(e) => handleNavClick('/', e)}>
           RIOT NETWORK
         </Link>
         
@@ -77,6 +83,7 @@ export default function Navigation() {
             background: router.pathname === '/vault' ? 'rgba(255, 0, 0, 0.2)' : 'transparent',
             border: '1px solid transparent'
           }}
+          onClick={(e) => handleNavClick('/vault', e)}
           onMouseEnter={(e) => {
             if (router.pathname !== '/vault') {
               e.target.style.background = 'rgba(255, 0, 0, 0.1)';
@@ -106,6 +113,7 @@ export default function Navigation() {
             background: router.pathname === '/stream' ? 'rgba(255, 0, 0, 0.2)' : 'transparent',
             border: '1px solid transparent'
           }}
+          onClick={(e) => handleNavClick('/stream', e)}
           onMouseEnter={(e) => {
             if (router.pathname !== '/stream') {
               e.target.style.background = 'rgba(255, 0, 0, 0.1)';
@@ -135,6 +143,7 @@ export default function Navigation() {
             background: router.pathname === '/merch' ? 'rgba(255, 0, 0, 0.2)' : 'transparent',
             border: '1px solid transparent'
           }}
+          onClick={(e) => handleNavClick('/merch', e)}
           onMouseEnter={(e) => {
             if (router.pathname !== '/merch') {
               e.target.style.background = 'rgba(255, 0, 0, 0.1)';
@@ -164,6 +173,7 @@ export default function Navigation() {
             background: router.pathname === '/schedule' ? 'rgba(255, 0, 0, 0.2)' : 'transparent',
             border: '1px solid transparent'
           }}
+          onClick={(e) => handleNavClick('/schedule', e)}
           onMouseEnter={(e) => {
             if (router.pathname !== '/schedule') {
               e.target.style.background = 'rgba(255, 0, 0, 0.1)';
@@ -195,6 +205,7 @@ export default function Navigation() {
                 background: router.pathname === '/profile' ? 'rgba(255, 0, 0, 0.2)' : 'transparent',
                 border: '1px solid transparent'
               }}
+              onClick={(e) => handleNavClick('/profile', e)}
               onMouseEnter={(e) => {
                 if (router.pathname !== '/profile') {
                   e.target.style.background = 'rgba(255, 0, 0, 0.1)';
@@ -225,6 +236,7 @@ export default function Navigation() {
                   background: router.pathname === '/admin' ? 'rgba(255, 0, 0, 0.2)' : 'transparent',
                   border: '1px solid transparent'
                 }}
+                onClick={(e) => handleNavClick('/admin', e)}
                 onMouseEnter={(e) => {
                   if (router.pathname !== '/admin') {
                     e.target.style.background = 'rgba(255, 0, 0, 0.1)';
@@ -290,6 +302,7 @@ export default function Navigation() {
               background: router.pathname === '/login' ? 'rgba(255, 0, 0, 0.2)' : 'transparent',
               border: '1px solid transparent'
             }}
+            onClick={(e) => handleNavClick('/login', e)}
             onMouseEnter={(e) => {
               if (router.pathname !== '/login') {
                 e.target.style.background = 'rgba(255, 0, 0, 0.1)';
