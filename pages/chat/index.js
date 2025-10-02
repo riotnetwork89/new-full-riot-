@@ -17,7 +17,9 @@ export default function ChatPage() {
     async function getUser() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
-        router.push('/login');
+        if (router.pathname !== '/login') {
+          router.push('/login');
+        }
       } else {
         setUser(user);
         userCache.set(`user-${user.id}`, user);

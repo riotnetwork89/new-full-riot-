@@ -14,7 +14,9 @@ export default function Admin() {
     const fetchData = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
-        router.push('/login');
+        if (router.pathname !== '/login') {
+          router.push('/login');
+        }
         return;
       }
       

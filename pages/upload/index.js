@@ -12,7 +12,9 @@ export default function Upload() {
     e.preventDefault();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
-      router.push('/login');
+      if (router.pathname !== '/login') {
+        router.push('/login');
+      }
       return;
     }
     if (!file) {
