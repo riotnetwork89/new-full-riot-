@@ -7,13 +7,6 @@ export default function Navigation() {
   const [user, setUser] = useState(null);
   const router = useRouter();
 
-  useEffect(() => {
-    const handleGlobalClick = (e) => {
-      console.log('Global click detected:', e.target.tagName, e.target.textContent, e.target.href);
-    };
-    document.addEventListener('click', handleGlobalClick);
-    return () => document.removeEventListener('click', handleGlobalClick);
-  }, []);
 
   useEffect(() => {
     const checkUser = async () => {
@@ -94,84 +87,74 @@ export default function Navigation() {
           gap: '2.5rem',
           alignItems: 'center'
         }}>
-          <button 
-            onClick={() => {
-              console.log('VOD navigation clicked - button approach');
-              router.push('/vault');
-            }}
-            style={{
-              color: 'white',
-              textDecoration: 'none',
-              fontSize: '0.9rem',
-              fontWeight: '600',
-              textTransform: 'uppercase',
-              letterSpacing: '1px',
-              cursor: 'pointer',
-              display: 'inline-block',
-              padding: '0.75rem 1rem',
-              borderRadius: '6px',
-              transition: 'all 0.15s ease',
-              background: router.pathname === '/vault' ? 'rgba(255, 0, 0, 0.2)' : 'transparent',
-              border: '1px solid transparent',
-              userSelect: 'none',
-              WebkitUserSelect: 'none',
-              MozUserSelect: 'none',
-              msUserSelect: 'none',
-              pointerEvents: 'auto'
-            }}
-            onMouseEnter={(e) => {
-              if (router.pathname !== '/vault') {
-                e.target.style.background = 'rgba(255, 0, 0, 0.1)';
-                e.target.style.borderColor = 'rgba(255, 0, 0, 0.3)';
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (router.pathname !== '/vault') {
-                e.target.style.background = 'transparent';
-                e.target.style.borderColor = 'transparent';
-              }
-            }}>
+          <Link href="/vault" style={{
+            color: 'white',
+            textDecoration: 'none',
+            fontSize: '0.9rem',
+            fontWeight: '600',
+            textTransform: 'uppercase',
+            letterSpacing: '1px',
+            cursor: 'pointer',
+            display: 'inline-block',
+            padding: '0.75rem 1rem',
+            borderRadius: '6px',
+            transition: 'all 0.15s ease',
+            background: router.pathname === '/vault' ? 'rgba(255, 0, 0, 0.2)' : 'transparent',
+            border: '1px solid transparent',
+            userSelect: 'none',
+            WebkitUserSelect: 'none',
+            MozUserSelect: 'none',
+            msUserSelect: 'none',
+            pointerEvents: 'auto'
+          }}
+          onMouseEnter={(e) => {
+            if (router.pathname !== '/vault') {
+              e.target.style.background = 'rgba(255, 0, 0, 0.1)';
+              e.target.style.borderColor = 'rgba(255, 0, 0, 0.3)';
+            }
+          }}
+          onMouseLeave={(e) => {
+            if (router.pathname !== '/vault') {
+              e.target.style.background = 'transparent';
+              e.target.style.borderColor = 'transparent';
+            }
+          }}>
             VOD
-          </button>
-          <button 
-            onClick={() => {
-              console.log('Stream navigation clicked - button approach');
-              router.push('/stream');
-            }}
-            style={{
-              color: 'white',
-              textDecoration: 'none',
-              fontSize: '0.9rem',
-              fontWeight: '600',
-              textTransform: 'uppercase',
-              letterSpacing: '1px',
-              cursor: 'pointer',
-              display: 'inline-block',
-              padding: '0.75rem 1rem',
-              borderRadius: '6px',
-              transition: 'all 0.15s ease',
-              background: router.pathname === '/stream' ? 'rgba(255, 0, 0, 0.2)' : 'transparent',
-              border: '1px solid transparent',
-              userSelect: 'none',
-              WebkitUserSelect: 'none',
-              MozUserSelect: 'none',
-              msUserSelect: 'none',
-              pointerEvents: 'auto'
-            }}
-            onMouseEnter={(e) => {
-              if (router.pathname !== '/stream') {
-                e.target.style.background = 'rgba(255, 0, 0, 0.1)';
-                e.target.style.borderColor = 'rgba(255, 0, 0, 0.3)';
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (router.pathname !== '/stream') {
-                e.target.style.background = 'transparent';
-                e.target.style.borderColor = 'transparent';
-              }
-            }}>
+          </Link>
+          <Link href="/stream" style={{
+            color: 'white',
+            textDecoration: 'none',
+            fontSize: '0.9rem',
+            fontWeight: '600',
+            textTransform: 'uppercase',
+            letterSpacing: '1px',
+            cursor: 'pointer',
+            display: 'inline-block',
+            padding: '0.75rem 1rem',
+            borderRadius: '6px',
+            transition: 'all 0.15s ease',
+            background: router.pathname === '/stream' ? 'rgba(255, 0, 0, 0.2)' : 'transparent',
+            border: '1px solid transparent',
+            userSelect: 'none',
+            WebkitUserSelect: 'none',
+            MozUserSelect: 'none',
+            msUserSelect: 'none',
+            pointerEvents: 'auto'
+          }}
+          onMouseEnter={(e) => {
+            if (router.pathname !== '/stream') {
+              e.target.style.background = 'rgba(255, 0, 0, 0.1)';
+              e.target.style.borderColor = 'rgba(255, 0, 0, 0.3)';
+            }
+          }}
+          onMouseLeave={(e) => {
+            if (router.pathname !== '/stream') {
+              e.target.style.background = 'transparent';
+              e.target.style.borderColor = 'transparent';
+            }
+          }}>
             STREAM
-          </button>
+          </Link>
           <Link href="/merch" style={{
             color: 'white',
             textDecoration: 'none',
