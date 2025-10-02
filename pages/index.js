@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import { supabase } from '../utils/supabase';
 
 export default function HomePage() {
   const [user, setUser] = useState(null);
