@@ -69,13 +69,25 @@ export default function Navigation() {
             fontWeight: '600',
             textTransform: 'uppercase',
             letterSpacing: '1px',
-            opacity: 0.9,
             cursor: 'pointer',
-            userSelect: 'none',
-            display: 'block',
-            padding: '0.5rem 0.75rem',
-            borderRadius: '4px',
-            transition: 'color 0.2s ease'
+            display: 'inline-block',
+            padding: '0.75rem 1rem',
+            borderRadius: '6px',
+            transition: 'all 0.15s ease',
+            background: router.pathname === '/vault' ? 'rgba(255, 0, 0, 0.2)' : 'transparent',
+            border: '1px solid transparent'
+          }}
+          onMouseEnter={(e) => {
+            if (router.pathname !== '/vault') {
+              e.target.style.background = 'rgba(255, 0, 0, 0.1)';
+              e.target.style.borderColor = 'rgba(255, 0, 0, 0.3)';
+            }
+          }}
+          onMouseLeave={(e) => {
+            if (router.pathname !== '/vault') {
+              e.target.style.background = 'transparent';
+              e.target.style.borderColor = 'transparent';
+            }
           }}>
             VOD
           </Link>
@@ -86,13 +98,25 @@ export default function Navigation() {
             fontWeight: '600',
             textTransform: 'uppercase',
             letterSpacing: '1px',
-            opacity: 0.9,
             cursor: 'pointer',
-            userSelect: 'none',
-            display: 'block',
-            padding: '0.5rem 0.75rem',
-            borderRadius: '4px',
-            transition: 'color 0.2s ease'
+            display: 'inline-block',
+            padding: '0.75rem 1rem',
+            borderRadius: '6px',
+            transition: 'all 0.15s ease',
+            background: router.pathname === '/stream' ? 'rgba(255, 0, 0, 0.2)' : 'transparent',
+            border: '1px solid transparent'
+          }}
+          onMouseEnter={(e) => {
+            if (router.pathname !== '/stream') {
+              e.target.style.background = 'rgba(255, 0, 0, 0.1)';
+              e.target.style.borderColor = 'rgba(255, 0, 0, 0.3)';
+            }
+          }}
+          onMouseLeave={(e) => {
+            if (router.pathname !== '/stream') {
+              e.target.style.background = 'transparent';
+              e.target.style.borderColor = 'transparent';
+            }
           }}>
             STREAM
           </Link>
@@ -103,13 +127,25 @@ export default function Navigation() {
             fontWeight: '600',
             textTransform: 'uppercase',
             letterSpacing: '1px',
-            opacity: 0.9,
             cursor: 'pointer',
-            userSelect: 'none',
-            display: 'block',
-            padding: '0.5rem 0.75rem',
-            borderRadius: '4px',
-            transition: 'color 0.2s ease'
+            display: 'inline-block',
+            padding: '0.75rem 1rem',
+            borderRadius: '6px',
+            transition: 'all 0.15s ease',
+            background: router.pathname === '/merch' ? 'rgba(255, 0, 0, 0.2)' : 'transparent',
+            border: '1px solid transparent'
+          }}
+          onMouseEnter={(e) => {
+            if (router.pathname !== '/merch') {
+              e.target.style.background = 'rgba(255, 0, 0, 0.1)';
+              e.target.style.borderColor = 'rgba(255, 0, 0, 0.3)';
+            }
+          }}
+          onMouseLeave={(e) => {
+            if (router.pathname !== '/merch') {
+              e.target.style.background = 'transparent';
+              e.target.style.borderColor = 'transparent';
+            }
           }}>
             MERCH
           </Link>
@@ -120,13 +156,25 @@ export default function Navigation() {
             fontWeight: '600',
             textTransform: 'uppercase',
             letterSpacing: '1px',
-            opacity: 0.9,
             cursor: 'pointer',
-            userSelect: 'none',
-            display: 'block',
-            padding: '0.5rem 0.75rem',
-            borderRadius: '4px',
-            transition: 'color 0.2s ease'
+            display: 'inline-block',
+            padding: '0.75rem 1rem',
+            borderRadius: '6px',
+            transition: 'all 0.15s ease',
+            background: router.pathname === '/schedule' ? 'rgba(255, 0, 0, 0.2)' : 'transparent',
+            border: '1px solid transparent'
+          }}
+          onMouseEnter={(e) => {
+            if (router.pathname !== '/schedule') {
+              e.target.style.background = 'rgba(255, 0, 0, 0.1)';
+              e.target.style.borderColor = 'rgba(255, 0, 0, 0.3)';
+            }
+          }}
+          onMouseLeave={(e) => {
+            if (router.pathname !== '/schedule') {
+              e.target.style.background = 'transparent';
+              e.target.style.borderColor = 'transparent';
+            }
           }}>
             SCHEDULE
           </Link>
@@ -139,13 +187,25 @@ export default function Navigation() {
                 fontWeight: '600',
                 textTransform: 'uppercase',
                 letterSpacing: '1px',
-                opacity: 0.9,
                 cursor: 'pointer',
-                userSelect: 'none',
-                display: 'block',
-                padding: '0.5rem 0.75rem',
-                borderRadius: '4px',
-                transition: 'color 0.2s ease'
+                display: 'inline-block',
+                padding: '0.75rem 1rem',
+                borderRadius: '6px',
+                transition: 'all 0.15s ease',
+                background: router.pathname === '/profile' ? 'rgba(255, 0, 0, 0.2)' : 'transparent',
+                border: '1px solid transparent'
+              }}
+              onMouseEnter={(e) => {
+                if (router.pathname !== '/profile') {
+                  e.target.style.background = 'rgba(255, 0, 0, 0.1)';
+                  e.target.style.borderColor = 'rgba(255, 0, 0, 0.3)';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (router.pathname !== '/profile') {
+                  e.target.style.background = 'transparent';
+                  e.target.style.borderColor = 'transparent';
+                }
               }}>
                 PROFILE
               </Link>
@@ -157,13 +217,25 @@ export default function Navigation() {
                   fontWeight: '600',
                   textTransform: 'uppercase',
                   letterSpacing: '1px',
-                  opacity: 0.9,
                   cursor: 'pointer',
-                  userSelect: 'none',
-                  display: 'block',
-                  padding: '0.5rem 0.75rem',
-                  borderRadius: '4px',
-                  transition: 'color 0.2s ease'
+                  display: 'inline-block',
+                  padding: '0.75rem 1rem',
+                  borderRadius: '6px',
+                  transition: 'all 0.15s ease',
+                  background: router.pathname === '/admin' ? 'rgba(255, 0, 0, 0.2)' : 'transparent',
+                  border: '1px solid transparent'
+                }}
+                onMouseEnter={(e) => {
+                  if (router.pathname !== '/admin') {
+                    e.target.style.background = 'rgba(255, 0, 0, 0.1)';
+                    e.target.style.borderColor = 'rgba(255, 0, 0, 0.3)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (router.pathname !== '/admin') {
+                    e.target.style.background = 'transparent';
+                    e.target.style.borderColor = 'transparent';
+                  }
                 }}>
                   ADMIN
                 </Link>
@@ -177,14 +249,26 @@ export default function Navigation() {
                   background: 'linear-gradient(45deg, #ff0000, #cc0000)',
                   color: 'white',
                   border: 'none',
-                  padding: '0.5rem 1rem',
-                  borderRadius: '20px',
+                  padding: '0.75rem 1.25rem',
+                  borderRadius: '25px',
                   fontSize: '0.8rem',
                   fontWeight: '600',
                   cursor: 'pointer',
                   textTransform: 'uppercase',
                   letterSpacing: '1px',
-                  transition: 'all 0.3s ease'
+                  transition: 'all 0.15s ease',
+                  boxShadow: '0 2px 8px rgba(255, 0, 0, 0.3)'
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.transform = 'translateY(-1px)';
+                  e.target.style.boxShadow = '0 4px 12px rgba(255, 0, 0, 0.4)';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.transform = 'translateY(0)';
+                  e.target.style.boxShadow = '0 2px 8px rgba(255, 0, 0, 0.3)';
+                }}
+                onMouseDown={(e) => {
+                  e.target.style.transform = 'translateY(0)';
                 }}
               >
                 LOGOUT
@@ -198,13 +282,25 @@ export default function Navigation() {
               fontWeight: '600',
               textTransform: 'uppercase',
               letterSpacing: '1px',
-              opacity: 0.9,
               cursor: 'pointer',
-              userSelect: 'none',
-              display: 'block',
-              padding: '0.5rem 0.75rem',
-              borderRadius: '4px',
-              transition: 'color 0.2s ease'
+              display: 'inline-block',
+              padding: '0.75rem 1rem',
+              borderRadius: '6px',
+              transition: 'all 0.15s ease',
+              background: router.pathname === '/login' ? 'rgba(255, 0, 0, 0.2)' : 'transparent',
+              border: '1px solid transparent'
+            }}
+            onMouseEnter={(e) => {
+              if (router.pathname !== '/login') {
+                e.target.style.background = 'rgba(255, 0, 0, 0.1)';
+                e.target.style.borderColor = 'rgba(255, 0, 0, 0.3)';
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (router.pathname !== '/login') {
+                e.target.style.background = 'transparent';
+                e.target.style.borderColor = 'transparent';
+              }
             }}>
               LOGIN
             </Link>
