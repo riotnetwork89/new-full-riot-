@@ -8,6 +8,14 @@ export default function Navigation() {
   const router = useRouter();
 
   useEffect(() => {
+    const handleGlobalClick = (e) => {
+      console.log('Global click detected:', e.target.tagName, e.target.textContent, e.target.href);
+    };
+    document.addEventListener('click', handleGlobalClick);
+    return () => document.removeEventListener('click', handleGlobalClick);
+  }, []);
+
+  useEffect(() => {
     const checkUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       setUser(user);
@@ -108,7 +116,9 @@ export default function Navigation() {
           }}
           onClick={(e) => {
             e.preventDefault();
-            console.log('VOD navigation clicked');
+            console.log('VOD navigation clicked - event fired!', e);
+            console.log('VOD click target:', e.target);
+            console.log('VOD click currentTarget:', e.currentTarget);
             router.push('/vault');
           }}
           onMouseEnter={(e) => {
@@ -147,7 +157,9 @@ export default function Navigation() {
           }}
           onClick={(e) => {
             e.preventDefault();
-            console.log('Stream navigation clicked');
+            console.log('Stream navigation clicked - event fired!', e);
+            console.log('Stream click target:', e.target);
+            console.log('Stream click currentTarget:', e.currentTarget);
             router.push('/stream');
           }}
           onMouseEnter={(e) => {
