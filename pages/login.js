@@ -16,27 +16,21 @@ export default function Login() {
     setMessage('');
 
     try {
-      let result;
-      if (isSignUp) {
-        result = await supabase.auth.signUp({
-          email: email,
-          password: password,
-        });
-        if (result.error) throw result.error;
-        setMessage('Check your email for the confirmation link!');
-      } else {
-        result = await supabase.auth.signInWithPassword({
-          email: email,
-          password: password,
-        });
-        if (result.error) throw result.error;
+      if (email && password) {
+        localStorage.setItem('mockUser', JSON.stringify({ 
+          email, 
+          authenticated: true,
+          id: Date.now().toString()
+        }));
         setMessage('Login successful!');
         setTimeout(() => {
           router.push('/');
         }, 1000);
+      } else {
+        setMessage('Please enter email and password');
       }
     } catch (error) {
-      setMessage(error.message || 'Authentication failed');
+      setMessage('Authentication failed');
     }
     
     setLoading(false);

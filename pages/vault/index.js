@@ -10,9 +10,13 @@ export default function VaultPage() {
 
   useEffect(() => {
     const checkAccess = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        router.push('/login');
+      const mockUser = localStorage.getItem('mockUser');
+      const user = mockUser ? JSON.parse(mockUser) : null;
+      
+      if (!user || !user.authenticated) {
+        if (router.pathname !== '/login' && !router.asPath.includes('/login')) {
+          router.replace('/login');
+        }
         return;
       }
       
