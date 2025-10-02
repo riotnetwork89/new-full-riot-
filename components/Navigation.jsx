@@ -28,20 +28,6 @@ export default function Navigation() {
     router.push('/login');
   };
 
-  const handleNavClick = (path, e) => {
-    console.log('Navigation click handler called:', path, e);
-    e.preventDefault();
-    e.stopPropagation();
-    
-    if (e.target) {
-      e.target.style.opacity = '0.7';
-      setTimeout(() => {
-        if (e.target) e.target.style.opacity = '1';
-      }, 100);
-    }
-    
-    router.push(path);
-  };
 
   return (
     <nav style={{
@@ -107,6 +93,11 @@ export default function Navigation() {
             msUserSelect: 'none',
             pointerEvents: 'auto'
           }}
+          onClick={(e) => {
+            e.preventDefault();
+            console.log('VOD navigation clicked');
+            router.push('/vault');
+          }}
           onMouseEnter={(e) => {
             if (router.pathname !== '/vault') {
               e.target.style.background = 'rgba(255, 0, 0, 0.1)';
@@ -140,6 +131,11 @@ export default function Navigation() {
             MozUserSelect: 'none',
             msUserSelect: 'none',
             pointerEvents: 'auto'
+          }}
+          onClick={(e) => {
+            e.preventDefault();
+            console.log('STREAM navigation clicked');
+            router.push('/stream');
           }}
           onMouseEnter={(e) => {
             if (router.pathname !== '/stream') {
