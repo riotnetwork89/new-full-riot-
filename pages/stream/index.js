@@ -242,35 +242,44 @@ export default function Stream() {
               <div style={{
                 width: '100%',
                 height: '480px',
-                background: currentView === 'live' ? 'linear-gradient(45deg, #ff0000, #000000)' : '#000',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
                 borderRadius: '8px',
                 border: '2px solid #ff0000',
-                marginBottom: '1rem'
+                marginBottom: '1rem',
+                overflow: 'hidden'
               }}>
                 {currentView === 'live' ? (
-                  <div style={{ textAlign: 'center', color: 'white' }}>
-                    <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🔴</div>
-                    <h3>RIOT NETWORK LIVE</h3>
-                    <p>Stream is currently offline</p>
-                    <p style={{ fontSize: '0.9rem', opacity: 0.8 }}>
-                      Demo mode - Mux integration ready for production
-                    </p>
-                  </div>
-                ) : selectedVod ? (
-                  <video 
-                    controls 
-                    src={selectedVod.video_url} 
-                    style={{ 
-                      width: '100%', 
-                      height: '100%',
-                      borderRadius: '8px'
-                    }} 
-                    autoPlay
+                  <mux-player
+                    playback-id="EcHgOK9coz5K4rjSwOkoE7Y7O01201YMIC200RI6lNxnhs"
+                    metadata-video-title="Riot Network Live Stream"
+                    metadata-viewer-user-id={user?.email || 'anonymous'}
+                    style={{ width: '100%', height: '100%' }}
+                    autoplay="muted"
                   />
-                ) : null}
+                ) : selectedVod ? (
+                  <mux-player
+                    playback-id="EcHgOK9coz5K4rjSwOkoE7Y7O01201YMIC200RI6lNxnhs"
+                    metadata-video-title={selectedVod.title}
+                    metadata-viewer-user-id={user?.email || 'anonymous'}
+                    style={{ width: '100%', height: '100%' }}
+                    autoplay="muted"
+                  />
+                ) : (
+                  <div style={{ 
+                    width: '100%', 
+                    height: '100%', 
+                    background: 'linear-gradient(45deg, #ff0000, #000000)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: 'white',
+                    textAlign: 'center'
+                  }}>
+                    <div>
+                      <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📺</div>
+                      <h3>Select a VOD to play</h3>
+                    </div>
+                  </div>
+                )}
               </div>
               
               {currentView === 'live' && (
