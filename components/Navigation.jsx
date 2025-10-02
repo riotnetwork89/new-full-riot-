@@ -45,7 +45,7 @@ export default function Navigation() {
         maxWidth: '1200px',
         margin: '0 auto'
       }}>
-        <Link href="/" style={{
+        <Link href="#" style={{
           fontSize: '1.5rem',
           fontWeight: '900',
           color: 'white',
@@ -62,7 +62,11 @@ export default function Navigation() {
         }} onClick={(e) => {
           e.preventDefault();
           console.log('Home navigation clicked');
-          router.push('/');
+          if (router.asPath !== '/') {
+            router.push('/');
+          } else {
+            console.log('Already on home page, skipping navigation');
+          }
         }}>
           RIOT NETWORK
         </Link>
@@ -72,7 +76,7 @@ export default function Navigation() {
           gap: '2.5rem',
           alignItems: 'center'
         }}>
-          <Link href="/vault" style={{
+          <Link href="#" style={{
             color: 'white',
             textDecoration: 'none',
             fontSize: '0.9rem',
@@ -97,7 +101,11 @@ export default function Navigation() {
             e.preventDefault();
             e.stopPropagation();
             console.log('VOD navigation clicked - using router.push');
-            router.push('/vault');
+            if (router.asPath !== '/vault') {
+              router.push('/vault');
+            } else {
+              console.log('Already on VOD page, skipping navigation');
+            }
           }}
           onMouseDown={(e) => {
             console.log('🔥 VOD onMouseDown triggered!', e);
@@ -119,7 +127,7 @@ export default function Navigation() {
           }}>
             VOD
           </Link>
-          <Link href="/stream" style={{
+          <Link href="#" style={{
             color: 'white',
             textDecoration: 'none',
             fontSize: '0.9rem',
@@ -144,7 +152,11 @@ export default function Navigation() {
             e.preventDefault();
             e.stopPropagation();
             console.log('STREAM navigation clicked - using router.push');
-            router.push('/stream');
+            if (router.asPath !== '/stream') {
+              router.push('/stream');
+            } else {
+              console.log('Already on STREAM page, skipping navigation');
+            }
           }}
           onMouseDown={(e) => {
             console.log('🔥 STREAM onMouseDown triggered!', e);
@@ -166,7 +178,7 @@ export default function Navigation() {
           }}>
             STREAM
           </Link>
-          <Link href="/merch" style={{
+          <Link href="#" style={{
             color: 'white',
             textDecoration: 'none',
             fontSize: '0.9rem',
@@ -191,7 +203,11 @@ export default function Navigation() {
             e.preventDefault();
             e.stopPropagation();
             console.log('Merch navigation clicked - preventing default and pushing route');
-            router.push('/merch');
+            if (router.asPath !== '/merch') {
+              router.push('/merch');
+            } else {
+              console.log('Already on MERCH page, skipping navigation');
+            }
           }}
           onMouseDown={(e) => {
             console.log('🔥 MERCH onMouseDown triggered!', e);
@@ -213,7 +229,7 @@ export default function Navigation() {
           }}>
             MERCH
           </Link>
-          <Link href="/schedule" style={{
+          <Link href="#" style={{
             color: 'white',
             textDecoration: 'none',
             fontSize: '0.9rem',
@@ -238,7 +254,11 @@ export default function Navigation() {
             e.preventDefault();
             e.stopPropagation();
             console.log('Schedule navigation clicked - preventing default and pushing route');
-            router.push('/schedule');
+            if (router.asPath !== '/schedule') {
+              router.push('/schedule');
+            } else {
+              console.log('Already on SCHEDULE page, skipping navigation');
+            }
           }}
           onMouseDown={(e) => {
             console.log('🔥 SCHEDULE onMouseDown triggered!', e);
@@ -262,7 +282,7 @@ export default function Navigation() {
           </Link>
           {user ? (
             <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-              <Link href="/profile" style={{
+              <Link href="#" style={{
                 color: 'white',
                 textDecoration: 'none',
                 fontSize: '0.9rem',
@@ -285,7 +305,11 @@ export default function Navigation() {
               onClick={(e) => {
                 e.preventDefault();
                 console.log('Profile navigation clicked');
-                router.push('/profile');
+                if (router.asPath !== '/profile') {
+                  router.push('/profile');
+                } else {
+                  console.log('Already on PROFILE page, skipping navigation');
+                }
               }}
               onMouseEnter={(e) => {
                 if (router.pathname !== '/profile') {
@@ -302,7 +326,7 @@ export default function Navigation() {
                 PROFILE
               </Link>
               {user.email === 'kevinparxmusic@gmail.com' && (
-                <Link href="/admin" style={{
+                <Link href="#" style={{
                   color: 'white',
                   textDecoration: 'none',
                   fontSize: '0.9rem',
@@ -325,7 +349,11 @@ export default function Navigation() {
                 onClick={(e) => {
                   e.preventDefault();
                   console.log('Admin navigation clicked');
-                  router.push('/admin');
+                  if (router.asPath !== '/admin') {
+                    router.push('/admin');
+                  } else {
+                    console.log('Already on ADMIN page, skipping navigation');
+                  }
                 }}
                 onMouseEnter={(e) => {
                   if (router.pathname !== '/admin') {
@@ -381,7 +409,7 @@ export default function Navigation() {
               </button>
             </div>
           ) : (
-            <Link href="/login" style={{
+            <Link href="#" style={{
               color: 'white',
               textDecoration: 'none',
               fontSize: '0.9rem',
@@ -404,7 +432,11 @@ export default function Navigation() {
             onClick={(e) => {
               e.preventDefault();
               console.log('Login navigation clicked');
-              router.push('/login');
+              if (router.asPath !== '/login') {
+                router.push('/login');
+              } else {
+                console.log('Already on LOGIN page, skipping navigation');
+              }
             }}
             onMouseEnter={(e) => {
               if (router.pathname !== '/login') {
