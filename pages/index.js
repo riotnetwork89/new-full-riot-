@@ -7,10 +7,17 @@ export default function HomePage() {
   const router = useRouter();
 
   useEffect(() => {
-    const mockUser = localStorage.getItem('mockUser');
-    if (mockUser) {
-      setUser(JSON.parse(mockUser));
-    }
+    const checkUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+    };
+    checkUser();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user || null);
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
   if (user) {

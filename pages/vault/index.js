@@ -1,46 +1,41 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import { supabase } from '../../utils/supabase';
 
 export default function VaultPage() {
   const [vods, setVods] = useState([]);
-  const [authorized, setAuthorized] = useState(false);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
-    async function check() {
-      const mockUser = localStorage.getItem('mockUser');
-      if (!mockUser) {
+    const checkAccess = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
         router.push('/login');
         return;
       }
       
-      setAuthorized(true);
-      const mockVods = [
-        {
-          id: 1,
-          title: 'Riot Network Live Event #1',
-          video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-          created_at: new Date().toISOString()
-        },
-        {
-          id: 2,
-          title: 'Riot Network Live Event #2',
-          video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
-          created_at: new Date().toISOString()
-        },
-        {
-          id: 3,
-          title: 'Riot Network Special Event',
-          video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
-          created_at: new Date().toISOString()
-        }
-      ];
-      setVods(mockVods);
-    }
-    check();
-  }, []);
+      setUser(user);
+      
+      try {
+        const { data: vodsData } = await supabase
+          .from('vods')
+          .select('*')
+          .order('created_at', { ascending: false });
+        
+        setVods(vodsData || []);
+      } catch (error) {
+        console.error('Error fetching VODs:', error);
+        setVods([]);
+      }
+      
+      setLoading(false);
+    };
+    checkAccess();
+  }, [router]);
 
-  if (!authorized) {
+  if (loading) {
     return (
       <div className="container">
         <div style={{ textAlign: 'center', padding: '3rem' }}>

@@ -24,15 +24,33 @@ export default function Stream() {
 
   useEffect(() => {
     const checkAccess = async () => {
-      const mockUser = localStorage.getItem('mockUser');
-      if (!mockUser) {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
         router.push('/login');
         return;
       }
       
-      const userData = JSON.parse(mockUser);
-      setUser(userData);
-      setHasAccess(true);
+      const { data: order } = await supabase
+        .from('orders')
+        .select('id')
+        .eq('email', user.email)
+        .eq('product', 'ppv_ticket')
+        .single();
+      
+      if (order) {
+        setUser(user);
+        setHasAccess(true);
+        
+        await supabase.from('stream_logs').insert({
+          user_email: user.email,
+          action: 'stream_access',
+          status: 'active'
+        });
+      } else {
+        router.push('/checkout');
+        return;
+      }
+      
       setLoading(false);
     };
     
@@ -49,50 +67,44 @@ export default function Stream() {
       }
     };
     
-    const mockMessages = [
-      {
-        id: 1,
-        user_email: 'demo@riot.com',
-        message: 'Welcome to the Riot Network chat!',
-        created_at: new Date(Date.now() - 300000).toISOString()
-      },
-      {
-        id: 2,
-        user_email: 'fan@example.com',
-        message: 'This stream is amazing! 🔥',
-        created_at: new Date(Date.now() - 120000).toISOString()
-      },
-      {
-        id: 3,
-        user_email: 'viewer@test.com',
-        message: 'Can\'t wait for the next event!',
-        created_at: new Date(Date.now() - 60000).toISOString()
+    const fetchMessages = async () => {
+      const { data, error } = await supabase
+        .from('chat_messages')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(50);
+      if (!error && data) {
+        setMessages(data.reverse());
       }
-    ];
-    setMessages(mockMessages);
-    setIsConnected(true);
-    
-    const mockVods = [
-      {
-        id: 1,
-        title: 'Riot Network Live Event #1',
-        video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-        created_at: new Date().toISOString()
-      },
-      {
-        id: 2,
-        title: 'Riot Network Live Event #2',
-        video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
-        created_at: new Date().toISOString()
-      },
-      {
-        id: 3,
-        title: 'Riot Network Special Event',
-        video_url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
-        created_at: new Date().toISOString()
+    };
+    fetchMessages();
+
+    const channel = supabase
+      .channel('chat_messages')
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'chat_messages' },
+        (payload) => {
+          setMessages((current) => {
+            const newMessages = [...current, payload.new];
+            return newMessages.slice(-50);
+          });
+        }
+      )
+      .subscribe((status) => {
+        setIsConnected(status === 'SUBSCRIBED');
+      });
+
+    const fetchVods = async () => {
+      const { data, error } = await supabase
+        .from('vods')
+        .select('*')
+        .order('created_at', { ascending: false });
+      if (!error && data) {
+        setVods(data);
       }
-    ];
-    setVods(mockVods);
+    };
+    fetchVods();
     
     checkAccess();
     updateViewerCount();
@@ -126,19 +138,20 @@ export default function Stream() {
       return;
     }
     
-    const mockMessage = {
-      id: Date.now(),
-      user_email: user.email,
-      message: newMessage.slice(0, 500),
-      created_at: new Date().toISOString()
-    };
-    setMessages(prev => [...prev, mockMessage]);
-    setNewMessage('');
-    setMessageCount(prev => prev + 1);
-    
-    setTimeout(() => {
-      setMessageCount(prev => Math.max(0, prev - 1));
-    }, 60000);
+    try {
+      await supabase.from('chat_messages').insert({
+        user_email: user.email,
+        message: newMessage.slice(0, 500),
+      });
+      setNewMessage('');
+      setMessageCount(prev => prev + 1);
+      
+      setTimeout(() => {
+        setMessageCount(prev => Math.max(0, prev - 1));
+      }, 60000);
+    } catch (error) {
+      console.error('Failed to send message:', error);
+    }
   };
 
   const handleVodSelect = (vod) => {

@@ -1,20 +1,28 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { supabase } from '../utils/supabase';
 
 export default function Navigation() {
   const [user, setUser] = useState(null);
   const router = useRouter();
 
   useEffect(() => {
-    const mockUser = localStorage.getItem('mockUser');
-    if (mockUser) {
-      setUser(JSON.parse(mockUser));
-    }
+    const checkUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+    };
+    checkUser();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user || null);
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem('mockUser');
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
     setUser(null);
     router.push('/login');
   };

@@ -15,38 +15,47 @@ export default function ChatPage() {
 
   useEffect(() => {
     async function getUser() {
-      const mockUser = localStorage.getItem('mockUser');
-      if (!mockUser) {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
         router.push('/login');
       } else {
-        const userData = JSON.parse(mockUser);
-        setUser(userData);
+        setUser(user);
+        userCache.set(`user-${user.id}`, user);
       }
     }
     getUser();
 
-    const mockMessages = [
-      {
-        id: 1,
-        user_email: 'demo@riot.com',
-        message: 'Welcome to the Riot Network chat!',
-        created_at: new Date(Date.now() - 300000).toISOString()
-      },
-      {
-        id: 2,
-        user_email: 'fan@example.com',
-        message: 'This stream is amazing! 🔥',
-        created_at: new Date(Date.now() - 120000).toISOString()
-      },
-      {
-        id: 3,
-        user_email: 'viewer@test.com',
-        message: 'Can\'t wait for the next event!',
-        created_at: new Date(Date.now() - 60000).toISOString()
+    async function fetchMessages() {
+      const { data, error } = await supabase
+        .from('chat_messages')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(100);
+      if (!error && data) {
+        setMessages(data.reverse()); // Reverse to show oldest first
       }
-    ];
-    setMessages(mockMessages);
-    setIsConnected(true);
+    }
+    fetchMessages();
+
+    const channel = supabase
+      .channel('chat_messages')
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'chat_messages' },
+        (payload) => {
+          setMessages((current) => {
+            const newMessages = [...current, payload.new];
+            return newMessages.slice(-100);
+          });
+        }
+      )
+      .subscribe((status) => {
+        setIsConnected(status === 'SUBSCRIBED');
+      });
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   useEffect(() => {
@@ -71,19 +80,20 @@ export default function ChatPage() {
       return;
     }
     
-    const mockMessage = {
-      id: Date.now(),
-      user_email: user.email,
-      message: newMessage.slice(0, 500),
-      created_at: new Date().toISOString()
-    };
-    setMessages(prev => [...prev, mockMessage]);
-    setNewMessage('');
-    setMessageCount(prev => prev + 1);
-    
-    setTimeout(() => {
-      setMessageCount(prev => Math.max(0, prev - 1));
-    }, 60000);
+    try {
+      await supabase.from('chat_messages').insert({
+        user_email: user.email,
+        message: newMessage.slice(0, 500), // Limit message length
+      });
+      setNewMessage('');
+      setMessageCount(prev => prev + 1);
+      
+      setTimeout(() => {
+        setMessageCount(prev => Math.max(0, prev - 1));
+      }, 60000);
+    } catch (error) {
+      console.error('Failed to send message:', error);
+    }
   };
 
   return (

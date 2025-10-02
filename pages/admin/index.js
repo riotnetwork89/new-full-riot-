@@ -12,38 +12,56 @@ export default function Admin() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const mockUser = localStorage.getItem('mockUser');
-      if (!mockUser) {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
         router.push('/login');
         return;
       }
       
-      const mockOrders = [
-        { id: 1, email: 'user1@test.com', product: 'ppv_ticket', type: 'ticket', timestamp: new Date().toISOString() },
-        { id: 2, email: 'user2@test.com', product: 'ppv_ticket', type: 'ticket', timestamp: new Date().toISOString() }
-      ];
+      if (user.email !== 'kevinparxmusic@gmail.com') {
+        router.push('/');
+        return;
+      }
       
-      const mockUploads = [
-        { id: 1, submitted_by: 'fan@test.com', caption: 'Amazing show!', approved: true, video_url: 'demo.mp4' }
-      ];
-      
-      const mockLogs = [
-        { id: 1, status: 'live', checked_at: new Date().toISOString() }
-      ];
-      
-      const mockMessages = [
-        { id: 1, user_email: 'viewer@test.com', message: 'Great stream!', created_at: new Date().toISOString() }
-      ];
-      
-      const mockResponses = [
-        { id: 1, question_id: 1, user_email: 'player@test.com', selected_option: 'c', correct: true }
-      ];
-      
-      setOrders(mockOrders);
-      setUploads(mockUploads);
-      setLogs(mockLogs);
-      setMessages(mockMessages);
-      setResponses(mockResponses);
+      try {
+        const { data: ordersData } = await supabase
+          .from('orders')
+          .select('*')
+          .order('timestamp', { ascending: false });
+        
+        const { data: uploadsData } = await supabase
+          .from('fan_uploads')
+          .select('*')
+          .order('created_at', { ascending: false });
+        
+        const { data: logsData } = await supabase
+          .from('stream_logs')
+          .select('*')
+          .order('timestamp', { ascending: false });
+        
+        const { data: chatData } = await supabase
+          .from('chat_messages')
+          .select('*')
+          .order('created_at', { ascending: false });
+        
+        const { data: responsesData } = await supabase
+          .from('trivia_responses')
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        setOrders(ordersData || []);
+        setUploads(uploadsData || []);
+        setLogs(logsData || []);
+        setMessages(chatData || []);
+        setResponses(responsesData || []);
+      } catch (error) {
+        console.error('Error fetching admin data:', error);
+        setOrders([]);
+        setUploads([]);
+        setLogs([]);
+        setMessages([]);
+        setResponses([]);
+      }
     };
     fetchData();
   }, [router]);
