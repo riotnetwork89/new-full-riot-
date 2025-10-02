@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 import { supabase } from '../utils/supabase';
 
@@ -20,6 +20,20 @@ export default function Navigation() {
     const interval = setInterval(checkUser, 1000);
     return () => clearInterval(interval);
   }, []);
+
+  const handleNavigation = (path, e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    console.log('🔥 Navigation clicked:', path, 'from:', router.asPath);
+    
+    if (router.asPath === path) {
+      console.log('Already on target page, skipping navigation');
+      return;
+    }
+    
+    router.push(path);
+  };
 
   const handleLogout = async () => {
     localStorage.removeItem('mockUser');
@@ -59,15 +73,7 @@ export default function Navigation() {
           WebkitUserSelect: 'none',
           MozUserSelect: 'none',
           msUserSelect: 'none'
-        }} onClick={(e) => {
-          e.preventDefault();
-          console.log('Home navigation clicked');
-          if (router.asPath !== '/') {
-            router.push('/');
-          } else {
-            console.log('Already on home page, skipping navigation');
-          }
-        }}>
+        }} onClick={(e) => handleNavigation('/', e)}>
           RIOT NETWORK
         </div>
         
@@ -96,17 +102,7 @@ export default function Navigation() {
             msUserSelect: 'none',
             pointerEvents: 'auto'
           }}
-          onClick={(e) => {
-            console.log('🔥 VOD onClick handler triggered!', e);
-            e.preventDefault();
-            e.stopPropagation();
-            console.log('VOD navigation clicked - using router.push');
-            if (router.asPath !== '/vault') {
-              router.push('/vault');
-            } else {
-              console.log('Already on VOD page, skipping navigation');
-            }
-          }}
+          onClick={(e) => handleNavigation('/vault', e)}
           onMouseDown={(e) => {
             console.log('🔥 VOD onMouseDown triggered!', e);
           }}
@@ -147,17 +143,7 @@ export default function Navigation() {
             msUserSelect: 'none',
             pointerEvents: 'auto'
           }}
-          onClick={(e) => {
-            console.log('🔥 STREAM onClick handler triggered!', e);
-            e.preventDefault();
-            e.stopPropagation();
-            console.log('STREAM navigation clicked - using router.push');
-            if (router.asPath !== '/stream') {
-              router.push('/stream');
-            } else {
-              console.log('Already on STREAM page, skipping navigation');
-            }
-          }}
+          onClick={(e) => handleNavigation('/stream', e)}
           onMouseDown={(e) => {
             console.log('🔥 STREAM onMouseDown triggered!', e);
           }}
@@ -198,17 +184,7 @@ export default function Navigation() {
             msUserSelect: 'none',
             pointerEvents: 'auto'
           }}
-          onClick={(e) => {
-            console.log('🔥 MERCH onClick handler triggered!', e);
-            e.preventDefault();
-            e.stopPropagation();
-            console.log('Merch navigation clicked - preventing default and pushing route');
-            if (router.asPath !== '/merch') {
-              router.push('/merch');
-            } else {
-              console.log('Already on MERCH page, skipping navigation');
-            }
-          }}
+          onClick={(e) => handleNavigation('/merch', e)}
           onMouseDown={(e) => {
             console.log('🔥 MERCH onMouseDown triggered!', e);
           }}
@@ -249,17 +225,7 @@ export default function Navigation() {
             msUserSelect: 'none',
             pointerEvents: 'auto'
           }}
-          onClick={(e) => {
-            console.log('🔥 SCHEDULE onClick handler triggered!', e);
-            e.preventDefault();
-            e.stopPropagation();
-            console.log('Schedule navigation clicked - preventing default and pushing route');
-            if (router.asPath !== '/schedule') {
-              router.push('/schedule');
-            } else {
-              console.log('Already on SCHEDULE page, skipping navigation');
-            }
-          }}
+          onClick={(e) => handleNavigation('/schedule', e)}
           onMouseDown={(e) => {
             console.log('🔥 SCHEDULE onMouseDown triggered!', e);
           }}
@@ -302,15 +268,7 @@ export default function Navigation() {
                 msUserSelect: 'none',
                 pointerEvents: 'auto'
               }}
-              onClick={(e) => {
-                e.preventDefault();
-                console.log('Profile navigation clicked');
-                if (router.asPath !== '/profile') {
-                  router.push('/profile');
-                } else {
-                  console.log('Already on PROFILE page, skipping navigation');
-                }
-              }}
+              onClick={(e) => handleNavigation('/profile', e)}
               onMouseEnter={(e) => {
                 if (router.pathname !== '/profile') {
                   e.target.style.background = 'rgba(255, 0, 0, 0.1)';
@@ -346,15 +304,7 @@ export default function Navigation() {
                   msUserSelect: 'none',
                   pointerEvents: 'auto'
                 }}
-                onClick={(e) => {
-                  e.preventDefault();
-                  console.log('Admin navigation clicked');
-                  if (router.asPath !== '/admin') {
-                    router.push('/admin');
-                  } else {
-                    console.log('Already on ADMIN page, skipping navigation');
-                  }
-                }}
+                onClick={(e) => handleNavigation('/admin', e)}
                 onMouseEnter={(e) => {
                   if (router.pathname !== '/admin') {
                     e.target.style.background = 'rgba(255, 0, 0, 0.1)';
@@ -429,15 +379,7 @@ export default function Navigation() {
               msUserSelect: 'none',
               pointerEvents: 'auto'
             }}
-            onClick={(e) => {
-              e.preventDefault();
-              console.log('Login navigation clicked');
-              if (router.asPath !== '/login') {
-                router.push('/login');
-              } else {
-                console.log('Already on LOGIN page, skipping navigation');
-              }
-            }}
+            onClick={(e) => handleNavigation('/login', e)}
             onMouseEnter={(e) => {
               if (router.pathname !== '/login') {
                 e.target.style.background = 'rgba(255, 0, 0, 0.1)';
