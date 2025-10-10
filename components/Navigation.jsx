@@ -6,21 +6,27 @@ import { useEffect, useState } from 'react'
 export default function Navigation() {
   const router = useRouter()
   const [user, setUser] = useState(null)
+  const [isClient, setIsClient] = useState(false)
 
   useEffect(() => {
+    setIsClient(true)
     const checkUser = () => {
-      const mockUser = localStorage.getItem('mockUser')
-      if (mockUser) {
-        setUser(JSON.parse(mockUser))
+      if (typeof window !== 'undefined') {
+        const mockUser = localStorage.getItem('mockUser')
+        if (mockUser) {
+          setUser(JSON.parse(mockUser))
+        }
       }
     }
     checkUser()
   }, [])
 
   const handleLogout = () => {
-    localStorage.removeItem('mockUser')
-    setUser(null)
-    router.push('/login')
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('mockUser')
+      setUser(null)
+      router.push('/login')
+    }
   }
 
   const navLinkStyle = {
@@ -106,7 +112,7 @@ export default function Navigation() {
             TICKETS
           </Link>
           
-          {user ? (
+          {isClient && user ? (
             <>
               <Link href="/subscription" style={{
                 ...navLinkStyle,
@@ -141,13 +147,17 @@ export default function Navigation() {
                 LOGOUT
               </button>
             </>
-          ) : (
+          ) : isClient ? (
             <Link href="/login" style={{
               ...navLinkStyle,
               ...(router.pathname === '/login' ? activeStyle : {})
             }}>
               LOGIN
             </Link>
+          ) : (
+            <div style={{ ...navLinkStyle, opacity: 0 }}>
+              LOADING
+            </div>
           )}
         </div>
       </div>

@@ -14,9 +14,13 @@ export default function App({ Component, pageProps }) {
     
     const setupNotifications = async () => {
       if (typeof window !== 'undefined') {
-        const swSupported = await initializeNotifications()
-        if (swSupported && localStorage.getItem('mockUser')) {
-          await requestNotificationPermission()
+        try {
+          const swSupported = await initializeNotifications()
+          if (swSupported && localStorage.getItem('mockUser')) {
+            await requestNotificationPermission()
+          }
+        } catch (error) {
+          console.warn('Notification setup failed:', error)
         }
       }
     }
@@ -59,7 +63,7 @@ export default function App({ Component, pageProps }) {
         strategy="beforeInteractive"
       />
       
-      <Navigation />
+      {isClient && <Navigation />}
       <main style={{ paddingTop: '80px' }} suppressHydrationWarning={true}>
         <Component {...pageProps} />
       </main>
