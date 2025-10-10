@@ -301,6 +301,41 @@ export default function Navigation() {
                 padding: '0.75rem 1rem',
                 borderRadius: '6px',
                 transition: 'all 0.15s ease',
+                background: router.pathname === '/subscription' ? 'rgba(255, 0, 0, 0.2)' : 'transparent',
+                border: '1px solid transparent',
+                userSelect: 'none',
+                WebkitUserSelect: 'none',
+                MozUserSelect: 'none',
+                msUserSelect: 'none',
+                pointerEvents: 'auto'
+              }}
+              onClick={(e) => handleNavigation('/subscription', e)}
+              onMouseEnter={(e) => {
+                if (router.pathname !== '/subscription') {
+                  e.target.style.background = 'rgba(255, 0, 0, 0.1)';
+                  e.target.style.borderColor = 'rgba(255, 0, 0, 0.3)';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (router.pathname !== '/subscription') {
+                  e.target.style.background = 'transparent';
+                  e.target.style.borderColor = 'transparent';
+                }
+              }}>
+                SUBSCRIPTION
+              </div>
+              <div style={{
+                color: 'white',
+                textDecoration: 'none',
+                fontSize: '0.9rem',
+                fontWeight: '600',
+                textTransform: 'uppercase',
+                letterSpacing: '1px',
+                cursor: 'pointer',
+                display: 'inline-block',
+                padding: '0.75rem 1rem',
+                borderRadius: '6px',
+                transition: 'all 0.15s ease',
                 background: router.pathname === '/profile' ? 'rgba(255, 0, 0, 0.2)' : 'transparent',
                 border: '1px solid transparent',
                 userSelect: 'none',

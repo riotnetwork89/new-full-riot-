@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { supabase } from '../../utils/supabase';
+import SocialShare from '../../components/SocialShare';
 
 export default function EventTicketsPage() {
   const [event, setEvent] = useState(null);
@@ -463,6 +464,14 @@ export default function EventTicketsPage() {
               </p>
             )}
           </div>
+        </div>
+
+        <div style={{ marginTop: '2rem' }}>
+          <SocialShare 
+            title={`${event.title} - Riot Network Live Event`}
+            description={event.description}
+            hashtags="RiotNetwork,HipHop,LiveEvents,Tickets"
+          />
         </div>
       </div>
     </div>

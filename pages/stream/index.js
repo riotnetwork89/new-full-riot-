@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/router';
 import { supabase } from '../../utils/supabase';
 import { accessCache } from '../../utils/cache';
+import SocialShare from '../../components/SocialShare';
 
 export default function Stream() {
   const router = useRouter();
@@ -561,6 +562,14 @@ export default function Stream() {
             </button>
           </div>
         )}
+        
+        <div style={{ marginTop: '1.5rem' }}>
+          <SocialShare 
+            title="Riot Network Live Stream - Hip Hop Event"
+            description="Join the exclusive live hip hop event streaming now on Riot Network"
+            hashtags="RiotNetwork,HipHop,LiveStream,PPV"
+          />
+        </div>
       </div>
     </div>
   );

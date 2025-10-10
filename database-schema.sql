@@ -212,3 +212,67 @@ CREATE INDEX IF NOT EXISTS idx_tickets_code ON tickets(ticket_code);
 CREATE INDEX IF NOT EXISTS idx_tickets_qrcode ON tickets(qrcode_data);
 CREATE INDEX IF NOT EXISTS idx_audit_logs_admin ON admin_audit_logs(admin_email);
 CREATE INDEX IF NOT EXISTS idx_audit_logs_resource ON admin_audit_logs(resource_type, resource_id);
+
+CREATE TABLE IF NOT EXISTS subscription_tiers (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  price_cents INTEGER NOT NULL,
+  duration_days INTEGER NOT NULL,
+  features_json JSONB DEFAULT '[]',
+  description TEXT,
+  is_active BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS user_subscriptions (
+  id SERIAL PRIMARY KEY,
+  subscription_uuid UUID UNIQUE NOT NULL DEFAULT gen_random_uuid(),
+  user_email VARCHAR(255) NOT NULL,
+  tier_id INTEGER REFERENCES subscription_tiers(id),
+  status VARCHAR(20) DEFAULT 'pending',
+  paypal_order_id VARCHAR(100),
+  total_cents INTEGER NOT NULL,
+  start_date TIMESTAMPTZ,
+  end_date TIMESTAMPTZ,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS push_subscriptions (
+  id SERIAL PRIMARY KEY,
+  user_email VARCHAR(255) UNIQUE NOT NULL,
+  endpoint TEXT NOT NULL,
+  p256dh_key TEXT NOT NULL,
+  auth_key TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS notification_logs (
+  id SERIAL PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  body TEXT NOT NULL,
+  event_type VARCHAR(50),
+  recipients_count INTEGER DEFAULT 0,
+  successful_count INTEGER DEFAULT 0,
+  failed_count INTEGER DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE subscription_tiers ENABLE ROW LEVEL SECURITY;
+ALTER TABLE user_subscriptions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE push_subscriptions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE notification_logs ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Allow public read access to subscription_tiers" ON subscription_tiers FOR SELECT USING (true);
+CREATE POLICY "Allow authenticated read access to user_subscriptions" ON user_subscriptions FOR SELECT USING (auth.role() = 'authenticated');
+CREATE POLICY "Allow authenticated read access to push_subscriptions" ON push_subscriptions FOR SELECT USING (auth.role() = 'authenticated');
+CREATE POLICY "Allow authenticated read access to notification_logs" ON notification_logs FOR SELECT USING (auth.role() = 'authenticated');
+
+CREATE POLICY "Allow authenticated insert to user_subscriptions" ON user_subscriptions FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+CREATE POLICY "Allow authenticated insert to push_subscriptions" ON push_subscriptions FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+CREATE POLICY "Allow authenticated insert to notification_logs" ON notification_logs FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+
+INSERT INTO subscription_tiers (name, price_cents, duration_days, features_json, description) VALUES
+('Basic', 999, 30, '["Access to live streams", "Basic chat features", "Standard VOD access"]', 'Basic access to Riot Network content'),
+('VIP', 2499, 30, '["All Basic features", "Early ticket access", "VIP chat badge", "Exclusive VOD content", "Priority support"]', 'VIP access with exclusive perks'),
+('Premium', 4999, 30, '["All VIP features", "Backstage content", "Meet & greet opportunities", "Custom chat colors", "Ad-free experience"]', 'Premium tier with backstage access');

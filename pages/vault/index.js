@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { supabase } from '../../utils/supabase';
+import SocialShare from '../../components/SocialShare';
 
 export default function VaultPage() {
   const [vods, setVods] = useState([]);
@@ -127,6 +128,14 @@ export default function VaultPage() {
               </p>
             </div>
           ))}
+        </div>
+        
+        <div className="mt-8">
+          <SocialShare 
+            title="The Riot Vault - Exclusive Hip Hop Content"
+            description="Access exclusive video content and past live events from The Riot Network"
+            hashtags="RiotNetwork,HipHop,VOD,ExclusiveContent"
+          />
         </div>
       </div>
     </div>
