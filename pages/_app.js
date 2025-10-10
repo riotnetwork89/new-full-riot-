@@ -35,7 +35,7 @@ export default function App({ Component, pageProps }) {
         <meta name="description" content="Riot Network Pay-Per-View Platform" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
-        <link rel="manifest" href="/manifest.json" />
+        <link rel="manifest" href="/manifest.json" crossOrigin="use-credentials" />
         <meta name="theme-color" content="#ff0000" />
       </Head>
       
