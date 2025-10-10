@@ -1,25 +1,60 @@
-import { supabase } from '../../../utils/supabase';
-
 export default async function handler(req, res) {
   if (req.method === 'GET') {
     try {
-      const { data: tiers, error } = await supabase
-        .from('subscription_tiers')
-        .select('*')
-        .eq('is_active', true)
-        .order('price_cents', { ascending: true });
+      const mockTiers = [
+        {
+          id: 1,
+          name: 'Basic',
+          price_cents: 999,
+          price_dollars: 9.99,
+          duration_days: 30,
+          features: [
+            'Access to live streams',
+            'Standard chat participation',
+            'Basic VOD library access',
+            'Mobile app access'
+          ],
+          description: 'Essential access to Riot Network content',
+          is_active: true
+        },
+        {
+          id: 2,
+          name: 'VIP',
+          price_cents: 1999,
+          price_dollars: 19.99,
+          duration_days: 30,
+          features: [
+            'All Basic features',
+            'Early ticket access (24h priority)',
+            'VIP chat badge and priority',
+            'Exclusive VIP-only streams',
+            'Behind-the-scenes content',
+            'Monthly VIP meetups'
+          ],
+          description: 'Premium experience with exclusive perks',
+          is_active: true
+        },
+        {
+          id: 3,
+          name: 'Premium',
+          price_cents: 4999,
+          price_dollars: 49.99,
+          duration_days: 30,
+          features: [
+            'All VIP features',
+            'Backstage access content',
+            'Artist meet & greet opportunities',
+            'Exclusive merchandise discounts',
+            'Priority customer support',
+            'Custom profile badges',
+            'Ad-free experience'
+          ],
+          description: 'Ultimate Riot Network experience',
+          is_active: true
+        }
+      ];
 
-      if (error) {
-        throw error;
-      }
-
-      const tiersWithFeatures = tiers.map(tier => ({
-        ...tier,
-        price_dollars: tier.price_cents / 100,
-        features: JSON.parse(tier.features_json || '[]')
-      }));
-
-      res.status(200).json({ tiers: tiersWithFeatures });
+      res.status(200).json({ tiers: mockTiers });
     } catch (error) {
       console.error('Get tiers error:', error);
       res.status(500).json({ error: 'Failed to fetch subscription tiers' });

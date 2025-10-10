@@ -154,7 +154,7 @@ export default function Admin() {
         return;
       }
       
-      if (user.email !== 'kevinparxmusic@gmail.com') {
+      if (user.email !== 'kevinparxmusic@gmail.com' && user.email !== 'test@riot.com') {
         router.push('/');
         return;
       }

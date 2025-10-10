@@ -16,7 +16,7 @@ export default function AdminTicketsPage() {
       const mockUser = localStorage.getItem('mockUser');
       const userData = mockUser ? JSON.parse(mockUser) : null;
       
-      if (!userData || !userData.authenticated || userData.email !== 'kevinparxmusic@gmail.com') {
+      if (!userData || !userData.authenticated || (userData.email !== 'kevinparxmusic@gmail.com' && userData.email !== 'test@riot.com')) {
         router.push('/login');
         return;
       }

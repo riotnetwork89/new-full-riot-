@@ -9,12 +9,13 @@ export default function SubscriptionPage() {
   const router = useRouter();
 
   useEffect(() => {
-    const userEmail = localStorage.getItem('userEmail');
-    if (!userEmail) {
+    const mockUser = localStorage.getItem('mockUser');
+    if (!mockUser) {
       router.push('/login');
       return;
     }
 
+    const userEmail = 'test@riot.com'; // Mock user email
     fetchTiers();
     fetchCurrentSubscription(userEmail);
   }, []);
@@ -42,7 +43,7 @@ export default function SubscriptionPage() {
   };
 
   const handleSubscribe = async (tierId) => {
-    const userEmail = localStorage.getItem('userEmail');
+    const userEmail = 'test@riot.com'; // Mock user email
     
     try {
       const response = await fetch('/api/subscriptions/subscribe', {
