@@ -21,43 +21,18 @@ export default function Navigation() {
     return () => clearInterval(interval);
   }, []);
 
-  const [isNavigating, setIsNavigating] = useState(false);
-
   const handleNavigation = (path, e) => {
     e.preventDefault();
     e.stopPropagation();
     
-    if (isNavigating) return;
-    
     console.log('🔥 Navigation clicked:', path, 'from:', router.asPath);
-    
-    if (e.target) {
-      e.target.style.transform = 'scale(0.95)';
-      setTimeout(() => {
-        if (e.target) e.target.style.transform = 'scale(1)';
-      }, 100);
-    }
     
     if (router.asPath === path) {
       console.log('Already on target page, skipping navigation');
       return;
     }
     
-    setIsNavigating(true);
-    
-    setTimeout(() => {
-      router.push(path).finally(() => {
-        setIsNavigating(false);
-      });
-    }, 50);
-  };
-
-  const handleMouseDown = (path, e) => {
-    e.preventDefault();
-    console.log('🔥 MouseDown navigation:', path);
-    if (!isNavigating && router.asPath !== path) {
-      handleNavigation(path, e);
-    }
+    router.push(path);
   };
 
   const handleLogout = async () => {
@@ -128,7 +103,6 @@ export default function Navigation() {
             pointerEvents: 'auto'
           }}
           onClick={(e) => handleNavigation('/vault', e)}
-          onMouseDown={(e) => handleMouseDown('/vault', e)}
           onMouseEnter={(e) => {
             if (router.pathname !== '/vault') {
               e.target.style.background = 'rgba(255, 0, 0, 0.1)';
@@ -164,7 +138,6 @@ export default function Navigation() {
             pointerEvents: 'auto'
           }}
           onClick={(e) => handleNavigation('/stream', e)}
-          onMouseDown={(e) => handleMouseDown('/stream', e)}
           onMouseEnter={(e) => {
             if (router.pathname !== '/stream') {
               e.target.style.background = 'rgba(255, 0, 0, 0.1)';
@@ -200,7 +173,6 @@ export default function Navigation() {
             pointerEvents: 'auto'
           }}
           onClick={(e) => handleNavigation('/merch', e)}
-          onMouseDown={(e) => handleMouseDown('/merch', e)}
           onMouseEnter={(e) => {
             if (router.pathname !== '/merch') {
               e.target.style.background = 'rgba(255, 0, 0, 0.1)';
@@ -236,7 +208,6 @@ export default function Navigation() {
             pointerEvents: 'auto'
           }}
           onClick={(e) => handleNavigation('/schedule', e)}
-          onMouseDown={(e) => handleMouseDown('/schedule', e)}
           onMouseEnter={(e) => {
             if (router.pathname !== '/schedule') {
               e.target.style.background = 'rgba(255, 0, 0, 0.1)';
@@ -272,7 +243,6 @@ export default function Navigation() {
             pointerEvents: 'auto'
           }}
           onClick={(e) => handleNavigation('/tickets', e)}
-          onMouseDown={(e) => handleMouseDown('/tickets', e)}
           onMouseEnter={(e) => {
             if (router.pathname !== '/tickets') {
               e.target.style.background = 'rgba(255, 0, 0, 0.1)';

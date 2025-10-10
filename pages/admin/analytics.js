@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { supabase } from '../../utils/supabase';
-import Navigation from '../../components/Navigation';
 
 export default function AdminAnalytics() {
   const [analytics, setAnalytics] = useState({
@@ -124,7 +123,6 @@ export default function AdminAnalytics() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-black via-red-900/20 to-black">
-        <Navigation />
         <div className="flex items-center justify-center min-h-screen">
           <div className="text-white text-xl">Loading analytics...</div>
         </div>
@@ -134,8 +132,6 @@ export default function AdminAnalytics() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-red-900/20 to-black">
-      <Navigation />
-      
       <div className="container mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-4xl font-bold text-white">
