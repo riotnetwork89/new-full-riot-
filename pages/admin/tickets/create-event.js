@@ -6,12 +6,12 @@ export default function CreateEventPage() {
   const [formData, setFormData] = useState({
     title: '',
     venue: '',
-    startDateTime: '',
-    endDateTime: '',
+    startDateTime: '2025-12-31T20:00',
+    endDateTime: '2025-12-31T23:59',
     description: '',
     imageUrl: '',
-    saleStart: '',
-    saleEnd: ''
+    saleStart: '2025-11-01T10:00',
+    saleEnd: '2025-12-30T23:59'
   });
   const [ticketTiers, setTicketTiers] = useState([
     { name: 'General Admission', price: 2500, quantity: 100, limits: 10 }
@@ -76,58 +76,125 @@ export default function CreateEventPage() {
     e.preventDefault();
     setLoading(true);
 
+    console.log('🔥 Form submission started');
+    console.log('Form data:', formData);
+    console.log('Ticket tiers:', ticketTiers);
+
+    if (!formData.title || !formData.venue || !formData.startDateTime || !formData.endDateTime || !formData.saleStart || !formData.saleEnd) {
+      console.log('❌ Missing required fields');
+      alert('Please fill in all required fields');
+      setLoading(false);
+      return;
+    }
+
+    if (ticketTiers.length === 0) {
+      console.log('❌ No ticket tiers');
+      alert('Please add at least one ticket tier');
+      setLoading(false);
+      return;
+    }
+
+    for (const tier of ticketTiers) {
+      if (!tier.name || !tier.price || !tier.quantity) {
+        console.log('❌ Invalid ticket tier:', tier);
+        alert('Please fill in all ticket tier fields');
+        setLoading(false);
+        return;
+      }
+    }
+
     try {
+      console.log('✅ Validation passed, creating event...');
       const slug = generateSlug(formData.title);
+      console.log('Generated slug:', slug);
+      
+      const startDateTime = new Date(formData.startDateTime).toISOString();
+      const endDateTime = new Date(formData.endDateTime).toISOString();
+      const saleStart = new Date(formData.saleStart).toISOString();
+      const saleEnd = new Date(formData.saleEnd).toISOString();
+      
+      console.log('Converted dates:', { startDateTime, endDateTime, saleStart, saleEnd });
+
+      const eventData = {
+        title: formData.title,
+        slug,
+        venue: formData.venue,
+        start_datetime: startDateTime,
+        end_datetime: endDateTime,
+        description: formData.description,
+        image_url: formData.imageUrl,
+        sale_start: saleStart,
+        sale_end: saleEnd,
+        is_active: true
+      };
+
+      console.log('Inserting event data:', eventData);
       
       const { data: event, error: eventError } = await supabase
         .from('events')
-        .insert({
-          title: formData.title,
-          slug,
-          venue: formData.venue,
-          start_datetime: formData.startDateTime,
-          end_datetime: formData.endDateTime,
-          description: formData.description,
-          image_url: formData.imageUrl,
-          sale_start: formData.saleStart,
-          sale_end: formData.saleEnd,
-          is_active: true
-        })
+        .insert(eventData)
         .select()
         .single();
 
-      if (eventError) throw eventError;
+      if (eventError) {
+        console.error('❌ Event creation error:', eventError);
+        throw eventError;
+      }
+
+      console.log('✅ Event created:', event);
 
       for (const tier of ticketTiers) {
         if (tier.name && tier.price > 0 && tier.quantity > 0) {
-          await supabase
+          const tierData = {
+            event_id: event.id,
+            name: tier.name,
+            price_cents: Math.round(tier.price * 100),
+            quantity_total: tier.quantity,
+            quantity_sold: 0,
+            limits_per_order: tier.limits
+          };
+          
+          console.log('Inserting ticket tier:', tierData);
+          
+          const { error: tierError } = await supabase
             .from('ticket_tiers')
-            .insert({
-              event_id: event.id,
-              name: tier.name,
-              price_cents: Math.round(tier.price * 100),
-              quantity_total: tier.quantity,
-              limits_per_order: tier.limits
-            });
+            .insert(tierData);
+
+          if (tierError) {
+            console.error('❌ Ticket tier error:', tierError);
+            throw tierError;
+          }
         }
       }
 
-      await supabase
-        .from('admin_audit_logs')
-        .insert({
-          admin_email: user.email,
-          action: 'event_created',
-          resource_type: 'event',
-          resource_id: event.id.toString(),
-          details: {
-            event_title: formData.title,
-            ticket_tiers: ticketTiers.length
-          }
-        });
+      console.log('✅ Ticket tiers created');
 
+      const auditData = {
+        admin_email: 'kevinparxmusic@gmail.com',
+        action: 'event_created',
+        resource_type: 'event',
+        resource_id: event.id.toString(),
+        details: {
+          event_title: formData.title,
+          ticket_tiers: ticketTiers.length
+        }
+      };
+
+      console.log('Inserting audit log:', auditData);
+
+      const { error: auditError } = await supabase
+        .from('admin_audit_logs')
+        .insert(auditData);
+
+      if (auditError) {
+        console.error('❌ Audit log error:', auditError);
+      }
+
+      console.log('✅ Event creation completed successfully');
+      alert('Event created successfully!');
       router.push('/admin/tickets');
     } catch (error) {
-      console.error('Error creating event:', error);
+      console.error('❌ Error creating event:', error);
       alert(`Failed to create event: ${error.message}`);
     } finally {
       setLoading(false);

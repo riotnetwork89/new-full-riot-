@@ -3,125 +3,117 @@ const nodemailer = require('nodemailer');
 const transporter = nodemailer.createTransporter({
   service: 'gmail',
   auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
+    user: process.env.EMAIL_SENDER,
+    pass: process.env.EMAIL_SERVICE_API_KEY
   }
 });
 
-async function sendTicketEmail(orderData) {
-  const { userEmail, orderUuid, tickets, eventTitle, totalAmount } = orderData;
-  
-  const attachments = tickets.map(ticket => ({
-    filename: `ticket-${ticket.ticketCode}.pdf`,
-    path: ticket.pdfUrl,
-    contentType: 'application/pdf'
-  }));
-  
-  const mailOptions = {
-    from: process.env.EMAIL_USER,
-    to: userEmail,
-    subject: `Your Riot Network Tickets - ${eventTitle}`,
-    html: `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #000; color: #fff; padding: 20px;">
-        <div style="text-align: center; margin-bottom: 30px;">
-          <h1 style="color: #ff0000; font-size: 28px; margin: 0; text-transform: uppercase; letter-spacing: 2px;">
-            RIOT NETWORK
-          </h1>
-          <p style="color: #ccc; margin: 10px 0;">Your tickets are ready!</p>
-        </div>
-        
-        <div style="background: rgba(255, 0, 0, 0.1); border: 1px solid #ff0000; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
-          <h2 style="color: #ff0000; margin-top: 0;">${eventTitle}</h2>
-          <p><strong>Order ID:</strong> ${orderUuid}</p>
-          <p><strong>Total Amount:</strong> $${(totalAmount / 100).toFixed(2)}</p>
-          <p><strong>Number of Tickets:</strong> ${tickets.length}</p>
-        </div>
-        
-        <div style="margin-bottom: 20px;">
-          <h3 style="color: #ff0000;">Your Tickets:</h3>
-          ${tickets.map(ticket => `
-            <div style="background: rgba(255, 255, 255, 0.05); padding: 15px; margin: 10px 0; border-radius: 6px;">
-              <p><strong>Ticket Code:</strong> ${ticket.ticketCode}</p>
-              <p><strong>Tier:</strong> ${ticket.tierName}</p>
-              <p style="font-size: 12px; color: #ccc;">Present the QR code on your PDF ticket at the venue entrance.</p>
+export const sendTicketEmail = async ({ userEmail, order, tickets }) => {
+  try {
+    const attachments = tickets.map(ticket => ({
+      filename: `ticket-${ticket.ticket_code}.pdf`,
+      path: ticket.pdf_url,
+      contentType: 'application/pdf'
+    }));
+
+    const eventInfo = order.order_items?.[0]?.ticket_tier?.event || {};
+
+    const mailOptions = {
+      from: process.env.EMAIL_SENDER,
+      to: userEmail,
+      subject: `Your Riot Network Tickets - Order ${order.order_uuid}`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <div style="background: linear-gradient(135deg, #000000 0%, #1a0000 50%, #330000 100%); color: white; padding: 2rem; text-align: center;">
+            <h1 style="color: #ff0000; margin: 0;">RIOT NETWORK</h1>
+            <h2 style="margin: 0.5rem 0;">Your Tickets Are Ready!</h2>
+          </div>
+          
+          <div style="padding: 2rem; background: #f9f9f9;">
+            <h3>Order Details</h3>
+            <p><strong>Order ID:</strong> ${order.order_uuid}</p>
+            <p><strong>Total:</strong> $${(order.total_cents / 100).toFixed(2)}</p>
+            
+            <h3>Event Information</h3>
+            ${order.order_items.map(item => `
+              <div style="margin-bottom: 1rem; padding: 1rem; background: white; border-radius: 8px;">
+                <h4>${item.ticket_tier?.event?.title || 'Event'}</h4>
+                <p><strong>Venue:</strong> ${item.ticket_tier?.event?.venue || 'TBA'}</p>
+                <p><strong>Date:</strong> ${item.ticket_tier?.event?.start_datetime ? new Date(item.ticket_tier.event.start_datetime).toLocaleDateString() : 'TBA'}</p>
+                <p><strong>Tickets:</strong> ${item.qty} × ${item.ticket_tier?.name || 'General Admission'}</p>
+              </div>
+            `).join('')}
+            
+            <div style="background: #fff3cd; border: 1px solid #ffeaa7; padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+              <h4 style="color: #856404; margin: 0 0 0.5rem 0;">Important:</h4>
+              <p style="color: #856404; margin: 0;">Please bring your tickets (PDF attachments) to the event. Each ticket contains a unique QR code for entry.</p>
             </div>
-          `).join('')}
+          </div>
+          
+          <div style="background: #000; color: white; padding: 1rem; text-align: center;">
+            <p style="margin: 0;">Questions? Contact us at support@riotnetwork.com</p>
+          </div>
         </div>
-        
-        <div style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 6px; margin-bottom: 20px;">
-          <h3 style="color: #ff0000; margin-top: 0;">Important Information:</h3>
-          <ul style="margin: 0; padding-left: 20px;">
-            <li>Your PDF tickets are attached to this email</li>
-            <li>Each ticket is valid for one-time entry only</li>
-            <li>Present the QR code at the venue entrance</li>
-            <li>Tickets are non-transferable and non-refundable</li>
-          </ul>
-        </div>
-        
-        <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #333;">
-          <p style="color: #888; font-size: 12px;">
-            Thank you for choosing Riot Network!<br>
-            For support, contact us at support@riotnetwork.com
-          </p>
-        </div>
-      </div>
-    `,
-    attachments
-  };
-  
-  try {
-    await transporter.sendMail(mailOptions);
-    return { success: true };
-  } catch (error) {
-    console.error('Email sending failed:', error);
-    return { success: false, error: error.message };
-  }
-}
+      `,
+      attachments
+    };
 
-async function sendOrderConfirmation(orderData) {
-  const { userEmail, orderUuid, eventTitle, totalAmount } = orderData;
-  
-  const mailOptions = {
-    from: process.env.EMAIL_USER,
-    to: userEmail,
-    subject: `Order Confirmation - ${eventTitle}`,
-    html: `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #000; color: #fff; padding: 20px;">
-        <div style="text-align: center; margin-bottom: 30px;">
-          <h1 style="color: #ff0000; font-size: 28px; margin: 0; text-transform: uppercase; letter-spacing: 2px;">
-            RIOT NETWORK
-          </h1>
-          <p style="color: #ccc; margin: 10px 0;">Order Confirmation</p>
-        </div>
-        
-        <div style="background: rgba(255, 0, 0, 0.1); border: 1px solid #ff0000; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
-          <h2 style="color: #ff0000; margin-top: 0;">Thank you for your purchase!</h2>
-          <p><strong>Event:</strong> ${eventTitle}</p>
-          <p><strong>Order ID:</strong> ${orderUuid}</p>
-          <p><strong>Total Amount:</strong> $${(totalAmount / 100).toFixed(2)}</p>
-        </div>
-        
-        <div style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 6px;">
-          <p>Your tickets are being processed and will be emailed to you shortly.</p>
-          <p>Please keep this confirmation for your records.</p>
-        </div>
-        
-        <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #333;">
-          <p style="color: #888; font-size: 12px;">
-            Riot Network - Premium Live Events
-          </p>
-        </div>
-      </div>
-    `
-  };
-  
-  try {
     await transporter.sendMail(mailOptions);
-    return { success: true };
+    return true;
   } catch (error) {
-    console.error('Confirmation email failed:', error);
-    return { success: false, error: error.message };
+    console.error('Email sending error:', error);
+    return false;
   }
-}
+};
 
-module.exports = { sendTicketEmail, sendOrderConfirmation };
+export const sendOrderConfirmation = async ({ userEmail, order }) => {
+  try {
+    const eventInfo = order.order_items?.[0]?.ticket_tier?.event || {};
+
+    const mailOptions = {
+      from: process.env.EMAIL_SENDER,
+      to: userEmail,
+      subject: `Order Confirmation - Riot Network Tickets`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <div style="background: linear-gradient(135deg, #000000 0%, #1a0000 50%, #330000 100%); color: white; padding: 2rem; text-align: center;">
+            <h1 style="color: #ff0000; margin: 0;">RIOT NETWORK</h1>
+            <h2 style="margin: 0.5rem 0;">Order Confirmed!</h2>
+          </div>
+          
+          <div style="padding: 2rem; background: #f9f9f9;">
+            <h3>Thank you for your purchase!</h3>
+            <p>Your order has been confirmed and your tickets will be delivered shortly.</p>
+            
+            <h3>Order Details</h3>
+            <p><strong>Order ID:</strong> ${order.order_uuid}</p>
+            <p><strong>Total:</strong> $${(order.total_cents / 100).toFixed(2)}</p>
+            <p><strong>Status:</strong> Confirmed</p>
+            
+            <h3>Event Information</h3>
+            <div style="margin-bottom: 1rem; padding: 1rem; background: white; border-radius: 8px;">
+              <h4>${eventInfo.title || 'Event'}</h4>
+              <p><strong>Venue:</strong> ${eventInfo.venue || 'TBA'}</p>
+              <p><strong>Date:</strong> ${eventInfo.start_datetime ? new Date(eventInfo.start_datetime).toLocaleDateString() : 'TBA'}</p>
+            </div>
+            
+            <div style="background: #d1ecf1; border: 1px solid #bee5eb; padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+              <h4 style="color: #0c5460; margin: 0 0 0.5rem 0;">Next Steps:</h4>
+              <p style="color: #0c5460; margin: 0;">Your tickets are being generated and will be emailed to you within the next few minutes. Please check your email for the PDF tickets with QR codes.</p>
+            </div>
+          </div>
+          
+          <div style="background: #000; color: white; padding: 1rem; text-align: center;">
+            <p style="margin: 0;">Questions? Contact us at support@riotnetwork.com</p>
+          </div>
+        </div>
+      `
+    };
+
+    await transporter.sendMail(mailOptions);
+    return true;
+  } catch (error) {
+    console.error('Email sending error:', error);
+    return false;
+  }
+};
