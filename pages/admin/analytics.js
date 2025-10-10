@@ -32,89 +32,31 @@ export default function AdminAnalytics() {
     try {
       setLoading(true);
       
-      const endDate = new Date();
-      const startDate = new Date();
-      
-      switch (dateRange) {
-        case '24h':
-          startDate.setDate(endDate.getDate() - 1);
-          break;
-        case '7d':
-          startDate.setDate(endDate.getDate() - 7);
-          break;
-        case '30d':
-          startDate.setDate(endDate.getDate() - 30);
-          break;
-        case '90d':
-          startDate.setDate(endDate.getDate() - 90);
-          break;
-      }
-
-      const { data: orders, error: ordersError } = await supabase
-        .from('ticket_orders')
-        .select('total_cents, created_at, status')
-        .eq('status', 'paid')
-        .gte('created_at', startDate.toISOString());
-
-      if (ordersError) throw ordersError;
-
-      const { data: subscriptions, error: subsError } = await supabase
-        .from('user_subscriptions')
-        .select('total_cents, created_at, status')
-        .eq('status', 'active')
-        .gte('created_at', startDate.toISOString());
-
-      if (subsError) throw subsError;
-
-      const { data: events, error: eventsError } = await supabase
-        .from('events')
-        .select(`
-          id,
-          title,
-          ticket_tiers (
-            quantity_sold
-          )
-        `);
-
-      if (eventsError) throw eventsError;
-
-      const { data: chatMessages, error: chatError } = await supabase
-        .from('chat_messages')
-        .select('user_email, created_at')
-        .gte('created_at', startDate.toISOString());
-
-      if (chatError) throw chatError;
-
-      const totalRevenue = [...orders, ...subscriptions].reduce((sum, item) => sum + item.total_cents, 0);
-      const monthlyRevenue = orders
-        .filter(order => new Date(order.created_at) >= new Date(Date.now() - 30 * 24 * 60 * 60 * 1000))
-        .reduce((sum, order) => sum + order.total_cents, 0);
-
-      const popularEvents = events
-        .map(event => ({
-          ...event,
-          totalSold: event.ticket_tiers.reduce((sum, tier) => sum + tier.quantity_sold, 0)
-        }))
-        .sort((a, b) => b.totalSold - a.totalSold)
-        .slice(0, 5);
-
-      const uniqueUsers = new Set(chatMessages.map(msg => msg.user_email)).size;
-
-      setAnalytics({
-        totalUsers: uniqueUsers,
-        activeSubscriptions: subscriptions.length,
-        totalRevenue: totalRevenue / 100,
-        monthlyRevenue: monthlyRevenue / 100,
-        popularEvents,
+      const mockAnalytics = {
+        totalUsers: 150,
+        activeSubscriptions: 45,
+        totalRevenue: 2500.00,
+        monthlyRevenue: 1200.00,
+        popularEvents: [
+          { id: 1, title: 'Riot Network Live Stream #1', totalSold: 85 },
+          { id: 2, title: 'Hip Hop Cypher Night', totalSold: 67 },
+          { id: 3, title: 'Underground Battles', totalSold: 52 },
+          { id: 4, title: 'Freestyle Friday', totalSold: 41 },
+          { id: 5, title: 'Beat Making Workshop', totalSold: 33 }
+        ],
         userEngagement: {
-          totalMessages: chatMessages.length,
-          activeUsers: uniqueUsers,
-          avgMessagesPerUser: uniqueUsers > 0 ? chatMessages.length / uniqueUsers : 0
+          totalMessages: 1250,
+          activeUsers: 89,
+          avgMessagesPerUser: 14.0
         },
-        recentActivity: [...orders, ...subscriptions]
-          .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-          .slice(0, 10)
-      });
+        recentActivity: [
+          { total_cents: 2500, status: 'paid', created_at: new Date().toISOString(), paypal_order_id: 'ORDER123' },
+          { total_cents: 999, status: 'active', created_at: new Date().toISOString() },
+          { total_cents: 1999, status: 'paid', created_at: new Date().toISOString(), paypal_order_id: 'ORDER124' }
+        ]
+      };
+
+      setAnalytics(mockAnalytics);
     } catch (error) {
       console.error('Analytics fetch error:', error);
     } finally {

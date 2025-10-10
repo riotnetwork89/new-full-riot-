@@ -160,36 +160,11 @@ export default function Admin() {
       }
       
       try {
-        const { data: ordersData } = await supabase
-          .from('orders')
-          .select('*')
-          .order('timestamp', { ascending: false });
-        
-        const { data: uploadsData } = await supabase
-          .from('fan_uploads')
-          .select('*')
-          .order('created_at', { ascending: false });
-        
-        const { data: logsData } = await supabase
-          .from('stream_logs')
-          .select('*')
-          .order('timestamp', { ascending: false });
-        
-        const { data: chatData } = await supabase
-          .from('chat_messages')
-          .select('*')
-          .order('created_at', { ascending: false });
-        
-        const { data: responsesData } = await supabase
-          .from('trivia_responses')
-          .select('*')
-          .order('created_at', { ascending: false });
-
-        setOrders(ordersData || []);
-        setUploads(uploadsData || []);
-        setLogs(logsData || []);
-        setMessages(chatData || []);
-        setResponses(responsesData || []);
+        setOrders([]);
+        setUploads([]);
+        setLogs([]);
+        setMessages([]);
+        setResponses([]);
       } catch (error) {
         console.error('Error fetching admin data:', error);
         setOrders([]);
