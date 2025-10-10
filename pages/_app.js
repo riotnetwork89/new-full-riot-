@@ -3,22 +3,26 @@ import '../styles/globals.css'
 import Navigation from '../components/Navigation'
 import Head from 'next/head'
 import Script from 'next/script'
-import { useEffect } from 'react';
-import { initializeNotifications, requestNotificationPermission } from '../utils/notifications';
+import { useEffect, useState } from 'react'
+import { initializeNotifications, requestNotificationPermission } from '../utils/notifications'
 
 export default function App({ Component, pageProps }) {
+  const [isClient, setIsClient] = useState(false)
+
   useEffect(() => {
+    setIsClient(true)
+    
     const setupNotifications = async () => {
       if (typeof window !== 'undefined') {
-        const swSupported = await initializeNotifications();
+        const swSupported = await initializeNotifications()
         if (swSupported && localStorage.getItem('mockUser')) {
-          await requestNotificationPermission();
+          await requestNotificationPermission()
         }
       }
-    };
+    }
 
-    setupNotifications();
-  }, []);
+    setupNotifications()
+  }, [])
 
   return (
     <>
@@ -56,7 +60,7 @@ export default function App({ Component, pageProps }) {
       />
       
       <Navigation />
-      <main style={{ paddingTop: '80px' }}>
+      <main style={{ paddingTop: '80px' }} suppressHydrationWarning={true}>
         <Component {...pageProps} />
       </main>
     </>

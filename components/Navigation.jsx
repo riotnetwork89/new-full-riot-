@@ -1,383 +1,153 @@
 import React from 'react'
-import Link from 'next/link';
-import { useState, useEffect, useRef } from 'react';
-import { useRouter } from 'next/router';
-import { supabase } from '../utils/supabase';
+import Link from 'next/link'
+import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
 
 export default function Navigation() {
-  const [user, setUser] = useState(null);
-  const router = useRouter();
-
+  const router = useRouter()
+  const [user, setUser] = useState(null)
 
   useEffect(() => {
     const checkUser = () => {
-      if (typeof window !== 'undefined') {
-        const mockUser = localStorage.getItem('mockUser');
-        const user = mockUser ? JSON.parse(mockUser) : null;
-        setUser(user && user.authenticated ? user : null);
+      const mockUser = localStorage.getItem('mockUser')
+      if (mockUser) {
+        setUser(JSON.parse(mockUser))
       }
-    };
-    
-    checkUser();
-    
-    const interval = setInterval(checkUser, 1000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const handleNavigation = (path, e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    
-    console.log('🔥 Navigation clicked:', path, 'from:', router.asPath);
-    
-    if (router.asPath === path) {
-      console.log('Already on target page, skipping navigation');
-      return;
     }
-    
-    router.push(path);
-  };
+    checkUser()
+  }, [])
 
-  const handleLogout = async () => {
-    localStorage.removeItem('mockUser');
-    setUser(null);
-    router.push('/login');
-  };
+  const handleLogout = () => {
+    localStorage.removeItem('mockUser')
+    setUser(null)
+    router.push('/login')
+  }
 
+  const navLinkStyle = {
+    color: 'white',
+    textDecoration: 'none',
+    fontSize: '0.9rem',
+    fontWeight: '600',
+    textTransform: 'uppercase',
+    letterSpacing: '1px',
+    display: 'inline-block',
+    padding: '0.75rem 1rem',
+    borderRadius: '6px',
+    border: '1px solid transparent',
+    transition: 'all 0.15s ease'
+  }
+
+  const activeStyle = {
+    ...navLinkStyle,
+    background: 'rgba(255, 0, 0, 0.2)',
+    borderColor: 'rgba(255, 0, 0, 0.3)'
+  }
 
   return (
     <nav style={{
-      background: 'linear-gradient(90deg, #000000, #1a0000)',
-      padding: '1rem 2rem',
-      position: 'sticky',
+      position: 'fixed',
       top: 0,
+      left: 0,
+      right: 0,
       zIndex: 1000,
-      boxShadow: '0 2px 10px rgba(0, 0, 0, 0.5)',
-      backdropFilter: 'blur(10px)'
+      background: 'linear-gradient(135deg, rgba(0,0,0,0.95) 0%, rgba(139,0,0,0.95) 100%)',
+      backdropFilter: 'blur(10px)',
+      borderBottom: '1px solid rgba(255,0,0,0.2)',
+      padding: '0.5rem 0'
     }}>
       <div style={{
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
         maxWidth: '1200px',
-        margin: '0 auto'
+        margin: '0 auto',
+        padding: '0 1rem'
       }}>
-        <div style={{
-          fontSize: '1.5rem',
-          fontWeight: '900',
-          color: 'white',
-          textDecoration: 'none',
-          background: 'linear-gradient(45deg, #ff0000, #ffffff)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          letterSpacing: '2px',
-          cursor: 'pointer',
-          userSelect: 'none',
-          WebkitUserSelect: 'none',
-          MozUserSelect: 'none',
-          msUserSelect: 'none'
-        }} onClick={(e) => handleNavigation('/', e)}>
-          RIOT NETWORK
-        </div>
-        
-        <div style={{
-          display: 'flex',
-          gap: '2.5rem',
-          alignItems: 'center'
+        <Link href="/" style={{
+          ...navLinkStyle,
+          ...(router.pathname === '/' ? activeStyle : {}),
+          fontSize: '1.1rem',
+          fontWeight: '700',
+          color: '#ff0000',
+          textShadow: '0 0 10px rgba(255, 0, 0, 0.5)'
         }}>
-          <div style={{
-            color: 'white',
-            textDecoration: 'none',
-            fontSize: '0.9rem',
-            fontWeight: '600',
-            textTransform: 'uppercase',
-            letterSpacing: '1px',
-            cursor: 'pointer',
-            display: 'inline-block',
-            padding: '0.75rem 1rem',
-            borderRadius: '6px',
-            background: router.pathname === '/vault' ? 'rgba(255, 0, 0, 0.2)' : 'transparent',
-            border: '1px solid transparent',
-            userSelect: 'none',
-            WebkitUserSelect: 'none',
-            MozUserSelect: 'none',
-            msUserSelect: 'none',
-            pointerEvents: 'auto'
-          }}
-          onClick={(e) => handleNavigation('/vault', e)}>
+          RIOT NETWORK
+        </Link>
+        
+        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+          <Link href="/vault" style={{
+            ...navLinkStyle,
+            ...(router.pathname === '/vault' ? activeStyle : {})
+          }}>
             VOD
-          </div>
-          <div style={{
-            color: 'white',
-            textDecoration: 'none',
-            fontSize: '0.9rem',
-            fontWeight: '600',
-            textTransform: 'uppercase',
-            letterSpacing: '1px',
-            cursor: 'pointer',
-            display: 'inline-block',
-            padding: '0.75rem 1rem',
-            borderRadius: '6px',
-            background: router.pathname === '/stream' ? 'rgba(255, 0, 0, 0.2)' : 'transparent',
-            border: '1px solid transparent',
-            userSelect: 'none',
-            WebkitUserSelect: 'none',
-            MozUserSelect: 'none',
-            msUserSelect: 'none',
-            pointerEvents: 'auto'
-          }}
-          onClick={(e) => handleNavigation('/stream', e)}>
+          </Link>
+          <Link href="/checkout" style={{
+            ...navLinkStyle,
+            ...(router.pathname === '/checkout' || router.pathname === '/stream' ? activeStyle : {})
+          }}>
             STREAM
-          </div>
-          <div style={{
-            color: 'white',
-            textDecoration: 'none',
-            fontSize: '0.9rem',
-            fontWeight: '600',
-            textTransform: 'uppercase',
-            letterSpacing: '1px',
-            cursor: 'pointer',
-            display: 'inline-block',
-            padding: '0.75rem 1rem',
-            borderRadius: '6px',
-            background: router.pathname === '/merch' ? 'rgba(255, 0, 0, 0.2)' : 'transparent',
-            border: '1px solid transparent',
-            userSelect: 'none',
-            WebkitUserSelect: 'none',
-            MozUserSelect: 'none',
-            msUserSelect: 'none',
-            pointerEvents: 'auto'
-          }}
-          onClick={(e) => handleNavigation('/merch', e)}>
+          </Link>
+          <Link href="/merch" style={{
+            ...navLinkStyle,
+            ...(router.pathname === '/merch' ? activeStyle : {})
+          }}>
             MERCH
-          </div>
-          <div style={{
-            color: 'white',
-            textDecoration: 'none',
-            fontSize: '0.9rem',
-            fontWeight: '600',
-            textTransform: 'uppercase',
-            letterSpacing: '1px',
-            cursor: 'pointer',
-            display: 'inline-block',
-            padding: '0.75rem 1rem',
-            borderRadius: '6px',
-            background: router.pathname === '/schedule' ? 'rgba(255, 0, 0, 0.2)' : 'transparent',
-            border: '1px solid transparent',
-            userSelect: 'none',
-            WebkitUserSelect: 'none',
-            MozUserSelect: 'none',
-            msUserSelect: 'none',
-            pointerEvents: 'auto'
-          }}
-          onClick={(e) => handleNavigation('/schedule', e)}>
+          </Link>
+          <Link href="/schedule" style={{
+            ...navLinkStyle,
+            ...(router.pathname === '/schedule' ? activeStyle : {})
+          }}>
             SCHEDULE
-          </div>
-          <div style={{
-            color: 'white',
-            textDecoration: 'none',
-            fontSize: '0.9rem',
-            fontWeight: '600',
-            textTransform: 'uppercase',
-            letterSpacing: '1px',
-            cursor: 'pointer',
-            display: 'inline-block',
-            padding: '0.75rem 1rem',
-            borderRadius: '6px',
-            background: router.pathname === '/tickets' ? 'rgba(255, 0, 0, 0.2)' : 'transparent',
-            border: '1px solid transparent',
-            userSelect: 'none',
-            WebkitUserSelect: 'none',
-            MozUserSelect: 'none',
-            msUserSelect: 'none',
-            pointerEvents: 'auto'
-          }}
-          onClick={(e) => handleNavigation('/tickets', e)}>
+          </Link>
+          <Link href="/tickets" style={{
+            ...navLinkStyle,
+            ...(router.pathname === '/tickets' ? activeStyle : {})
+          }}>
             TICKETS
-          </div>
+          </Link>
+          
           {user ? (
-            <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-              <div style={{
-                color: 'white',
-                textDecoration: 'none',
-                fontSize: '0.9rem',
-                fontWeight: '600',
-                textTransform: 'uppercase',
-                letterSpacing: '1px',
-                cursor: 'pointer',
-                display: 'inline-block',
-                padding: '0.75rem 1rem',
-                borderRadius: '6px',
-                transition: 'all 0.15s ease',
-                background: router.pathname === '/subscription' ? 'rgba(255, 0, 0, 0.2)' : 'transparent',
-                border: '1px solid transparent',
-                userSelect: 'none',
-                WebkitUserSelect: 'none',
-                MozUserSelect: 'none',
-                msUserSelect: 'none',
-                pointerEvents: 'auto'
-              }}
-              onClick={(e) => handleNavigation('/subscription', e)}
-              onMouseEnter={(e) => {
-                if (router.pathname !== '/subscription') {
-                  e.target.style.background = 'rgba(255, 0, 0, 0.1)';
-                  e.target.style.borderColor = 'rgba(255, 0, 0, 0.3)';
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (router.pathname !== '/subscription') {
-                  e.target.style.background = 'transparent';
-                  e.target.style.borderColor = 'transparent';
-                }
+            <>
+              <Link href="/subscription" style={{
+                ...navLinkStyle,
+                ...(router.pathname === '/subscription' ? activeStyle : {})
               }}>
                 SUBSCRIPTION
-              </div>
-              <div style={{
-                color: 'white',
-                textDecoration: 'none',
-                fontSize: '0.9rem',
-                fontWeight: '600',
-                textTransform: 'uppercase',
-                letterSpacing: '1px',
-                cursor: 'pointer',
-                display: 'inline-block',
-                padding: '0.75rem 1rem',
-                borderRadius: '6px',
-                transition: 'all 0.15s ease',
-                background: router.pathname === '/profile' ? 'rgba(255, 0, 0, 0.2)' : 'transparent',
-                border: '1px solid transparent',
-                userSelect: 'none',
-                WebkitUserSelect: 'none',
-                MozUserSelect: 'none',
-                msUserSelect: 'none',
-                pointerEvents: 'auto'
-              }}
-              onClick={(e) => handleNavigation('/profile', e)}
-              onMouseEnter={(e) => {
-                if (router.pathname !== '/profile') {
-                  e.target.style.background = 'rgba(255, 0, 0, 0.1)';
-                  e.target.style.borderColor = 'rgba(255, 0, 0, 0.3)';
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (router.pathname !== '/profile') {
-                  e.target.style.background = 'transparent';
-                  e.target.style.borderColor = 'transparent';
-                }
+              </Link>
+              <Link href="/profile" style={{
+                ...navLinkStyle,
+                ...(router.pathname === '/profile' ? activeStyle : {})
               }}>
                 PROFILE
-              </div>
-              {user.email === 'kevinparxmusic@gmail.com' && (
-                <div style={{
-                  color: 'white',
-                  textDecoration: 'none',
-                  fontSize: '0.9rem',
-                  fontWeight: '600',
-                  textTransform: 'uppercase',
-                  letterSpacing: '1px',
-                  cursor: 'pointer',
-                  display: 'inline-block',
-                  padding: '0.75rem 1rem',
-                  borderRadius: '6px',
-                  transition: 'all 0.15s ease',
-                  background: router.pathname === '/admin' ? 'rgba(255, 0, 0, 0.2)' : 'transparent',
-                  border: '1px solid transparent',
-                  userSelect: 'none',
-                  WebkitUserSelect: 'none',
-                  MozUserSelect: 'none',
-                  msUserSelect: 'none',
-                  pointerEvents: 'auto'
-                }}
-                onClick={(e) => handleNavigation('/admin', e)}
-                onMouseEnter={(e) => {
-                  if (router.pathname !== '/admin') {
-                    e.target.style.background = 'rgba(255, 0, 0, 0.1)';
-                    e.target.style.borderColor = 'rgba(255, 0, 0, 0.3)';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (router.pathname !== '/admin') {
-                    e.target.style.background = 'transparent';
-                    e.target.style.borderColor = 'transparent';
-                  }
-                }}>
-                  ADMIN
-                </div>
-              )}
-              <span style={{ color: 'white', fontSize: '0.9rem' }}>
+              </Link>
+              <Link href="/admin" style={{
+                ...navLinkStyle,
+                ...(router.pathname.startsWith('/admin') ? activeStyle : {})
+              }}>
+                ADMIN
+              </Link>
+              <span style={{ color: 'white', fontSize: '0.8rem', margin: '0 0.5rem' }}>
                 {user.email}
               </span>
-              <button 
-                onClick={(e) => {
-                  e.preventDefault();
-                  console.log('Logout clicked');
-                  handleLogout();
-                }}
+              <button
+                onClick={handleLogout}
                 style={{
-                  background: 'linear-gradient(45deg, #ff0000, #cc0000)',
-                  color: 'white',
+                  ...navLinkStyle,
+                  background: 'rgba(255, 0, 0, 0.8)',
                   border: 'none',
-                  padding: '0.75rem 1.25rem',
-                  borderRadius: '25px',
-                  fontSize: '0.8rem',
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                  textTransform: 'uppercase',
-                  letterSpacing: '1px',
-                  transition: 'all 0.15s ease',
-                  boxShadow: '0 2px 8px rgba(255, 0, 0, 0.3)'
-                }}
-                onMouseEnter={(e) => {
-                  e.target.style.transform = 'translateY(-1px)';
-                  e.target.style.boxShadow = '0 4px 12px rgba(255, 0, 0, 0.4)';
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.transform = 'translateY(0)';
-                  e.target.style.boxShadow = '0 2px 8px rgba(255, 0, 0, 0.3)';
-                }}
-                onMouseDown={(e) => {
-                  e.target.style.transform = 'translateY(0)';
+                  cursor: 'pointer'
                 }}
               >
                 LOGOUT
               </button>
-            </div>
+            </>
           ) : (
-            <div style={{
-              color: 'white',
-              textDecoration: 'none',
-              fontSize: '0.9rem',
-              fontWeight: '600',
-              textTransform: 'uppercase',
-              letterSpacing: '1px',
-              cursor: 'pointer',
-              display: 'inline-block',
-              padding: '0.75rem 1rem',
-              borderRadius: '6px',
-              transition: 'all 0.15s ease',
-              background: router.pathname === '/login' ? 'rgba(255, 0, 0, 0.2)' : 'transparent',
-              border: '1px solid transparent',
-              userSelect: 'none',
-              WebkitUserSelect: 'none',
-              MozUserSelect: 'none',
-              msUserSelect: 'none',
-              pointerEvents: 'auto'
-            }}
-            onClick={(e) => handleNavigation('/login', e)}
-            onMouseEnter={(e) => {
-              if (router.pathname !== '/login') {
-                e.target.style.background = 'rgba(255, 0, 0, 0.1)';
-                e.target.style.borderColor = 'rgba(255, 0, 0, 0.3)';
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (router.pathname !== '/login') {
-                e.target.style.background = 'transparent';
-                e.target.style.borderColor = 'transparent';
-              }
+            <Link href="/login" style={{
+              ...navLinkStyle,
+              ...(router.pathname === '/login' ? activeStyle : {})
             }}>
               LOGIN
-            </div>
+            </Link>
           )}
         </div>
       </div>
