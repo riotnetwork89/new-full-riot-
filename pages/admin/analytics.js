@@ -17,8 +17,10 @@ export default function AdminAnalytics() {
   const router = useRouter();
 
   useEffect(() => {
-    const userEmail = localStorage.getItem('userEmail');
-    if (!userEmail || userEmail !== 'kevinparxmusic@gmail.com') {
+    const mockUser = localStorage.getItem('mockUser');
+    const user = mockUser ? JSON.parse(mockUser) : null;
+    
+    if (!user || !user.authenticated) {
       router.push('/login');
       return;
     }
