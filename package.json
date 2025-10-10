@@ -8,9 +8,17 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
+    "@paypal/checkout-server-sdk": "^1.0.3",
+    "@paypal/paypal-server-sdk": "^1.1.0",
+    "@supabase/supabase-js": "^2.0.0",
+    "emailjs-com": "^3.2.0",
     "next": "14.1.4",
+    "nodemailer": "^6.10.1",
+    "puppeteer": "^24.23.0",
+    "qrcode": "^1.5.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "@supabase/supabase-js": "^2.0.0"
+    "uuid": "^9.0.1"
   }
 }

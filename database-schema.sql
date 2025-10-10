@@ -92,3 +92,123 @@ CREATE POLICY "Allow authenticated insert" ON chat_messages FOR INSERT WITH CHEC
 CREATE POLICY "Allow authenticated insert" ON stream_logs FOR INSERT WITH CHECK (auth.role() = 'authenticated');
 CREATE POLICY "Allow authenticated insert" ON trivia_responses FOR INSERT WITH CHECK (auth.role() = 'authenticated');
 CREATE POLICY "Allow authenticated insert" ON fan_uploads FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+
+
+CREATE TABLE IF NOT EXISTS events (
+  id SERIAL PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  slug VARCHAR(255) UNIQUE NOT NULL,
+  venue VARCHAR(255) NOT NULL,
+  start_datetime TIMESTAMPTZ NOT NULL,
+  end_datetime TIMESTAMPTZ NOT NULL,
+  description TEXT,
+  image_url TEXT,
+  sale_start TIMESTAMPTZ NOT NULL,
+  sale_end TIMESTAMPTZ NOT NULL,
+  is_active BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS ticket_tiers (
+  id SERIAL PRIMARY KEY,
+  event_id INTEGER REFERENCES events(id) ON DELETE CASCADE,
+  name VARCHAR(255) NOT NULL,
+  price_cents INTEGER NOT NULL,
+  currency VARCHAR(3) DEFAULT 'USD',
+  quantity_total INTEGER NOT NULL,
+  quantity_sold INTEGER DEFAULT 0,
+  limits_per_order INTEGER DEFAULT 10,
+  metadata_json JSONB DEFAULT '{}',
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW(),
+  CONSTRAINT check_quantity_sold CHECK (quantity_sold >= 0 AND quantity_sold <= quantity_total)
+);
+
+CREATE TABLE IF NOT EXISTS ticket_orders (
+  id SERIAL PRIMARY KEY,
+  order_uuid UUID UNIQUE NOT NULL DEFAULT gen_random_uuid(),
+  user_email VARCHAR(255) NOT NULL,
+  status VARCHAR(50) NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'paid', 'refunded', 'cancelled')),
+  total_cents INTEGER NOT NULL,
+  currency VARCHAR(3) DEFAULT 'USD',
+  paypal_order_id VARCHAR(255),
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS order_items (
+  id SERIAL PRIMARY KEY,
+  order_id INTEGER REFERENCES ticket_orders(id) ON DELETE CASCADE,
+  ticket_tier_id INTEGER REFERENCES ticket_tiers(id) ON DELETE CASCADE,
+  qty INTEGER NOT NULL,
+  unit_price_cents INTEGER NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS tickets (
+  id SERIAL PRIMARY KEY,
+  ticket_uuid UUID UNIQUE NOT NULL DEFAULT gen_random_uuid(),
+  order_item_id INTEGER REFERENCES order_items(id) ON DELETE CASCADE,
+  ticket_code VARCHAR(255) UNIQUE NOT NULL,
+  pdf_url TEXT,
+  qrcode_data TEXT NOT NULL,
+  status VARCHAR(50) NOT NULL DEFAULT 'valid' CHECK (status IN ('valid', 'used', 'cancelled')),
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  used_at TIMESTAMPTZ
+);
+
+CREATE TABLE IF NOT EXISTS admin_audit_logs (
+  id SERIAL PRIMARY KEY,
+  admin_user_id UUID,
+  admin_email VARCHAR(255) NOT NULL,
+  action VARCHAR(255) NOT NULL,
+  resource_type VARCHAR(100) NOT NULL,
+  resource_id VARCHAR(255),
+  details JSONB DEFAULT '{}',
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS refunds (
+  id SERIAL PRIMARY KEY,
+  order_id INTEGER REFERENCES ticket_orders(id) ON DELETE CASCADE,
+  refund_amount_cents INTEGER NOT NULL,
+  paypal_refund_id VARCHAR(255),
+  status VARCHAR(50) NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'completed', 'failed')),
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  completed_at TIMESTAMPTZ
+);
+
+ALTER TABLE events ENABLE ROW LEVEL SECURITY;
+ALTER TABLE ticket_tiers ENABLE ROW LEVEL SECURITY;
+ALTER TABLE ticket_orders ENABLE ROW LEVEL SECURITY;
+ALTER TABLE order_items ENABLE ROW LEVEL SECURITY;
+ALTER TABLE tickets ENABLE ROW LEVEL SECURITY;
+ALTER TABLE admin_audit_logs ENABLE ROW LEVEL SECURITY;
+ALTER TABLE refunds ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Allow public read access to events" ON events FOR SELECT USING (true);
+CREATE POLICY "Allow public read access to ticket_tiers" ON ticket_tiers FOR SELECT USING (true);
+CREATE POLICY "Allow authenticated read access to ticket_orders" ON ticket_orders FOR SELECT USING (auth.role() = 'authenticated');
+CREATE POLICY "Allow authenticated read access to order_items" ON order_items FOR SELECT USING (auth.role() = 'authenticated');
+CREATE POLICY "Allow authenticated read access to tickets" ON tickets FOR SELECT USING (auth.role() = 'authenticated');
+CREATE POLICY "Allow authenticated read access to admin_audit_logs" ON admin_audit_logs FOR SELECT USING (auth.role() = 'authenticated');
+CREATE POLICY "Allow authenticated read access to refunds" ON refunds FOR SELECT USING (auth.role() = 'authenticated');
+
+CREATE POLICY "Allow authenticated insert to ticket_orders" ON ticket_orders FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+CREATE POLICY "Allow authenticated insert to order_items" ON order_items FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+CREATE POLICY "Allow authenticated insert to tickets" ON tickets FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+CREATE POLICY "Allow authenticated insert to admin_audit_logs" ON admin_audit_logs FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+CREATE POLICY "Allow authenticated insert to refunds" ON refunds FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+
+CREATE INDEX IF NOT EXISTS idx_events_slug ON events(slug);
+CREATE INDEX IF NOT EXISTS idx_events_active ON events(is_active);
+CREATE INDEX IF NOT EXISTS idx_events_sale_dates ON events(sale_start, sale_end);
+CREATE INDEX IF NOT EXISTS idx_ticket_tiers_event ON ticket_tiers(event_id);
+CREATE INDEX IF NOT EXISTS idx_ticket_orders_email ON ticket_orders(user_email);
+CREATE INDEX IF NOT EXISTS idx_ticket_orders_status ON ticket_orders(status);
+CREATE INDEX IF NOT EXISTS idx_ticket_orders_paypal ON ticket_orders(paypal_order_id);
+CREATE INDEX IF NOT EXISTS idx_tickets_code ON tickets(ticket_code);
+CREATE INDEX IF NOT EXISTS idx_tickets_qrcode ON tickets(qrcode_data);
+CREATE INDEX IF NOT EXISTS idx_audit_logs_admin ON admin_audit_logs(admin_email);
+CREATE INDEX IF NOT EXISTS idx_audit_logs_resource ON admin_audit_logs(resource_type, resource_id);
