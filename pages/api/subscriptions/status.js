@@ -10,16 +10,28 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'User email required' });
     }
 
-    const mockSubscription = localStorage?.getItem('mockSubscription');
+    const mockSubscriptions = {
+      'test@riot.com': {
+        tierName: 'VIP',
+        features: ['Early ticket access', 'Exclusive content', 'VIP chat badge', 'Priority support'],
+        endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // 30 days from now
+      },
+      'kevinparxmusic@gmail.com': {
+        tierName: 'Premium',
+        features: ['HD streaming', 'Chat access', 'VOD library'],
+        endDate: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000).toISOString() // 15 days from now
+      }
+    };
+
+    const subscriptionData = mockSubscriptions[userEmail];
     
-    if (!mockSubscription) {
+    if (!subscriptionData) {
       return res.status(200).json({
         hasActiveSubscription: false,
         tier: null
       });
     }
 
-    const subscriptionData = JSON.parse(mockSubscription);
     const endDate = new Date(subscriptionData.endDate);
     const now = new Date();
     

@@ -1,3 +1,4 @@
+import React from 'react'
 import Link from 'next/link';
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
@@ -95,7 +96,6 @@ export default function Navigation() {
             display: 'inline-block',
             padding: '0.75rem 1rem',
             borderRadius: '6px',
-            transition: 'all 0.15s ease',
             background: router.pathname === '/vault' ? 'rgba(255, 0, 0, 0.2)' : 'transparent',
             border: '1px solid transparent',
             userSelect: 'none',
@@ -104,19 +104,7 @@ export default function Navigation() {
             msUserSelect: 'none',
             pointerEvents: 'auto'
           }}
-          onClick={(e) => handleNavigation('/vault', e)}
-          onMouseEnter={(e) => {
-            if (router.pathname !== '/vault') {
-              e.target.style.background = 'rgba(255, 0, 0, 0.1)';
-              e.target.style.borderColor = 'rgba(255, 0, 0, 0.3)';
-            }
-          }}
-          onMouseLeave={(e) => {
-            if (router.pathname !== '/vault') {
-              e.target.style.background = 'transparent';
-              e.target.style.borderColor = 'transparent';
-            }
-          }}>
+          onClick={(e) => handleNavigation('/vault', e)}>
             VOD
           </div>
           <div style={{
@@ -130,7 +118,6 @@ export default function Navigation() {
             display: 'inline-block',
             padding: '0.75rem 1rem',
             borderRadius: '6px',
-            transition: 'all 0.15s ease',
             background: router.pathname === '/stream' ? 'rgba(255, 0, 0, 0.2)' : 'transparent',
             border: '1px solid transparent',
             userSelect: 'none',
@@ -139,19 +126,7 @@ export default function Navigation() {
             msUserSelect: 'none',
             pointerEvents: 'auto'
           }}
-          onClick={(e) => handleNavigation('/stream', e)}
-          onMouseEnter={(e) => {
-            if (router.pathname !== '/stream') {
-              e.target.style.background = 'rgba(255, 0, 0, 0.1)';
-              e.target.style.borderColor = 'rgba(255, 0, 0, 0.3)';
-            }
-          }}
-          onMouseLeave={(e) => {
-            if (router.pathname !== '/stream') {
-              e.target.style.background = 'transparent';
-              e.target.style.borderColor = 'transparent';
-            }
-          }}>
+          onClick={(e) => handleNavigation('/stream', e)}>
             STREAM
           </div>
           <div style={{
@@ -165,7 +140,6 @@ export default function Navigation() {
             display: 'inline-block',
             padding: '0.75rem 1rem',
             borderRadius: '6px',
-            transition: 'all 0.15s ease',
             background: router.pathname === '/merch' ? 'rgba(255, 0, 0, 0.2)' : 'transparent',
             border: '1px solid transparent',
             userSelect: 'none',
@@ -174,19 +148,7 @@ export default function Navigation() {
             msUserSelect: 'none',
             pointerEvents: 'auto'
           }}
-          onClick={(e) => handleNavigation('/merch', e)}
-          onMouseEnter={(e) => {
-            if (router.pathname !== '/merch') {
-              e.target.style.background = 'rgba(255, 0, 0, 0.1)';
-              e.target.style.borderColor = 'rgba(255, 0, 0, 0.3)';
-            }
-          }}
-          onMouseLeave={(e) => {
-            if (router.pathname !== '/merch') {
-              e.target.style.background = 'transparent';
-              e.target.style.borderColor = 'transparent';
-            }
-          }}>
+          onClick={(e) => handleNavigation('/merch', e)}>
             MERCH
           </div>
           <div style={{
@@ -200,7 +162,6 @@ export default function Navigation() {
             display: 'inline-block',
             padding: '0.75rem 1rem',
             borderRadius: '6px',
-            transition: 'all 0.15s ease',
             background: router.pathname === '/schedule' ? 'rgba(255, 0, 0, 0.2)' : 'transparent',
             border: '1px solid transparent',
             userSelect: 'none',
@@ -209,19 +170,7 @@ export default function Navigation() {
             msUserSelect: 'none',
             pointerEvents: 'auto'
           }}
-          onClick={(e) => handleNavigation('/schedule', e)}
-          onMouseEnter={(e) => {
-            if (router.pathname !== '/schedule') {
-              e.target.style.background = 'rgba(255, 0, 0, 0.1)';
-              e.target.style.borderColor = 'rgba(255, 0, 0, 0.3)';
-            }
-          }}
-          onMouseLeave={(e) => {
-            if (router.pathname !== '/schedule') {
-              e.target.style.background = 'transparent';
-              e.target.style.borderColor = 'transparent';
-            }
-          }}>
+          onClick={(e) => handleNavigation('/schedule', e)}>
             SCHEDULE
           </div>
           <div style={{
@@ -235,7 +184,6 @@ export default function Navigation() {
             display: 'inline-block',
             padding: '0.75rem 1rem',
             borderRadius: '6px',
-            transition: 'all 0.15s ease',
             background: router.pathname === '/tickets' ? 'rgba(255, 0, 0, 0.2)' : 'transparent',
             border: '1px solid transparent',
             userSelect: 'none',
@@ -244,19 +192,7 @@ export default function Navigation() {
             msUserSelect: 'none',
             pointerEvents: 'auto'
           }}
-          onClick={(e) => handleNavigation('/tickets', e)}
-          onMouseEnter={(e) => {
-            if (router.pathname !== '/tickets') {
-              e.target.style.background = 'rgba(255, 0, 0, 0.1)';
-              e.target.style.borderColor = 'rgba(255, 0, 0, 0.3)';
-            }
-          }}
-          onMouseLeave={(e) => {
-            if (router.pathname !== '/tickets') {
-              e.target.style.background = 'transparent';
-              e.target.style.borderColor = 'transparent';
-            }
-          }}>
+          onClick={(e) => handleNavigation('/tickets', e)}>
             TICKETS
           </div>
           {user ? (
