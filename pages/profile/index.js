@@ -11,8 +11,10 @@ export default function Profile() {
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
+      const mockUser = localStorage.getItem('mockUser');
+      const user = mockUser ? JSON.parse(mockUser) : null;
+      
+      if (!user || !user.authenticated) {
         if (router.pathname !== '/login') {
           router.push('/login');
         }
@@ -22,22 +24,14 @@ export default function Profile() {
       setUser(user);
       
       try {
-        const { data: coinData } = await supabase
-          .from('coin_ledger')
-          .select('coins')
-          .eq('user_email', user.email)
-          .order('created_at', { ascending: false });
+        const mockCoins = user.email === 'test@riot.com' ? 150 : 0;
+        setCoins(mockCoins);
         
-        const totalCoins = coinData?.reduce((sum, entry) => sum + entry.coins, 0) || 0;
-        setCoins(totalCoins);
-        
-        const { data: ordersData } = await supabase
-          .from('orders')
-          .select('*')
-          .eq('email', user.email)
-          .order('timestamp', { ascending: false });
-        
-        setOrders(ordersData || []);
+        const mockOrders = user.email === 'test@riot.com' ? [
+          { id: 1, product: 'PPV Ticket', type: 'ticket', timestamp: new Date().toISOString() },
+          { id: 2, product: 'VIP Subscription', type: 'subscription', timestamp: new Date(Date.now() - 86400000).toISOString() }
+        ] : [];
+        setOrders(mockOrders);
       } catch (error) {
         console.error('Error fetching user data:', error);
         setCoins(0);
