@@ -10,9 +10,11 @@ export default function Navigation() {
 
   useEffect(() => {
     const checkUser = () => {
-      const mockUser = localStorage.getItem('mockUser');
-      const user = mockUser ? JSON.parse(mockUser) : null;
-      setUser(user && user.authenticated ? user : null);
+      if (typeof window !== 'undefined') {
+        const mockUser = localStorage.getItem('mockUser');
+        const user = mockUser ? JSON.parse(mockUser) : null;
+        setUser(user && user.authenticated ? user : null);
+      }
     };
     
     checkUser();
