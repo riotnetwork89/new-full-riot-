@@ -156,12 +156,12 @@ export default function AdminAnalytics() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <div className="bg-black/20 backdrop-blur-sm border border-red-500/30 rounded-lg p-6">
             <h3 className="text-red-500 font-semibold mb-2">TOTAL REVENUE</h3>
-            <p className="text-3xl font-bold text-white">${analytics.totalRevenue.toFixed(2)}</p>
+            <p className="text-3xl font-bold text-white">${(analytics.totalRevenue || 0).toFixed(2)}</p>
           </div>
           
           <div className="bg-black/20 backdrop-blur-sm border border-red-500/30 rounded-lg p-6">
             <h3 className="text-red-500 font-semibold mb-2">MONTHLY REVENUE</h3>
-            <p className="text-3xl font-bold text-white">${analytics.monthlyRevenue.toFixed(2)}</p>
+            <p className="text-3xl font-bold text-white">${(analytics.monthlyRevenue || 0).toFixed(2)}</p>
           </div>
           
           <div className="bg-black/20 backdrop-blur-sm border border-red-500/30 rounded-lg p-6">
@@ -204,7 +204,7 @@ export default function AdminAnalytics() {
               <div className="flex justify-between">
                 <span className="text-gray-300">Avg Messages/User</span>
                 <span className="text-white font-semibold">
-                  {analytics.userEngagement.avgMessagesPerUser.toFixed(1)}
+                  {(analytics.userEngagement.avgMessagesPerUser || 0).toFixed(1)}
                 </span>
               </div>
             </div>
