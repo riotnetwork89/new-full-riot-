@@ -22,20 +22,72 @@ export default function SubscriptionPage() {
   const fetchTiers = async () => {
     try {
       const response = await fetch('/api/subscriptions/tiers');
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
       const data = await response.json();
+      console.log('Fetched tiers:', data);
       setTiers(data.tiers || []);
     } catch (error) {
       console.error('Failed to fetch tiers:', error);
+      setTiers([
+        {
+          id: 1,
+          name: 'BASIC',
+          price_dollars: 9.99,
+          duration_days: 30,
+          features: [
+            'Access to live streams',
+            'Standard chat participation',
+            'Basic VOD library access',
+            'Mobile app access'
+          ]
+        },
+        {
+          id: 2,
+          name: 'VIP',
+          price_dollars: 19.99,
+          duration_days: 30,
+          features: [
+            'All Basic features',
+            'Early ticket access (24h priority)',
+            'VIP chat badge and priority',
+            'Exclusive VIP-only streams',
+            'Behind-the-scenes content',
+            'Monthly VIP meetups'
+          ]
+        },
+        {
+          id: 3,
+          name: 'PREMIUM',
+          price_dollars: 49.99,
+          duration_days: 30,
+          features: [
+            'All VIP features',
+            'Backstage access content',
+            'Artist meet & greet opportunities',
+            'Exclusive merchandise discounts',
+            'Priority customer support',
+            'Custom profile badges',
+            'Ad-free experience'
+          ]
+        }
+      ]);
     }
   };
 
   const fetchCurrentSubscription = async (userEmail) => {
     try {
       const response = await fetch(`/api/subscriptions/status?userEmail=${encodeURIComponent(userEmail)}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
       const data = await response.json();
+      console.log('Subscription status:', data);
       setCurrentSubscription(data.hasActiveSubscription ? data.tier : null);
     } catch (error) {
       console.error('Failed to fetch subscription status:', error);
+      setCurrentSubscription(null);
     } finally {
       setLoading(false);
     }

@@ -130,9 +130,25 @@ export default function EventTicketsPage() {
 
   if (loading) {
     return (
-      <div className="container">
+      <div style={{ 
+        minHeight: '100vh',
+        background: 'linear-gradient(135deg, #000000 0%, #1a0000 50%, #330000 100%)',
+        color: 'white',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}>
         <div style={{ textAlign: 'center', padding: '3rem' }}>
-          <h2>Loading event...</h2>
+          <h2 style={{ color: '#ff0000', fontSize: '2rem', marginBottom: '1rem' }}>Loading event...</h2>
+          <div style={{ 
+            width: '50px', 
+            height: '50px', 
+            border: '3px solid rgba(255,0,0,0.3)',
+            borderTop: '3px solid #ff0000',
+            borderRadius: '50%',
+            animation: 'spin 1s linear infinite',
+            margin: '0 auto'
+          }}></div>
         </div>
       </div>
     );
@@ -140,9 +156,33 @@ export default function EventTicketsPage() {
 
   if (!event) {
     return (
-      <div className="container">
+      <div style={{ 
+        minHeight: '100vh',
+        background: 'linear-gradient(135deg, #000000 0%, #1a0000 50%, #330000 100%)',
+        color: 'white',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}>
         <div style={{ textAlign: 'center', padding: '3rem' }}>
-          <h2>Event not found</h2>
+          <h2 style={{ color: '#ff0000', fontSize: '2rem', marginBottom: '1rem' }}>Event not found</h2>
+          <button 
+            onClick={() => router.push('/tickets')}
+            style={{
+              background: 'linear-gradient(45deg, #ff0000, #cc0000)',
+              color: 'white',
+              border: 'none',
+              padding: '1rem 2rem',
+              borderRadius: '50px',
+              fontSize: '1rem',
+              fontWeight: '600',
+              cursor: 'pointer',
+              textTransform: 'uppercase',
+              letterSpacing: '1px'
+            }}
+          >
+            ← Back to Events
+          </button>
         </div>
       </div>
     );

@@ -12,13 +12,24 @@ export default function Navigation() {
     setIsClient(true)
     const checkUser = () => {
       if (typeof window !== 'undefined') {
-        const mockUser = localStorage.getItem('mockUser')
-        if (mockUser) {
-          setUser(JSON.parse(mockUser))
+        try {
+          const mockUser = localStorage.getItem('mockUser')
+          if (mockUser) {
+            const userData = JSON.parse(mockUser)
+            if (userData && userData.authenticated) {
+              setUser(userData)
+            }
+          }
+        } catch (error) {
+          console.error('Error parsing user data:', error)
+          localStorage.removeItem('mockUser')
         }
       }
     }
     checkUser()
+    
+    const interval = setInterval(checkUser, 1000)
+    return () => clearInterval(interval)
   }, [])
 
   const handleLogout = () => {
