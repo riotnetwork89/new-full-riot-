@@ -209,7 +209,7 @@ export default function HomePage() {
         </div>
         
         <div style={{ marginBottom: '3rem' }}>
-          <Link href="/login">
+          <Link href="/subscription">
             <button style={{
               background: 'linear-gradient(45deg, #ff0000, #cc0000)',
               color: 'white',
