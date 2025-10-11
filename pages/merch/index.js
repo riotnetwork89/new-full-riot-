@@ -125,7 +125,7 @@ export default function MerchPage() {
               }}>
                 ${product.price}
               </span>
-              <button style={{
+              <a href="/checkout" style={{
                 background: 'linear-gradient(45deg, #ff0000, #cc0000)',
                 color: 'white',
                 border: 'none',
@@ -136,10 +136,12 @@ export default function MerchPage() {
                 cursor: 'pointer',
                 transition: 'all 0.3s ease',
                 textTransform: 'uppercase',
-                letterSpacing: '1px'
+                letterSpacing: '1px',
+                textDecoration: 'none',
+                display: 'inline-block'
               }}>
                 Add to Cart
-              </button>
+              </a>
             </div>
           </div>
           ))}

@@ -209,43 +209,43 @@ export default function HomePage() {
         </div>
         
         <div style={{ marginBottom: '3rem' }}>
-          <Link href="/subscription">
-            <button style={{
-              background: 'linear-gradient(45deg, #ff0000, #cc0000)',
-              color: 'white',
-              border: 'none',
-              padding: '1.2rem 3rem',
-              borderRadius: '50px',
-              fontSize: '1.3rem',
-              fontWeight: '700',
-              cursor: 'pointer',
-              transition: 'all 0.3s ease',
-              textTransform: 'uppercase',
-              letterSpacing: '1px',
-              marginRight: '1rem',
-              boxShadow: '0 10px 30px rgba(255, 0, 0, 0.3)'
-            }}>
-              SUBSCRIBE NOW
-            </button>
-          </Link>
-          <Link href="/schedule">
-            <button style={{
-              background: 'transparent',
-              color: 'white',
-              border: '2px solid rgba(255, 255, 255, 0.5)',
-              padding: '1.2rem 3rem',
-              borderRadius: '50px',
-              fontSize: '1.1rem',
-              fontWeight: '600',
-              cursor: 'pointer',
-              transition: 'all 0.3s ease',
-              textTransform: 'uppercase',
-              letterSpacing: '1px',
-              backdropFilter: 'blur(10px)'
-            }}>
-              ▶ Trailer
-            </button>
-          </Link>
+          <a href="/subscription" style={{
+            background: 'linear-gradient(45deg, #ff0000, #cc0000)',
+            color: 'white',
+            border: 'none',
+            padding: '1.2rem 3rem',
+            borderRadius: '50px',
+            fontSize: '1.3rem',
+            fontWeight: '700',
+            cursor: 'pointer',
+            transition: 'all 0.3s ease',
+            textTransform: 'uppercase',
+            letterSpacing: '1px',
+            marginRight: '1rem',
+            boxShadow: '0 10px 30px rgba(255, 0, 0, 0.3)',
+            textDecoration: 'none',
+            display: 'inline-block'
+          }}>
+            SUBSCRIBE NOW
+          </a>
+          <a href="/schedule" style={{
+            background: 'transparent',
+            color: 'white',
+            border: '2px solid rgba(255, 255, 255, 0.5)',
+            padding: '1.2rem 3rem',
+            borderRadius: '50px',
+            fontSize: '1.1rem',
+            fontWeight: '600',
+            cursor: 'pointer',
+            transition: 'all 0.3s ease',
+            textTransform: 'uppercase',
+            letterSpacing: '1px',
+            backdropFilter: 'blur(10px)',
+            textDecoration: 'none',
+            display: 'inline-block'
+          }}>
+            ▶ Trailer
+          </a>
         </div>
         
         <p style={{ 

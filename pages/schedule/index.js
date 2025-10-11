@@ -174,7 +174,7 @@ export default function SchedulePage() {
                 }}>
                   ${event.ticketPrice}
                 </div>
-                <button style={{
+                <a href={event.status === 'upcoming' ? '/tickets' : '/vault'} style={{
                   background: event.status === 'upcoming' 
                     ? 'linear-gradient(45deg, #ff0080, #ff6600)' 
                     : 'linear-gradient(45deg, #6B46C1, #8B5CF6)',
@@ -187,10 +187,12 @@ export default function SchedulePage() {
                   cursor: 'pointer',
                   transition: 'all 0.3s ease',
                   textTransform: 'uppercase',
-                  letterSpacing: '1px'
+                  letterSpacing: '1px',
+                  textDecoration: 'none',
+                  display: 'inline-block'
                 }}>
                   {event.status === 'upcoming' ? 'Buy Ticket' : 'Watch Replay'}
-                </button>
+                </a>
               </div>
             </div>
           </div>
