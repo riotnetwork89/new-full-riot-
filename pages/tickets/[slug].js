@@ -26,25 +26,23 @@ export default function EventTicketsPage() {
     if (slug) {
       fetchEvent();
     }
-  }, [slug]);
+  }, [slug, router]);
 
   const fetchEvent = async () => {
     try {
-      const { data, error } = await supabase
-        .from('events')
-        .select(`
-          *,
-          ticket_tiers(*)
-        `)
-        .eq('slug', slug)
-        .eq('is_active', true)
-        .single();
-
-      if (error) throw error;
-      setEvent(data);
+      setLoading(true);
+      
+      const response = await fetch(`/api/events/${slug}`);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      setEvent(data.event);
     } catch (error) {
       console.error('Error fetching event:', error);
-      router.push('/tickets');
+      setEvent(null);
     } finally {
       setLoading(false);
     }
